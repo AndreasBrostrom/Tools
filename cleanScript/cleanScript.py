@@ -93,13 +93,25 @@ def cleanDesktop():
 def getTemp():
     location = []
     if os.name == 'nt':
-        location.append(os.path.join(os.path.expanduser('~\\AppData\\Local\\Temp')))
-        location.append(os.path.join(os.path.dirname('C:\\Windows\\Temp\\')))
+        try:
+            location.append(os.path.join(os.path.expanduser('~\\AppData\\Local\\Temp')))
+        except:
+            pass
+        try:
+            location.append(os.path.join(os.path.dirname('C:\\Windows\\Temp\\')))
+        except:
+            pass
         if os.path.ismount('D:/..') and os.path.isdir('D:\\Temp'):
             location.append(os.path.join(os.path.dirname('D:\\Temp\\')))
     else:
-        location.append(os.path.join(os.path.dirname('/mnt/c/Users/{}/AppData/Local/Temp/'.format(getpass.getuser()))))
-        location.append(os.path.join(os.path.dirname('/mnt/c/Windows/Temp/')))
+        try:
+            location.append(os.path.join(os.path.dirname('/mnt/c/Users/{}/AppData/Local/Temp/'.format(getpass.getuser()))))
+        except:
+            pass
+        try:
+            location.append(os.path.join(os.path.dirname('/mnt/c/Windows/Temp/')))
+        except:
+            pass
         if os.path.ismount('/mnt/d/') and os.path.isdir('/mnt/d/Temp'):
             location.append(os.path.join(os.path.dirname('/mnt/d/Temp/')))
     return location
