@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys, subprocess
+import sys, subprocess
 __version__ = 1.0
 
 def getLocation(path='',data=''):
@@ -25,13 +25,13 @@ def getLocation(path='',data=''):
 def main():
     if not os.name == 'nt':
         x = getLocation('HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders','Desktop')
-        os.sys('ln -s {} ~/Desktop')
+        subprocess.run('ln -s {} ~/Desktop'.format(x))
         x = getLocation('HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders','{374DE290-123F-4565-9164-39C4925E467B}')
-        os.sys('ln -s {} ~/Download')
+        subprocess.run('ln -s {} ~/Download'.format(x))
         x = getLocation('HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders','Personal')
-        os.sys('ln -s {} ~/Personal')
+        subprocess.run('ln -s {} ~/Personal'.format(x))
         x = getLocation('HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders','AppData')
-        os.sys('ln -s {} ~/AppData')
+        subprocess.run('ln -s {} ~/AppData'.format(x))
     else:
         sys.exit('Your not running a linux subsystem on a windows computer')
 if __name__ == "__main__":
