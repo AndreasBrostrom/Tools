@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, subprocess
+import os, sys, subprocess
 __version__ = 1.0
 
 def getLocation(path='',data=''):
