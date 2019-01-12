@@ -51,16 +51,16 @@ def create_symplink(path='', name=''):
     
 
 def main():
-    print('Prepering to set up symplinks')
+    print('Prepering to set up symplinks...')
 
     if not os.name == 'nt':
         path = 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
         regestry = 'Desktop'
         create_symplink(get_location(path,regestry),regestry)
         regestry = 'Download'
-        create_symplink(get_location(path,regestry),regestry)
+        create_symplink(get_location(path,regestry),'Downloads')
         regestry = 'Personal'
-        create_symplink(get_location(path,regestry),regestry)
+        create_symplink(get_location(path,regestry),'Documents')
         regestry = 'My Music'
         create_symplink(get_location(path,regestry),'Music')
         regestry = 'My Video'
@@ -70,7 +70,7 @@ def main():
     else:
         sys.exit('Your not running a linux subsystem on a windows computer')
 
-    print('Script compleet!')
+    print('Script completed, happy browsing!')
 
 if __name__ == "__main__":
     sys.exit(main())
