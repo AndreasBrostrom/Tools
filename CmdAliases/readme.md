@@ -6,7 +6,7 @@ NOTE! At the moment you are required to edit the `AddAliases.reg` path to the wi
 
 
 ```
-C:\>cowsay hi
+C:\>cowsay Hi! This work in cmd!
  ____
 < Hi! This work in cmd! >
  ----
