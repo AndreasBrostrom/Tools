@@ -1,5 +1,5 @@
 # What is this?
-This is a little regestry adjustment that allow you to set permanent windows aliases using DOSKEY.
+This is a little regestry adjustment that allow you to set permanent windows aliases using `DOSKEY`.
 The aliases is loaded via the `AutoRun` each time you upen a CMD terminal. 
 
 ```
