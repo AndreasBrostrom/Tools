@@ -16,5 +16,23 @@ C:\>cowsay Hi! This work in cmd!
 
 > ***NOTE!** At the moment you are required to edit the `AddAliases.reg` path to the `win_aliases.cmd` file.*
 
+# Avalible commands
+- ls, ll, la, l
+- ifconfig
+- reboot
+- rm
+- cat
+
+## With Bash
+- sudo 
+- apt
+- apt-get 
+- apt-cache
+- nvim
+- vim
+- sl 
+- cowsay 
+- lx [COMMAND] (lx allow you to run linux command without use of the added aliases.)
+
 # Requirements
 - (OPTIONAL) Windows Linux Subsystems
