@@ -16,7 +16,6 @@ DOSKEY cat=type $1
 
 
 if exist %WINDIR%/SYSTEM32/bash.exe (
-    echo With cow power bash integration
     DOSKEY lx=bash.exe -c '$1 $2 $3 $4 $5 $6 $7 $8 $9'
 
     :: common
@@ -30,9 +29,9 @@ if exist %WINDIR%/SYSTEM32/bash.exe (
     DOSKEY rmdir=bash.exe -c 'rmdir $1 $2 $3 $4 $5 $6 $7 $8 $9'
 
     :: apt commands
-    DOSKEY apt=bash.exe -c 'apt $1 $2 $3 $4 $5 $6 $7 $8 $9'
-    DOSKEY apt-get=bash.exe -c 'apt-get $1 $2 $3 $4 $5 $6 $7 $8 $9'
-    DOSKEY apt-cache=bash.exe -c 'apt-cache $1 $2 $3 $4 $5 $6 $7 $8 $9'
+    DOSKEY apt=bash.exe -c 'sudo apt $1 $2 $3 $4 $5 $6 $7 $8 $9'
+    DOSKEY apt-get=bash.exe -c 'sudo apt-get $1 $2 $3 $4 $5 $6 $7 $8 $9'
+    DOSKEY apt-cache=bash.exe -c 'sudo apt-cache $1 $2 $3 $4 $5 $6 $7 $8 $9'
     DOSKEY sudo=bash.exe -c 'sudo $1 $2 $3 $4 $5 $6 $7 $8 $9'
 
     :: editor
