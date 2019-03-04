@@ -8,7 +8,7 @@ DOSKEY l=dir /B
 
 DOSKEY ifconfig=ipconfig /all
 
-DOSKEY reboot=shutdown -r
+DOSKEY reboot=shutdown -r -t 0
 
 DOSKEY rm=del $1
 
