@@ -30,7 +30,8 @@ C:\>cowsay Hi! This work in cmd!
 - apt-cache
 - nvim
 - vim
-- sl 
+- dos2unix
+- sl
 - cowsay 
 - lx [COMMAND] (lx allow you to run linux command without use of the added aliases.)
 
