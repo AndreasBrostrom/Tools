@@ -38,6 +38,8 @@ if exist %WINDIR%/SYSTEM32/bash.exe (
     DOSKEY vim=bash.exe -c 'vim $1 $2 $3 $4 $5 $6 $7 $8 $9'
     DOSKEY nvim=bash.exe -c 'nvim $1 $2 $3 $4 $5 $6 $7 $8 $9'
 
+    DOSKEY dos2unix=bash.exe -c 'dos2unix $1 $2 $3 $4 $5 $6 $7 $8 $9'
+
     :: random commands
     DOSKEY sl=bash.exe -c 'sl $1 $2 $3 $4 $5 $6 $7 $8 $9'
     DOSKEY cowsay=bash.exe -c 'cowsay $1 $2 $3 $4 $5 $6 $7 $8 $9'
