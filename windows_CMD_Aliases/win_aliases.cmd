@@ -17,6 +17,7 @@ DOSKEY cat=type $1
 
 if exist %WINDIR%/SYSTEM32/bash.exe (
     DOSKEY lx=bash.exe -c '$1 $2 $3 $4 $5 $6 $7 $8 $9'
+    DOSKEY unix=bash.exe -c '$1 $2 $3 $4 $5 $6 $7 $8 $9'
 
     :: common
     DOSKEY cat=bash.exe -c 'cat $1 $2 $3 $4 $5 $6 $7 $8 $9'
@@ -27,6 +28,8 @@ if exist %WINDIR%/SYSTEM32/bash.exe (
 
     DOSKEY rm=bash.exe -c 'rm $1 $2 $3 $4 $5 $6 $7 $8 $9'
     DOSKEY rmdir=bash.exe -c 'rmdir $1 $2 $3 $4 $5 $6 $7 $8 $9'
+
+    DOSKEY ifconfig=bash.exe -c 'ifconfig $1 $2 $3 $4 $5 $6 $7 $8 $9'
 
     :: apt commands
     DOSKEY apt=bash.exe -c 'sudo apt $1 $2 $3 $4 $5 $6 $7 $8 $9'
@@ -44,3 +47,5 @@ if exist %WINDIR%/SYSTEM32/bash.exe (
     DOSKEY sl=bash.exe -c 'sl $1 $2 $3 $4 $5 $6 $7 $8 $9'
     DOSKEY cowsay=bash.exe -c 'cowsay $1 $2 $3 $4 $5 $6 $7 $8 $9'
 )
+
+DOSKEY alias=doskey /m

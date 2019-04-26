@@ -1,1 +1,3 @@
-REG IMPORT !cleanUnwantedCreateNewFile.reg
+@ECHO OFF
+
+regedit -s !cleanUnwantedCreateNewFile.reg
