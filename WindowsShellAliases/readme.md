@@ -1,6 +1,6 @@
 # What is this?
-This is a little regestry adjustment that allow you to set permanent windows aliases using `DOSKEY`.
-The aliases is loaded via the `AutoRun` each time you upen a CMD terminal. 
+This is a little regestry adjustment that sets up a `.batchrc` in your home directory using `DOSKEY` to set up aliases.
+The aliases is loaded via the `AutoRun` each time you upen a CMD terminal.
 
 ```
 C:\>cowsay Hi! This work in cmd!
@@ -18,22 +18,19 @@ C:\>cowsay Hi! This work in cmd!
 
 # Avalible commands
 - ls, ll, la, l
-- ifconfig
-- reboot
-- rm
-- cat
+- ln (mklink)
+- rm (del)
+- cat (type)
+- alias (Show all marcos)
+- sys-update (Run windows update and possible extentions)
+- source
+- source-batchrc
+- source-aliases
+- hide (hide all .files and .folder)
+- ifconfig (ipconfig)
+- reboot (shutdown)
 
-## With Bash
-- sudo 
-- apt
-- apt-get 
-- apt-cache
-- nvim
-- vim
-- dos2unix
-- sl
-- cowsay 
-- lx [COMMAND] (lx allow you to run linux command without use of the added aliases.)
-
-# Requirements
-- (OPTIONAL) Windows Linux Subsystems
+## Avalible extentions
+- Chocolatey
+- Scoop
+- WSL
