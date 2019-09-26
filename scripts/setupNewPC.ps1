@@ -22,7 +22,10 @@ sudo scoop install armake hemtt --global
 echo Installing Chocolately...
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
+echo Changeing chocolately settings...
 choco feature enable -n allowGlobalConfirmation
+
+echo Installing chocolately packages...
 sudo choco install googlechrome
 sudo choco install vscode
 sudo choco install microsoft-windows-terminal
