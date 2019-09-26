@@ -14,7 +14,7 @@ C:\>cowsay Hi! This work in cmd!
                 ||     ||
 ```
 
-> ***NOTE!** At the moment you are required to edit the `AddAliases.reg` path to the `win_aliases.cmd` file.*
+> ***NOTE!** At the moment you are required to add `.script` to your path variable `%USERPROFILE%\.scripts`*
 
 # Avalible commands
 - ls, ll, la, l
