@@ -13,7 +13,7 @@ scoop install ripgrep neovim adb  --global
 scoop install python --global
 
 scoop bucket add extras
-scoop install steamcmd qbittorrent-portable --global
+scoop install steamcmd qbittorrent-portable android-sdk rufus --global
 
 scoop bucket add Arma3Tools https://github.com/ColdEvul/arma3-scoop-bucket.git
 scoop install armake hemtt --global
