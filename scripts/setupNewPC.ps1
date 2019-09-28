@@ -6,14 +6,14 @@ Write-Host "Installing scoop..." -ForegroundColor green
 Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
 
 Write-Output "Installing scoop packages..."
-scoop install aria2 git 7zip go
+scoop install aria2 git 7zip
 scoop install sudo
 scoop install sudo --global
-scoop install aria2 git 7zip go --global
+scoop install aria2 git 7zip --global
 
 scoop install curl grep sed less touch ruby perl openssh --global
 scoop install ripgrep neovim adb dos2unix --global
-scoop install python --global
+scoop install python gdrive --global
 scoop bucket add extras
 scoop install steamcmd qbittorrent-portable android-sdk rufus --global
 
