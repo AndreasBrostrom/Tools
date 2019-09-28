@@ -12,9 +12,8 @@ scoop install sudo --global
 scoop install aria2 git 7zip go --global
 
 scoop install curl grep sed less touch ruby perl openssh --global
-scoop install ripgrep neovim adb  --global
+scoop install ripgrep neovim adb dos2unix --global
 scoop install python --global
-
 scoop bucket add extras
 scoop install steamcmd qbittorrent-portable android-sdk rufus --global
 
