@@ -11,7 +11,7 @@ scoop install sudo
 scoop install sudo --global
 scoop install aria2 git 7zip --global
 
-scoop install curl grep sed less touch ruby perl openssh --global
+scoop install curl grep sed less touch ruby perl openssh jq --global
 scoop install ripgrep neovim adb dos2unix --global
 scoop install python gdrive --global
 scoop bucket add extras
