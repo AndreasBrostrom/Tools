@@ -26,7 +26,6 @@ alias spotify-doc='google-chrome --app=https://github.com/hrkfdn/ncspot/blob/dev
 alias chrome='google-chrome'
 alias screen='echo Running: scrcpy; scrcpy'
 alias youtube='chrome --app=https://youtube.com/'
-alias ryver='chrome --app=https://playipp.ryver.com/index.html#users/1494170/chat'
 alias sneek='chrome --app=https://sneek.io/app/playipp'
 
 # ADB shorts
