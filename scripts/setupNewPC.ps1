@@ -43,7 +43,7 @@ choco install discord
 choco install slack
 choco install spotify
 choco install teamviewer
-
+choco install obs-studio
 
 Write-Host "Downloading drives and programs for gaming..." -ForegroundColor green
 Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile/Downloads/TrackIR_5.4.2.exe"
