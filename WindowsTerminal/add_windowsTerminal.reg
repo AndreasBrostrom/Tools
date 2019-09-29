@@ -1,0 +1,18 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
+@="Windows terminal here"
+"Icon"="%ProgramFiles%\\WindowsApps\\Microsoft.WindowsTerminal_0.5.2681.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+"Extended"=""
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe"
+
+
+[HKEY_CLASSES_ROOT\Directory\shell\wt]
+@="Windows terminal here"
+"Icon"="%ProgramFiles%\\WindowsApps\\Microsoft.WindowsTerminal_0.5.2681.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+"Extended"=""
+
+[HKEY_CLASSES_ROOT\Directory\shell\wt\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe"

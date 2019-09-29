@@ -9,6 +9,6 @@ Here you can find scripts and regestry edits to customize your computer more.
 - **VS Code** - VS Code regestry edits
 - **WindowsBatchRC** - A .bashrc copy but for windows.
 - **WindowsDefender** - Disabler and removal of defender from context menu.
-- **WindowsTerminalThemes** - Saved converted JSON style files for [Windows Terminal](https://github.com/microsoft/terminal). More can be found [here](https://github.com/mbadolato/iTerm2-Color-Schemes).
+- **WindowsTerminal** - Context right click and saved converted JSON style files for [Windows Terminal](https://github.com/microsoft/terminal). More can be found [here](https://github.com/mbadolato/iTerm2-Color-Schemes).
 - **Scripts** - Contain misc scripts, for new installed systems.
 - **Tools** - Tools for difrent sort of tasks.
