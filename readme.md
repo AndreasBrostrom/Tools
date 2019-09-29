@@ -1,4 +1,4 @@
-Here you can find scripts and regestry edits to custumize your computer more.
+Here you can find scripts and regestry edits to customize your computer more.
 
 - **Arma3Development** - Scripts that related to Arma Development
 - **CMDPowershellParallel** - This registry edit allow you to open a cmd terminal as well as powershell in the context menu.
