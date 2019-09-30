@@ -1,0 +1,10 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_CLASSES_ROOTDirectorybackgroundshellgit_gui]
+[-HKEY_CLASSES_ROOTDirectorybackgroundshellgit_shell]
+[-HKEY_CLASSES_ROOTDirectoryShellgit_gui]
+[-HKEY_CLASSES_ROOTDirectoryShellgit_shell]
+[-HKEY_LOCAL_MACHINESOFTWAREClassesDirectorybackgroundshellgit_gui] 
+[-HKEY_LOCAL_MACHINESOFTWAREClassesDirectorybackgroundshellgit_shell]
+[-HKEY_LOCAL_MACHINESOFTWAREClassesDirectoryshellgit_gui] 
+[-HKEY_LOCAL_MACHINESOFTWAREClassesDirectoryshellgit_shell] 
