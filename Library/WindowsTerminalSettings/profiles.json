@@ -15,7 +15,9 @@
             "source": "Windows.Terminal.Wsl",
             "hidden": false,
 
-            "startingDirectory": "\\\\wsl$\\Ubuntu\\home\\andre",
+            //"startingDirectory": "\\\\wsl$\\Ubuntu\\home\\andre",
+            "startingDirectory": ".",
+
             "colorScheme" : "Ubuntu",
             "fontFace" : "Ubuntu Mono",
             "fontSize" : 12,
@@ -28,6 +30,8 @@
             "name": "cmd",
             "commandline": "cmd.exe",
             "hidden": false,
+
+            "startingDirectory": "%USERPROFILE%",
 
             "colorScheme" : "Ubuntu",
             "fontFace" : "Ubuntu Mono",
@@ -53,6 +57,7 @@
     // Add custom color schemes to this array
     "schemes": [
         {
+            "name" : "Ubuntu",
             "background" : "#300A24",
             "black" : "#2E3436",
             "blue" : "#3465A4",
@@ -67,7 +72,6 @@
             "cyan" : "#06989A",
             "foreground" : "#EEEEEC",
             "green" : "#4E9A06",
-            "name" : "Ubuntu",
             "purple" : "#75507B",
             "red" : "#CC0000",
             "white" : "#D3D7CF",
