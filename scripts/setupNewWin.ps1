@@ -58,13 +58,16 @@ New-Item -itemtype "directory" -path "$Env:userprofile\.scripts"
 (get-item $Env:userprofile\.scripts).Attributes += 'Hidden'
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.scripts", "User")
 
-New-Item -itemtype "directory" -path "C:\Library"
-New-Item -itemtype Junction -path "$Env:userprofile" -name "Library" -value "C:\Library"
+New-Item -itemtype "directory" -path "C:\Programs"
+New-Item -itemtype Junction -path "$Env:userprofile" -name "Library" -value "C:\Programs"
+
+New-Item -itemtype "directory" -path "C:\Programs\Bin"
+[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine")
 
 Write-Output "Setting up symbolic links and directories..."
 New-Item -itemtype Junction -path "C:\" -name "Home" -value "$Env:userprofile"
 New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp"
-New-Item -itemtype Junction -path "C:\Library\" -name "SteamApps" -value "C:\Program Files\Steam\steamapps"
+New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Program Files\Steam\steamapps"
 
 
 Write-Output "Setting up shims..."
