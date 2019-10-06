@@ -2,7 +2,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
 @="Windows terminal here"
-"Icon"="%ProgramFiles%\\WindowsApps\\Microsoft.WindowsTerminal_0.5.2681.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+"Icon"="%ProgramFiles%\\WindowsApps\\Microsoft.WindowsTerminal_0.5.2762.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
 "Extended"=""
 
 [HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
@@ -11,7 +11,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\Directory\shell\wt]
 @="Windows terminal here"
-"Icon"="%ProgramFiles%\\WindowsApps\\Microsoft.WindowsTerminal_0.5.2681.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+"Icon"="%ProgramFiles%\\WindowsApps\\Microsoft.WindowsTerminal_0.5.2762.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
 "Extended"=""
 
 [HKEY_CLASSES_ROOT\Directory\shell\wt\command]

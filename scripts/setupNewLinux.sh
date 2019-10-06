@@ -10,14 +10,16 @@ sudo apt update -y
 sudo apt full-upgrade -y
 
 sudo apt install git -y
-sudo apt install neovim opessh android-sdk dos2unix ripgrep -y
-sudo apt install ninja rust python3 -y
+sudo apt install neovim android-sdk dos2unix -y
+sudo apt install ninja-build python3 python3-pip -y
 
 sudo apt install steam-installer -y
 
 ######################################################
 if [ ! -x "$IS_WSL" ]; then
     sudo apt install snapd -y
+
+    sudo snap install ripgrep
 
     sudo snap install code --classic
 
@@ -89,8 +91,6 @@ alias spotify-doc='google-chrome --app=https://github.com/hrkfdn/ncspot/blob/dev
 alias chrome='google-chrome'
 alias screen='echo Running: scrcpy; scrcpy'
 alias youtube='chrome --app=https://youtube.com/'
-alias ryver='chrome --app=https://playipp.ryver.com/index.html#users/1494170/chat'
-alias sneek='chrome --app=https://sneek.io/app/playipp'
 
 # ADB shorts
 alias adb-reverse='adb reverse tcp:8081 tcp:8081'
