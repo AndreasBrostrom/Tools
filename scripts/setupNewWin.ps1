@@ -50,6 +50,9 @@ choco install teamviewer
 choco install obs-studio
 
 choco install powershell-core
+New-Item -itemtype "file" -path "C:\Program Files\PowerShell\6\profile.ps1"
+New-Item -itemtype SymbolicLink -path "$Env:userprofile" -name ".psrc" -value "C:\Program Files\PowerShell\6\profile.ps1"
+(get-item $Env:userprofile\.psrc).Attributes += 'Hidden'
 
 
 Write-Host "Downloading drives and programs for gaming..." -ForegroundColor green
