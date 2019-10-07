@@ -51,7 +51,7 @@
             "fontFace" : "Ubuntu Mono",
             "fontSize" : 12,
             "useAcrylic": true,
-            "acrylicOpacity" : 0.5,
+            "acrylicOpacity" : 0.5
         },
         {
             // Make changes here to the powershell.exe profile
