@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 IS_WSL=/mnt/c/WINDOWS/system32/wsl.exe
-if [ -x "$IS_WSL" ]; then
-    python3 setupNewWSL.py
-fi
 
 ######################################################
 sudo apt update -y
@@ -27,6 +24,18 @@ if [ ! -x "$IS_WSL" ]; then
 
     sudo snap install discord
     sudo snap install slack --classic
+fi
+######################################################
+
+if [ -x "$IS_WSL" ]; then
+echo Adding a path mover to .bashrc...
+echo """
+# Set yout path in home if your in the system32 directory
+if [ \"\${PWD}\" == \"/mnt/c/Windows/system32\" ]; then
+    cd
+fi
+""" >> ~/.bashrc
+    python3 setupNewWSL.py
 fi
 
 ######################################################

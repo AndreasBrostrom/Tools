@@ -49,14 +49,25 @@ choco install spotify
 choco install teamviewer
 choco install obs-studio
 
+
+
 choco install powershell-core
-New-Item -itemtype "file" -path "C:\Program Files\PowerShell\6\profile.ps1"
-New-Item -itemtype SymbolicLink -path "$Env:userprofile" -name ".psrc" -value "C:\Program Files\PowerShell\6\profile.ps1"
+New-Item -itemtype "file" -path "$Env:userprofile\Documents\PowerShell\profile.ps1"
+New-Item -itemtype SymbolicLink -path "$Env:userprofile" -name ".psrc" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
+New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
 (get-item $Env:userprofile\.psrc).Attributes += 'Hidden'
 
 
 Write-Host "Downloading drives and programs for gaming..." -ForegroundColor green
 Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile/Downloads/TrackIR_5.4.2.exe"
+
+Invoke-WebRequest https://media.roccat.org/driver/Tyon/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip -OutFile "$Env:userprofile/Downloads/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip"
+Expand-Archive "$Env:userprofile/Downloads/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" -DestinationPath "$Env:userprofile/Downloads/"
+Remove-Item "$Env:userprofile/Downloads/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip"
+
+Invoke-WebRequest https://download01.logi.com/web/ftp/pub/techsupport/gaming/LGS_9.02.65_x64_Logitech.exe -OutFile "$Env:userprofile/Downloads/LGS_9.02.65_x64_Logitech.exe"
+
+Write-Host "Drives packages downloaded and ready..." -ForegroundColor blue
 
 
 Write-Host "Installing scoop packages..." -ForegroundColor green
@@ -105,4 +116,4 @@ C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe"
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe"
 
-Write-Host "Starting up..." -ForegroundColor green
+Write-Host "Script completed." -ForegroundColor green

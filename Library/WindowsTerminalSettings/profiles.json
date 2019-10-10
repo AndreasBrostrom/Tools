@@ -5,19 +5,33 @@
 {
     "$schema": "https://aka.ms/terminal-profiles-schema",
 
-    "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+    "defaultProfile": "{58ad8b0c-3ef8-5f4d-bc6f-13e4c00f2530}",
 
     "profiles":
     [
-        {
-            "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-            "name": "Ubuntu",
-            "source": "Windows.Terminal.Wsl",
-            "hidden": false,
+        // {
+        //     "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+        //     "name": "Ubuntu",
+        //     "source": "Windows.Terminal.Wsl",
+        //     "hidden": false,
 
-            //"startingDirectory": "\\\\wsl$\\Ubuntu\\home\\andre",
-            "startingDirectory": ".",
+        //     //"startingDirectory": "\\\\wsl$\\Ubuntu\\home\\andre",
+        //     "startingDirectory": ".",
             
+        //     "colorScheme" : "OneHalfDark",
+        //     "fontFace" : "Ubuntu Mono",
+        //     "fontSize" : 12,
+        //     "useAcrylic": true,
+        //     "acrylicOpacity" : 0.5
+        // },
+        {
+            "guid": "{58ad8b0c-3ef8-5f4d-bc6f-13e4c00f2530}",
+            "hidden": false,
+            "name": "Debian",
+            "source": "Windows.Terminal.Wsl",
+
+            "startingDirectory": ".",
+                    
             "colorScheme" : "OneHalfDark",
             "fontFace" : "Ubuntu Mono",
             "fontSize" : 12,
