@@ -1,28 +1,30 @@
 #Requires -RunAsAdministrator
+if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shell..." -ForegroundColor Red; exit }    
+
 # Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
 # GLOBALS
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/ColdEvul/arma3-scoop-bucket.git'
 
-$scoop_pkg        = 'sudo', 'aria2', 'git', '7zip', 'curl',
+$scoop_pkg        = 'git', 'curl',
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix',
                     'openssh', 'neovim', 'gdrive', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
                     'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
                     'armake', 'hemtt'
 
-$choco_pkg        = 'googlechrome', 'vscode',
+$choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017', 'KB2919355', 'KB2919442', 'KB2999226', 'KB3033929', 'KB3035131', 
+                    'googlechrome', 'vscode',
                     'microsoft-windows-terminal',
                     'winrar', 'vlc', 'spotify', 'teamviewer', 'TortoiseGit',
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
-                    'powershell-core'
+                    'powershell-core', 'ext2fsd'
+
 
 # Script start
 Write-Host "Starting up..." -ForegroundColor Blue
-
-
 
 # Installing scoop
 Write-Host "Setting up Scoop..." -ForegroundColor Blue
@@ -42,6 +44,9 @@ foreach ($buckets in $scoop_buckets) {
 
 # Install scoop packages
 Write-Host "Installing Scoop packages..."
+
+scoop install sudo aria2 7zip
+
 foreach ($pkg in $scoop_pkg) {
     if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
         Write-Host "Installing $pkg..."
