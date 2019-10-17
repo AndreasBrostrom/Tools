@@ -1,0 +1,19 @@
+
+export PATH=$PATH:~/.scripts
+
+# Android
+export ANDROID_HOME=/home/andre/android-sdk
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+
+export PATH=$PATH:/snap/bin
+
+# JAVA
+export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64'
+
+export PATH=$PATH:~/.scripts
+
+# Android
+export ANDROID_HOME=/home/andre/android-sdk
+export PATH=$PATH:/tools/bin
+export PATH=$PATH:/platform-tools
+
