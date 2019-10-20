@@ -1,6 +1,5 @@
  
 # Tools and systems
-alias dir='ls'
 alias sys-update='sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y; sudo snap refresh; echo All updates are completed.'
 
 # Python
