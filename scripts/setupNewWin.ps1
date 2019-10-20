@@ -16,12 +16,12 @@ $scoop_pkg        = 'git', 'curl',
 $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017', 'KB2919355', 'KB2919442', 'KB2999226', 'KB3033929', 'KB3035131', 
                     'googlechrome', 'vscode',
                     'microsoft-windows-terminal',
-                    'winrar', 'vlc', 'spotify', 'teamviewer', 'TortoiseGit',
+                    'winrar', 'vlc', 'spotify', 'teamviewer', 
+                    #'TortoiseGit',
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
-                    'powershell-core', 'ext2fsd'
-
+                    'powershell-core', 'ext2fsd --version=0.68.0.20161111', 'windows-tweaker'
 
 # Script start
 Write-Host "Starting up..." -ForegroundColor Blue
