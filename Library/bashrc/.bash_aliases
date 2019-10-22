@@ -1,5 +1,6 @@
  
 # Tools and systems
+alias dir='ls'
 alias sys-update='sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y; sudo snap refresh; echo All updates are completed.'
 
 # Python
@@ -51,4 +52,5 @@ alias g-rfpp='g-rfpp'
 if [[ -d "/data/data/com.termux/" ]]; then
     alias sudo='su'
     alias sys-update='apt update && apt full-upgrade -y && apt autoremove -y;'
+    alias toast='termux-toast'
 fi

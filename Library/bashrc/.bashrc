@@ -38,8 +38,9 @@ if grep -iq 'microsoft' /proc/version &> /dev/null; then
     fi
 fi
 if [[ -d "/data/data/com.termux/" ]]; then
+    cd
     clear
-    PS1='\033[01;32m\]andre@E-Phone\[\033[0m\]:\[\033[01;34m\]\w\[\033[00m\]\n\$ '
+    PS1='\[\033[01;32m\]andre@E-Phone\[\033[0m\]:\[\033[01;34m\]\w\[\033[00m\]\n\$ '
 fi
 
 # ls aliases
