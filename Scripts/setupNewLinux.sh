@@ -7,8 +7,10 @@ sudo apt update -y
 sudo apt full-upgrade -y
 
 sudo apt install git -y
-sudo apt install neovim android-sdk dos2unix -y
-sudo apt install ninja-build python3 python3-pip -y
+sudo apt install neovim android-sdk dos2unix jq -y
+
+sudo apt install cargo ninja-build -p
+sudo apt install python3 python3-pip -y
 
 sudo apt install steam-installer -y
 
@@ -20,6 +22,8 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 
     sudo snap install code --classic
 
+    sudo snap install powershell --classic
+
     sudo snap install spotify
 
     sudo snap install discord
@@ -28,6 +32,11 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
     sudo snap install scrcpy
     sudo snap install vlc
 fi
+
+# Installing other files
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb
+sudo dpkg -i ripgrep_11.0.2_amd64.deb
+rm ripgrep_11.0.2_amd64.deb
 
 # Setup WSL if exist
 if grep -iq 'microsoft' /proc/version &> /dev/null; then

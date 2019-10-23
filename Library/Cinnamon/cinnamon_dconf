@@ -1,0 +1,130 @@
+[/]
+extension-cache-updated=1571844517
+desktop-effects-unmaximize-transition='easeNone'
+desktop-effects-maximize-transition='easeInExpo'
+applet-cache-updated=1570718528
+desktop-effects-map-effect='traditional'
+hotcorner-layout=['expo:false:0', 'scale:false:0', 'scale:false:0', 'desktop:false:0']
+desktop-effects-close-effect='traditional'
+enabled-desklets=@as []
+desktop-effects-unmaximize-time=100
+desktop-effects-map-time=100
+panel-zone-icon-sizes='[{"panelId": 1, "left": 0, "center": 0, "right": 24}, {"panelId": 2, "left": 0, "center": 0, "right": 24}]'
+desktop-effects-minimize-effect='traditional'
+desklet-snap-interval=25
+prevent-focus-stealing=false
+panels-height=['1:40', '2:40']
+next-applet-id=25
+desktop-effects-map-transition='easeOutQuad'
+desktop-effects-tile-transition='easeInQuad'
+desktop-effects-unmaximize-effect='none'
+panels-enabled=['1:0:bottom', '2:1:bottom']
+desktop-effects-maximize-time=100
+desktop-effects-maximize-effect='none'
+enabled-applets=['panel1:left:0:menu@cinnamon.org:0', 'panel1:left:1:grouped-window-list@cinnamon.org:2', 'panel1:right:1:systray@cinnamon.org:3', 'panel1:right:2:notifications@cinnamon.org:4', 'panel1:right:3:printers@cinnamon.org:5', 'panel1:right:5:keyboard@cinnamon.org:7', 'panel1:right:7:network@cinnamon.org:9', 'panel1:right:9:power@cinnamon.org:11', 'panel1:right:10:calendar@cinnamon.org:12', 'panel2:right:6:calendar@cinnamon.org:16', 'panel2:left:1:grouped-window-list@cinnamon.org:18', 'panel2:right:1:sound@cinnamon.org:23', 'panel2:left:0:menu@cinnamon.org:24']
+desktop-effects-minimize-time=160
+alttab-switcher-delay=100
+desktop-effects-tile-effect='none'
+desktop-effects-close-transition='easeOutQuad'
+enabled-extensions=['watermark@germanfr']
+bring-windows-to-current-workspace=false
+panel-edit-mode=false
+panels-show-delay=['1:0', '2:0']
+desklet-cache-updated=1571844582
+desktop-effects-close-time=120
+next-desklet-id=2
+panels-hide-delay=['1:0', '2:0']
+favorite-apps=['nemo.desktop', 'org.gnome.Terminal.desktop', 'google-chrome.desktop']
+desktop-effects-minimize-transition='easeInQuad'
+desktop-effects-tile-time=100
+panels-autohide=['1:false', '2:false']
+no-adjacent-panel-barriers=false
+
+[settings-daemon/plugins/power]
+lock-on-suspend=true
+sleep-display-ac=7200
+
+[settings-daemon/plugins/xsettings]
+buttons-have-icons=false
+menus-have-icons=true
+
+[settings-daemon/peripherals/touchpad]
+motion-threshold=1
+
+[settings-daemon/peripherals/keyboard]
+repeat-interval=uint32 30
+delay=uint32 500
+numlock-state='on'
+
+[settings-daemon/peripherals/mouse]
+drag-threshold=8
+custom-acceleration=true
+motion-acceleration=2.905241935483871
+custom-threshold=false
+double-click=418
+motion-threshold=1
+
+[muffin]
+resize-threshold=24
+tile-hud-threshold=25
+attach-modal-dialogs=false
+
+[desktop/interface]
+clock-show-date=false
+cursor-size=24
+cursor-blink-time=1200
+text-scaling-factor=1.0
+icon-theme='Mint-X-Red'
+gtk-theme='Mint-Y-Dark-Red'
+toolkit-accessibility=true
+
+[desktop/keybindings]
+looking-glass-keybinding=@as []
+
+[desktop/keybindings/media-keys]
+screensaver=['<Super>l', 'XF86ScreenSaver']
+
+[desktop/media-handling]
+autorun-never=false
+
+[desktop/screensaver]
+lock-enabled=false
+
+[desktop/applications/calculator]
+exec='gnome-calculator'
+
+[desktop/applications/terminal]
+exec='gnome-terminal'
+
+[desktop/session]
+idle-delay=uint32 0
+
+[desktop/wm/preferences]
+min-window-opacity=30
+button-layout='menu:minimize,maximize,close'
+theme='Mint-Y-Dark'
+
+[desktop/a11y/applications]
+screen-keyboard-enabled=true
+
+[desktop/sound]
+event-sounds=false
+
+[desktop/background]
+picture-uri='file:///home/andre/Pictures/Wallpapers/Hi-Tech-Wallpaper-12.jpg'
+primary-color='#103610361036'
+picture-options='zoom'
+
+[desktop/background/slideshow]
+image-source='directory:///home/andre/Pictures/Wallpapers'
+random-order=false
+delay=15
+slideshow-enabled=false
+
+[theme]
+symbolic-relative-size=0.67000000000000004
+theme-cache-updated=1571844726
+name='Mint-Y-Dark-Red'
+
+[cinnamon-session]
+quit-time-delay=60
