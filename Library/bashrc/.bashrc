@@ -31,7 +31,7 @@ shopt -s checkwinsize
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # Check OS and set up prompt
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
 if grep -iq 'microsoft' /proc/version &> /dev/null; then
     if [[ "$PWD" = "/mnt/c/Windows/system32" || "$PWD" = "/mnt/c/WINDOWS/system32" ]]; then
       cd ~
@@ -40,7 +40,7 @@ fi
 if [[ -d "/data/data/com.termux/" ]]; then
     cd
     clear
-    PS1='\[\033[01;32m\]andre@E-Phone\[\033[0m\]:\[\033[01;34m\]\w\[\033[00m\]\n\$ '
+    PS1='\[\033[01;32m\]andre@E-Phone\[\033[0m\] \[\033[01;34m\]\w\[\033[00m\]\n\[\033[01;02m\]\$\[\033[00m\] '
 fi
 
 # ls aliases
