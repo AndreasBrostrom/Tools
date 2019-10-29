@@ -8,7 +8,7 @@ $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/ColdEvul/arma3-scoo
 
 $scoop_pkg        = 'git', 'curl',
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix',
-                    'openssh', 'neovim', 'gdrive', 'scrcpy',
+                    'neovim', 'gdrive', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
                     'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
                     'armake', 'hemtt'
@@ -44,13 +44,20 @@ foreach ($buckets in $scoop_buckets) {
 
 # Install scoop packages
 Write-Host "Installing Scoop packages..."
-
-scoop install sudo aria2 7zip
-
+# Basic Packages
+$scoop_defult_pkg = 'sudo', 'aria2', '7zip'
+foreach ($pkg in $scoop_defult_pkg) {
+    if (![System.IO.Directory]::Exists("$env:USERPROFILE\scoop\apps\$pkg")) {
+        Write-Host "Installing $pkg..."
+        scoop install $pkg >$null 2>&1
+    } else {
+        Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
+    }
+}
 foreach ($pkg in $scoop_pkg) {
     if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
         Write-Host "Installing $pkg..."
-        scoop install $pkg --global >$null 2>&1
+        scoop install $pkg -g >$null 2>&1
     } else {
         Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
     }
@@ -64,16 +71,15 @@ Write-Host "Setting up Chocolately..." -ForegroundColor Blue
 if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
     Write-Host "Installing Chocolately..." -ForegroundColor green
     Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    Write-Host "Changeing and setting some paths for Chocolately..."
+    choco feature enable -n allowGlobalConfirmation >$null 2>&1
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
 } else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
-
-Write-Host "Changeing and setting some paths for Chocolately..."
-choco feature enable -n allowGlobalConfirmation >$null 2>&1
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
 
 # Chocolately packages
 Write-Host "Installing Chocolately packages..."
 foreach ($pkg in $choco_pkg) {
-    choco search steam --local >$null 2>&1
+    choco search $pkg --local >$null 2>&1
     if (!$?) {
         Write-Host "Installing $pkg..."
         choco install $pkg >$null 2>&1
@@ -100,83 +106,94 @@ Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 
 # Setting up home enviroment
-Write-Host "Setting up home..."
+if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
+    Write-Host "Setting up home..."
 
-New-Item -itemtype "directory" -path "$Env:userprofile\.scripts"
-(get-item $Env:userprofile\.scripts).Attributes += 'Hidden'
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.scripts", "User")
+    New-Item -itemtype "directory" -path "$Env:userprofile\.scripts"
+    (get-item $Env:userprofile\.scripts).Attributes += 'Hidden'
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.scripts", "User")
 
-New-Item -itemtype "directory" -path "C:\Programs"
-New-Item -itemtype Junction -path "$Env:userprofile" -name "Library" -value "C:\Programs"
+    New-Item -itemtype "directory" -path "C:\Programs"
+    New-Item -itemtype Junction -path "$Env:userprofile" -name "Library" -value "C:\Programs"
 
-New-Item -itemtype "directory" -path "C:\Programs\Bin"
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine")
+    New-Item -itemtype "directory" -path "C:\Programs\Bin"
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine")
 
-Write-Host "Setting up symbolic links and directories..."
-New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp"
+    Write-Host "Setting up symbolic links and directories..."
+    New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp"
 
-New-Item -itemtype "directory" -path "C:\Program Files (x86)\Steam\steamapps\common"
-New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Program Files (x86)\Steam\steamapps\common"
+    New-Item -itemtype "directory" -path "C:\Program Files (x86)\Steam\steamapps\common"
+    New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Program Files (x86)\Steam\steamapps\common"
+} else {
+    Write-Host "Home already setup skipping..." -ForegroundColor Yellow
+}
 
+    # Setup cmd
+if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
+    Write-Host "Configurating CMD..." -ForegroundColor Blue
+    Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
+    reg import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
 
-# Setup cmd
-Write-Host "Configurating CMD..." -ForegroundColor Blue
-
-Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
-reg import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
-
-Write-Host "Configuration of CMD complete..." -ForegroundColor Green
-
+    Write-Host "Configuration of CMD complete..." -ForegroundColor Green
+} else {
+    Write-Host "CMD already configured skipping..." -ForegroundColor Yellow
+}
 
 # Setup powershell profile
-Write-Host "Configurating Powershell..." -ForegroundColor Blue
+if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1")) {
+    Write-Host "Configurating Powershell..." -ForegroundColor Blue
+    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\PowerShell\"
+    (get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
+    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
+    (get-item $Env:userprofile\Documents\WindowsPowerShell).Attributes += 'Hidden'
 
-New-Item -itemtype "directory" -path "$Env:userprofile\Documents\PowerShell\"
-(get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
-New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
-(get-item $Env:userprofile\Documents\WindowsPowerShell).Attributes += 'Hidden'
+    if ([System.IO.File]::Exists("$PSScriptRoot\..\Library\PowershellProfile\profile.ps1")) {
+        Write-Host "Profile restored..."
+        Copy-Item "$PSScriptRoot\..\Library\PowershellProfile\profile.ps1" -Destination "$Env:userprofile\Documents\PowerShell\"
+    } else {
+        Write-Host "Creating empty profile..."
+        New-Item -itemtype "file" -path "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    }
+    New-Item -itemtype SymbolicLink -path "$Env:userprofile" -name ".psrc" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    (get-item $Env:userprofile\.psrc).Attributes += 'Hidden'
 
-if ([System.IO.File]::Exists("$PSScriptRoot\..\Library\PowershellProfile\profile.ps1")) {
-    Write-Host "Profile restored..."
-    Copy-Item "$PSScriptRoot\..\Library\PowershellProfile\profile.ps1" -Destination "$Env:userprofile\Documents\PowerShell\"
+    Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
 } else {
-    Write-Host "Creating empty profile..."
-    New-Item -itemtype "file" -path "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    Write-Host "Powershell already configured skipping..." -ForegroundColor Yellow
 }
-New-Item -itemtype SymbolicLink -path "$Env:userprofile" -name ".psrc" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
-New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
-(get-item $Env:userprofile\.psrc).Attributes += 'Hidden'
-
-Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
 
 
 
 # Creating quick links for terminal
-Write-Host "Setting up shims..." -ForegroundColor Blue
-New-Item -itemtype "directory" -path "C:\ProgramData\Chocolatey\shims"
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\shims", "Machine")
+if (![System.IO.Directory]::Exists("C:\ProgramData\Chocolatey\shims")) {
+    Write-Host "Setting up shims..." -ForegroundColor Blue
+    New-Item -itemtype "directory" -path "C:\ProgramData\Chocolatey\shims"
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\shims", "Machine")
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+} else {
+    Write-Host "Shims already setup for common programs skipping..." -ForegroundColor Yellow
+}
 
 
 Write-Host "Adjusting the context menu..." -ForegroundColor Blue
