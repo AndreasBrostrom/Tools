@@ -1,6 +1,6 @@
 # What is this?
-This is a little regestry adjustment that sets up a `.batchrc` in your home directory using `DOSKEY` to set up aliases.
-The aliases is loaded via the `AutoRun` each time you upen a CMD terminal.
+This is a little regestry adjustment that allow you to setup a `.batchrc` in your home directory. The batchrc is built to mimic linux based systems using scripts in cobination with `DOSKEY` make it happen.
+The `.batchrc` is loaded via the `AutoRun` each time you upen a CMD terminal.
 
 ```
 C:\>cowsay Hi! This work in cmd!
@@ -17,18 +17,17 @@ C:\>cowsay Hi! This work in cmd!
 > ***NOTE!** At the moment you are required to add `.script` to your path variable `%USERPROFILE%\.scripts`*
 
 # Avalible commands
-- ls, ll, la, l
-- ln (mklink)
-- rm (del)
-- cat (type)
-- alias (Show all marcos)
-- sys-update (Run windows update and possible extentions)
-- source
-- source-batchrc
-- source-aliases
-- hide (hide all .files and .folder)
-- ifconfig (ipconfig)
-- reboot (shutdown)
+- `cd` (custom cd setting home to ~)
+- `ls`, ll, la, l
+- `rm` (del)
+- `cat` (type)
+- `which` (where)
+- `alias` (Show all marcos)
+- `sys-update` (Run windows update and possible extentions)
+- `source` (call)
+- `hide` (set all .files and .folder to be hidden in the directory)
+- `ifconfig` (ipconfig)
+- `reboot` (shutdown)
 
 ## Avalible extentions
 - Chocolatey
