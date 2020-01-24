@@ -1,6 +1,3 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
 
 # If not running interactively, don't do anything
 case $- in
@@ -40,7 +37,7 @@ fi
 if [[ -d "/data/data/com.termux/" ]]; then
     cd
     clear
-    PS1='\[\033[01;32m\]andre@E-Phone\[\033[0m\] \[\033[01;34m\]\w\[\033[00m\]\n\[\033[01;02m\]\$\[\033[00m\] '
+    PS1='\[\033[01;32m\]andre@E-Phone\[\033[0m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
 fi
 
 # ls aliases
