@@ -1,7 +1,8 @@
  
 # Tools and systems
-alias sys-update='sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y; sudo snap refresh; echo All updates are completed.'
 alias dir='ls -l'
+alias sys-update='sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y; sudo snap refresh; echo All updates are completed.'
+alias lock='cinnamon-screensaver-command -l; xset dpms force off'
 
 # cd
 alias ..='cd ..'
@@ -34,13 +35,15 @@ alias adb-reverse='adb reverse tcp:8081 tcp:8081'
 alias adb-r='adb-reverse'
 alias adb-p='adb-push'
 
-
 # Git shortcuts
 alias g-s='git status'
 alias g-c='git checkout'
-alias g-f='git fetch --all --prune'
+
 alias g-r='git rebase'
-alias g-u='git rebase master'
+alias g-u='git rebase origin/master'
+
+alias g-f='git fetch --all --prune'
+
 alias g-fr='g-f; g-r'
 alias g-rf='g-fr'
 alias g-fu='g-f; g-u'
@@ -53,7 +56,6 @@ alias g-frp='g-p; g-rf'
 alias g-rfp='g-frp'
 alias g-frpp='g-frp; g-pp'
 alias g-rfpp='g-rfpp'
-
 
 # Termux
 if [[ -d "/data/data/com.termux/" ]]; then
