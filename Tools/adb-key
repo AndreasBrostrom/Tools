@@ -3,25 +3,41 @@
 set -e
 
 # Help
-if [ "$1" == "--help" ]; then
+if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
     echo "Usage: adb-key [OPTION]"
     echo ""
     echo "Mandatory arguments to long options are mandatory for short options too."
-    echo "  -s, --shake                 send a shake event to a connected device"
-    echo "  -k [KEY]                    send a keyevent to a connected device"
-    echo "  -i [TEXT]                   send a text input to a connected device"
+    echo "  -k [KEY]                send a keyevent to a connected device"
+    echo "  -i [TEXT]               send a text input to a connected device"
+    echo ""
+    echo "  -s, --shake             send a shake event to a connected device"
+    echo "  -r, --refresh           send a shake and enter, enter event to connected device"
+    echo "  -h, --help              show this help document"
     echo ""
     exit 0
 fi
 
+
+# Shake event
 if [[ "$1" == "-s" ]] || [[ "$1" == "--shake" ]]; then
     adb shell input keyevent 82
     exit 0
 fi
 
+# React native refresh
+if [[ "$1" == "-r" ]] || [[ "$1" == "--refresh" ]]; then
+    adb shell input keyevent 82
+    adb shell input keyevent KEYCODE_ENTER
+    adb shell input keyevent KEYCODE_ENTER
+    exit 0
+fi
+
 # Key event
 if [ "$1" == "-k" ]; then
+    if [ "$2" == "" ]; then echo "adb-key: missing KEY operator"; exit 1; fi
     keyCode=$2
+    keyCode=${keyCode^^}
+
     if [ "$2" == "UP" ]; then keyCode=DPAD_UP; fi
     if [ "$2" == "DOWN" ]; then keyCode=DPAD_DOWN; fi
     if [ "$2" == "LEFT" ]; then keyCode=DPAD_LEFT; fi
@@ -34,6 +50,7 @@ fi
 
 # Input
 if [ "$1" == "-i" ]; then
+    if [ "$2" == "" ]; then echo "adb-key: missing TEXT operator"; exit 1; fi
     adb shell input text "$2"
     exit 0
 fi
