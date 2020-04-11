@@ -23,8 +23,12 @@ $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017'
                     'obs-studio',
                     'powershell-core', 'ext2fsd --version=0.68.0.20161111', 'windows-tweaker'
 
+$pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
+
 # Script start
 Write-Host "Starting up..." -ForegroundColor Blue
+
+
 
 # Installing scoop
 Write-Host "Setting up Scoop..." -ForegroundColor Blue
@@ -91,6 +95,15 @@ Write-Host "Installation of chocolately packages completed..." -ForegroundColor 
 
 
 
+# Install powershell moduels
+Write-Host "Powershell modules..."
+foreach ($module in $pwsh_modules) {
+    Install-Module -Name $module >$null 2>&1
+}
+Write-Host "Powershell module installation completed..." -ForegroundColor Green
+
+
+
 # Download drives and packages for gaming
 Write-Host "Downloading drives and programs for gaming..." -ForegroundColor Blue
 Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
@@ -114,7 +127,7 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.scripts", "User")
 
     New-Item -itemtype "directory" -path "C:\Programs"
-    New-Item -itemtype Junction -path "$Env:userprofile" -name "Library" -value "C:\Programs"
+    New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
 
     New-Item -itemtype "directory" -path "C:\Programs\Bin"
     [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine")
@@ -131,8 +144,12 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     # Setup cmd
 if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
     Write-Host "Configurating CMD..." -ForegroundColor Blue
-    Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
+    #Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
     reg import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
+
+    Copy-Item "$PSScriptRoot\..\Library\batchrc\.batchrc.cmd" -Destination "$Env:userprofile\"
+    Copy-Item "$PSScriptRoot\..\Library\batchrc\.batch_aliases.cmd" -Destination "$Env:userprofile\"
+    Copy-Item "$PSScriptRoot\..\Library\batchrc\.scripts" -Destination "$Env:userprofile\" -Recurse
 
     Write-Host "Configuration of CMD complete..." -ForegroundColor Green
 } else {
@@ -208,14 +225,18 @@ reg import "$PSScriptRoot\..\CustomNewFileRegFiles\addCreateNewSqfFile.reg" >$nu
 
 # Terminals
 reg import "$PSScriptRoot\..\WindowsTerminal\add_windowsTerminal.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\ContextMenuCMDnPowershell\CMDOnShellHack.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\Powershell6\Add_Powershell6_context.reg" >$null 2>&1
+#reg import "$PSScriptRoot\..\WindowsContextMenu\Cmd_Powershell\CMDOnShellHack.reg" >$null 2>&1
+#reg import "$PSScriptRoot\..\Powershell6\Add_Powershell6_context.reg" >$null 2>&1
 
 # Change windows time
 reg import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
 
-# Remove VLC
-reg import "$PSScriptRoot\..\ContextMenuCleaners\remove_VLC.reg" >$null 2>&1
+# Cleanup Context Menus
+reg import "$PSScriptRoot\..\\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
+
+# Remove unwanted objects
+reg import "$PSScriptRoot\..\\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
