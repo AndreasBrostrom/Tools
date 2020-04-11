@@ -27,25 +27,35 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# Check OS and set up prompt
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
+
+# > Check OS and set up prompt and terminals
+# Windows Linux SubSytstem Terminal
 if grep -iq 'microsoft' /proc/version &> /dev/null; then
     if [[ "$PWD" = "/mnt/c/Windows/system32" || "$PWD" = "/mnt/c/WINDOWS/system32" ]]; then
       cd ~
     fi
 fi
+# Termux Terminal
 if [[ -d "/data/data/com.termux/" ]]; then
     cd
     clear
-    PS1='\[\033[01;32m\]andre@E-Phone\[\033[0m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
 fi
 
+# Handle Terminal Prompt
+if [ -f ~/.bash_prompt ]; then
+    . ~/.bash_prompt
+else
+    PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+fi
+
+####################################################################################################
 # ls aliases
 alias ls='ls --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias dir='dir --color=auto'
+alias dir='ls -l'
 alias vdir='vdir --color=auto'
 
 # grep aliases
@@ -53,6 +63,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+####################################################################################################
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

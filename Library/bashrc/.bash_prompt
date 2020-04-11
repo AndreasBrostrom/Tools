@@ -1,0 +1,65 @@
+
+# Terminal style setup
+
+# Handle creation of defult config
+if [ ! -f ~/.config/prompt/config ]; then
+    mkdir -p ~/.config/prompt && touch ~/.config/prompt/config &&
+    echo "[settings]" > ~/.config/prompt/config
+    echo "    def_prompt_style  = default" >> ~/.config/prompt/config
+    echo "    git_prompt_style  = block" >> ~/.config/prompt/config
+fi
+
+# Get config settings
+CONFIG_PROMPT_STYLE=$(awk -F "=" '/def_prompt_style/ {print $2}' ~/.config/prompt/config | tr -d ' ')
+CONFIG_GIT_PROMPT_STYLE=$(awk -F "=" '/git_prompt_style/ {print $2}' ~/.config/prompt/config | tr -d ' ')
+
+# Style lister picker
+# awk -F "=" '// {print $1}' ~/.config/prompt/styles | sed '/Git Prompt Styles/,$d'
+# [Prompt Styles]
+# "Default"      = "${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+# "Slim"         = "\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+# [Git Prompt Styles]
+
+
+# Get style
+case $CONFIG_PROMPT_STYLE in
+1|slim)       # STYLE: ~ $
+  PROMPT_STYLE="\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+  ;;
+*)            #STYLE: user@server ~ $
+  PROMPT_STYLE='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
+  ;;
+esac
+
+case $CONFIG_GIT_PROMPT_STYLE in
+1|block)
+  GIT_PROMPT_STYLE='\[\033[7;34m\] $(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null ) \[\033[00m\] \[\033[7;33m\] $(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)$(git status | grep -c "nothing to commit, working tree clean" &>/dev/null || echo "*") \[\033[00m\]'"\n${PROMPT_STYLE}"
+  ;;
+2|minimalistic)
+  GIT_PROMPT_STYLE='\[\033[34m\]$(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null )\[\033[0m\] > \[\033[31m\]$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)$(git status | grep -c "nothing to commit, working tree clean" &>/dev/null || echo "*")\[\033[0m\]'"\n${PROMPT_STYLE}"
+  ;;
+*)
+  GIT_PROMPT_STYLE="$PROMPT_STYLE"
+  ;;
+esac
+
+# Set propt
+PS1="${PROMPT_STYLE}"
+
+# > Handle git directories
+if [[ ! $(type -t cd_function_handler) == "function" ]]; then
+  cd_function_handler () {
+    cd $*
+    echo -en "\033]0;$PWD\a"
+    PS1="${PROMPT_STYLE}"
+    if [[ -d .git || $(git rev-parse --git-dir 2> /dev/null) ]]; then
+      PS1="${GIT_PROMPT_STYLE}"
+    fi
+  }
+fi
+alias cd="cd_function_handler"
+
+# Git directory on new terminal
+if [[ -d .git || $(git rev-parse --git-dir 2> /dev/null) ]]; then
+  cd_function_handler .
+fi

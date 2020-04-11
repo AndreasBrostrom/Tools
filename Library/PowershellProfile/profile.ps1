@@ -1,23 +1,47 @@
+#function prompt { (Write-Host ($env:UserName + '@' + $env:ComputerName) -ForegroundColor Green -NoNewline) + (Write-Host ': PS ' -NoNewline) + (Write-Host (get-location)  -ForegroundColor Blue -NoNewline ) + '> '}
+#function prompt { (Write-Host 'PS ' -NoNewline) + (Write-Host (get-location)  -ForegroundColor Blue -NoNewline ) + ' > '}
+function prompt { (Write-Host (get-location)  -ForegroundColor Blue -NoNewline ) + (Write-Host ' PS>' -ForegroundColor DarkGray -NoNewline) + ' '}
 
-function prompt { (Write-Host ($env:UserName + '@' + $env:ComputerName) -ForegroundColor Green -NoNewline) + (Write-Host ': PS ' -NoNewline) + (Write-Host (get-location)  -ForegroundColor Blue -NoNewline ) + '> '}
-
+# Windows linux conversions
 $curren_path = ($pwd).path
 if (!(Compare-Object "$curren_path" "C:\Windows\system32")) { set-location "$env:userprofile" }
 
-# Aliases
-Set-Alias -Name py -Value python
-
-# Windows dir macro extentions
-if ($PSVersionTable.PSVersion.major -eq 6) {
-    function alias_ls { Get-ChildItem -Name }
-    Set-Alias -Name ls -Value alias_ls
+# tail program
+function tail {
+    if ( -not $args[0] ) {
+        Write-Host "usage: tail [file] [filter]"
+    } elseif ( $args[0] -and -not $args[1] ) {
+        Get-Content $args[0] -wait
+    } else {
+        Get-Content $args[0] -wait | Select-String -Patter $args[1]
+    }
 }
 
-function alias_ll { Get-ChildItem -Hidden }
-Set-Alias -Name ll -Value alias_ll
+# which program
+function which {
+    if     ((Get-Command $args).CommandType -eq "ExternalScript") { (Get-Command $args -ShowCommandInfo).Definition }
+    elseif ((Get-Command $args).CommandType -eq "Application") { (Get-Command $args -ShowCommandInfo).Definition }
+    elseif ((Get-Command $args).CommandType -eq "Alias") {
+        Write-Host "$((Get-Command $args).CommandType) $((Get-Command $args).Name) -> $((Get-Command $args).Definition) ($((Get-Command $((Get-Command $args).Definition)).CommandType))"
+    }
+    elseif ((Get-Command $args).CommandType -eq "Function") {
+        Write-Host "$((Get-Command $args).CommandType) $((Get-Command $args).Name)"
+    }
+    else {
+        Get-Command $args -ShowCommandInfo
+    }
+}
 
-function alias_la { Get-ChildItem -Name -Hidden }
-Set-Alias -Name la -Value alias_la
+# Windows dir macro extentions
+$FileHiddenPrefix = ".*"
+if ($PSVersionTable.PSVersion.major -eq 6) {
+    function lssys { Get-ChildItemColorFormatWide $args -Exclude $FileHiddenPrefix }
+    Set-Alias -Name ls -Value lssys
+}
+function ll { Get-ChildItem $args -Force -Exclude NTUSER* }
+function la { Get-ChildItemColorFormatWide $args -Force -Exclude NTUSER*}
+function l  { Get-ChildItemColorFormatWide $args -Exclude $FileHiddenPrefix }
 
-function alias_l  { Get-ChildItem -Name }
-Set-Alias -Name l  -Value alias_l
+# Programs
+Set-Alias -Name py -Value python
+Set-Alias -Name vim -Value nvim

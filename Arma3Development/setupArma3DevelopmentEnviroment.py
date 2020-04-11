@@ -2,7 +2,6 @@
 import os, sys
 import winreg
 
-
 def setup_PDrive(tool_path,pdrive=''):
     if not os.path.exists('P:'):
         os.system('start /d "{}" WorkDrive.exe /Mount {}'.format(tool_path,pdrive))
@@ -13,9 +12,10 @@ def setup_PDrive(tool_path,pdrive=''):
 
 def create_mount_unmount(tool_path,pdrive=''):
     print('Creating quick mount and unmount shortcuts.')
-    os.system('echo start /d "{}" WorkDrive.exe /Mount {} > PDrive_mount.cmd'.format(tool_path,pdrive))
-    os.system('echo start /d "{}" WorkDrive.exe /Dismount > PDrive_umount.cmd'.format(tool_path,pdrive))
-
+    PDrive_mount = open("PDrive_mount.cmd","w+") 
+    PDrive_mount.write('start /d "{}"" WorkDrive.exe /Mount {}'.format(tool_path,pdrive))
+    PDrive_umount = open("PDrive_umount.cmd","w+") 
+    PDrive_umount.write('start /d "{}" WorkDrive.exe /Dismount'.format(tool_path,pdrive))
 
 def request_action(text='Continue?'):
     Continue_Count = 0
@@ -82,14 +82,13 @@ def main():
 
     linking = get_program_path_HKLM('Arma 3','Software\\wow6432Node\\bohemia interactive\\arma 3')
     os.system('mklink /J "! ROOT" "{}"'.format(linking))
-    if not os.path.exists('{}/!Workshop'.format(linking)):
-        os.system('mklink /J "! Workshop" "{}/!Workshop"'.format(linking))
+    os.system('mklink /J "! Workshop" "{}/!Workshop"'.format(linking))
 
     linking = get_program_path_HKCU('Arma 3 Tool','Software\\Bohemia Interactive\\arma 3 tools')
     os.system('mklink /J "! Arma 3 Tools" "{}"'.format(linking))
 
     linking = get_program_path_HKCU('Mikero Tool','Software\Mikero\pboProject')
-    os.system('mklink /J "! Workshop" "{}\\!Workshop"'.format(linking))
+    os.system('mklink /J "! Mikero Tool" "{}"'.format(linking))
     os.system('mklink "Unpack_A3" "{}/bin/Arma3P.cmd"'.format(linking))
 
     # Get AppData
