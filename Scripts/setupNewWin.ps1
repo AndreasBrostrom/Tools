@@ -21,7 +21,7 @@ $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017'
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
-                    'powershell-core', 'ext2fsd --version=0.68.0.20161111', 'windows-tweaker'
+                    'powershell-core', 'ext2fsd --version=0.68.0.20161111', 'windows-tweaker', 'winaero-tweaker'
 
 $pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
 
