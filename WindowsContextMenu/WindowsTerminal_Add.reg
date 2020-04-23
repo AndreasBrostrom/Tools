@@ -1,18 +1,56 @@
 Windows Registry Editor Version 5.00
 
-[HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
-@="Windows terminal here"
-"Icon"="C:\\Programs\\.icon\\terminal.ico"
-"Extended"=""
-
-[HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
-@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe"
-
-
 [HKEY_CLASSES_ROOT\Directory\shell\wt]
 @="Windows terminal here"
 "Icon"="C:\\Programs\\.icon\\terminal.ico"
+"ExtendedSubCommandsKey"="Directory\\ContextMenus\\wt"
 "Extended"=""
 
-[HKEY_CLASSES_ROOT\Directory\shell\wt\command]
-@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe"
+[HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
+@="Windows terminal here"
+"Icon"="C:\\Programs\\.icon\\terminal.ico"
+"ExtendedSubCommandsKey"="Directory\\ContextMenus\\wt"
+"Extended"=""
+
+; Menu items
+; Default
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\0]
+@="Terminal"
+"Icon"="C:\\Programs\\.icon\\terminal.ico"
+"CommandFlags"=dword:00000040
+
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\0\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -d ."
+
+; CMD
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\cmd]
+@="CMD"
+"Icon"="%SystemRoot%\\System32\\imageres.dll,262"
+
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\cmd\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"Command Prompt\" -d ."
+
+; PowerShellCore
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\pwsh]
+@="PowerShellCore"
+"icon"="pwsh.exe"
+
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\pwsh\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"PowerShell\" -d ."
+
+; PowerShell
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\powershell]
+@="PowerShell"
+"icon"="powershell.exe"
+
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\powershell\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"Windows PowerShell\" -d ."
+
+
+; Debian
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\debian]
+@="Linux Shell (Debian)"
+"icon"="C:\\Programs\\.icon\\terminal.ico"
+
+[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\debian\command]
+@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"Debian\" -d ."
