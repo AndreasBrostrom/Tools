@@ -1,3 +1,23 @@
+
+# Check parameters
+param (
+    [Parameter(Mandatory=$false)][Switch]$help,
+    [Parameter(Mandatory=$false)][Switch]$Windows,
+    [Parameter(Mandatory=$false)][Switch]$Linux,
+    [Parameter(Mandatory=$false)][Switch]$Scoop,
+    [Parameter(Mandatory=$false)][Switch]$Chocolatey
+)
+if ($help) {
+    Write-Host  "Usage: upgrade [-w] [-l] [-s] [-c] [-help]"
+    Write-Host  ""
+    Write-Host  "    -h, -help          Show this help"
+    Write-Host  "    -w, -windows       Disable update check for windows"
+    Write-Host  "    -l, -linux         Disable update check for linux subsystem"
+    Write-Host  "    -s, -scoop         Disable update check for Scoop"
+    Write-Host  "    -c, -chocolatey    Disable update check for Chocolatey"
+    exit 0
+}
+
 if ( ![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
     Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.MyCommand.Name)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
     
@@ -26,7 +46,7 @@ function runWindowsUpdate {
 
     Write-Host "Windows update compleat...`n" -ForegroundColor Green
 }
-if ( [bool](Get-Package -Name PSWindowsUpdate) ) {
+if ( -Not $Windows -And [bool](Get-Package -Name PSWindowsUpdate) ) {
     Write-Host "Checking for windows updates..." -ForegroundColor Blue
     runWindowsUpdate
 }
@@ -40,7 +60,7 @@ function runWSLUpdate {
     
     Write-Host "Windows Subsystem for Linux update compleat...`n" -ForegroundColor Green
 }
-if (Test-Path "$env:WINDIR\system32\bash.exe" -PathType Leaf) {
+if ( -Not $Linux -And [bool](Test-Path "$env:WINDIR\system32\bash.exe" -PathType Leaf) ) {
     runWSLUpdate
 }
 
@@ -57,7 +77,7 @@ function runScoopUpdate {
 
     Write-Host "Scoop update compleat...`n" -ForegroundColor Green
 }
-if (Test-Path "$env:USERPROFILE\scoop\shims\scoop" -PathType Leaf) {
+if ( -Not $Scoop -And [bool](Test-Path "$env:USERPROFILE\scoop\shims\scoop" -PathType Leaf) ) {
     Write-Host "Scoop detected..." -ForegroundColor Blue
     runScoopUpdate
 }
@@ -70,7 +90,7 @@ function runChocolateyUpdate {
 
     Write-Host "Chocolatey update compleat...`n" -ForegroundColor Green
 }
-if (Test-Path "$env:ChocolateyInstall\choco.exe" -PathType Leaf) {
+if ( -Not $Chocolatey -And [bool](Test-Path "$env:ChocolateyInstall\choco.exe" -PathType Leaf) ) {
     Write-Host "Chocolatey detected..." -ForegroundColor Blue
     runChocolateyUpdate
 
