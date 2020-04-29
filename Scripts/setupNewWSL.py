@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os, sys, subprocess
-__version__ = 1.0
 
 def get_location(path='',data=''):
     if not path:
@@ -41,9 +40,7 @@ def create_symplink(path='', name=''):
         sys.exit('create_symplink: missing param: name')
 
     if not os.path.isdir('{}/{}'.format(os.path.expanduser('~'), name)):
-        subprocess.call('ln -s {} ~/{}'.format(path,name),
-        stderr=subprocess.STDOUT,
-        shell=True)
+        os.symlink(path, name, True)
         return print('Symplink for {} have been linked to your windows users corresponding directory.'.format(name))
     else:
         return print('Symplink for {} already exist.'.format(name))

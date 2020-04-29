@@ -7,18 +7,14 @@ sudo apt update -y
 sudo apt full-upgrade -y
 
 sudo apt install git -y
-sudo apt install neovim android-sdk dos2unix jq -y
+sudo apt install neovim android-sdk dos2unix jq ripgrep -y
 
 sudo apt install cargo ninja-build -p
 sudo apt install python3 python3-pip -y
 
-sudo apt install steam-installer -y
-
 # Setup and install snap
 if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
     sudo apt install snapd -y
-
-    sudo snap install ripgrep --classic
 
     sudo snap install code --classic
 

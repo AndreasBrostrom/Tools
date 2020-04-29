@@ -90,23 +90,47 @@ function runChocolateyUpdate {
 
     Write-Host "Chocolatey update compleat...`n" -ForegroundColor Green
 }
+
 if ( -Not $Chocolatey -And [bool](Test-Path "$env:ChocolateyInstall\choco.exe" -PathType Leaf) ) {
     Write-Host "Chocolatey detected..." -ForegroundColor Blue
+
+    # Get links on desctop befor installation
+    $Desktops =    "$env:USERPROFILE\Desktop\$ShortcutName",
+                    "C:\Users\Default\Desktop\$ShortcutName",
+                    "C:\Users\Public\Desktop\$ShortcutName" 
+    $preDesktop = @()
+    foreach ($Desktop in $Desktops) {
+        $items = Get-ChildItem -Path $Desktop -Name -Include "*.lnk"
+        foreach ($item in $items) {
+            $preDesktop += $item
+        }
+    }
+
+    # Update choco
     runChocolateyUpdate
 
-    # Cleaning up of unwhanted desktop icons
+    # Cleaning up new unwhanted desktop icons
     Write-Host "Cleaning up Chocolatey created desktop icons...`n"
+
+    $newDesktopLinks = @()
+    foreach ($Desktop in $Desktops) {
+        $items = Get-ChildItem -Path $Desktop -Name -Include "*.lnk"
+        foreach ($item in $items) {
+            if ($preDesktop -contains $item ) {
+            } else {
+                $newDesktopLinks += $item
+            }
+        }
+    }
     function RemoveShortcut-Item($ShortcutName) {
         Remove-Item -Path "$env:USERPROFILE\Desktop\$ShortcutName" >$null 2>&1
         Remove-Item -Path "C:\Users\Default\Desktop\$ShortcutName" >$null 2>&1
         Remove-Item -Path "C:\Users\Public\Desktop\$ShortcutName" >$null 2>&1
     }
-    RemoveShortcut-Item "Spotify.lnk"
-    RemoveShortcut-Item "WindowsTerminal.lnk"
-    RemoveShortcut-Item "OBS Studio.lnk"
-    RemoveShortcut-Item "TeamSpeak 3 Client.lnk"
-    RemoveShortcut-Item "Discord.lnk"
-    RemoveShortcut-Item "Visual Studio Code.lnk"
+    foreach ($item in $newDesktopLinks) {
+        RemoveShortcut-Item $item
+        Write-Host "Cleaned up $item" -ForegroundColor DarkGray
+    }
 }
 
 Write-Host "All updates is completed." -ForegroundColor Green

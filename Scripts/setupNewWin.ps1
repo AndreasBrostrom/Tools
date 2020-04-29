@@ -8,6 +8,7 @@ $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/ColdEvul/arma3-scoo
 
 $scoop_pkg        = 'git', 'curl',
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix',
+                    'zip', '7zip',
                     'neovim', 'gdrive', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
                     'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
@@ -17,17 +18,18 @@ $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017'
                     'googlechrome', 'vscode',
                     'microsoft-windows-terminal',
                     'winrar', 'vlc', 'spotify', 'teamviewer', 
-                    #'TortoiseGit',
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
-                    'powershell-core', 'ext2fsd --version=0.68.0.20161111', 'windows-tweaker', 'winaero-tweaker'
+                    'linux-reader',
+                    'powershell-core', 'winaero-tweaker'
 
 $pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
 
+
+
 # Script start
 Write-Host "Starting up..." -ForegroundColor Blue
-
 
 
 # Installing scoop
@@ -49,7 +51,7 @@ foreach ($buckets in $scoop_buckets) {
 # Install scoop packages
 Write-Host "Installing Scoop packages..."
 # Basic Packages
-$scoop_defult_pkg = 'sudo', 'aria2', '7zip'
+$scoop_defult_pkg = 'sudo', 'aria2', '7zip', 'gow'
 foreach ($pkg in $scoop_defult_pkg) {
     if (![System.IO.Directory]::Exists("$env:USERPROFILE\scoop\apps\$pkg")) {
         Write-Host "Installing $pkg..."
@@ -118,14 +120,16 @@ Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 
 
-# Setting up home enviroment
-if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
+# Setting up home and root enviroment
     Write-Host "Setting up home..."
-
+if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     New-Item -itemtype "directory" -path "$Env:userprofile\.scripts"
     (get-item $Env:userprofile\.scripts).Attributes += 'Hidden'
     [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.scripts", "User")
-
+} else {
+    Write-Host "Home already setup skipping..." -ForegroundColor Yellow
+}
+if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     New-Item -itemtype "directory" -path "C:\Programs"
     New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
 
@@ -138,10 +142,10 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     New-Item -itemtype "directory" -path "C:\Program Files (x86)\Steam\steamapps\common"
     New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Program Files (x86)\Steam\steamapps\common"
 } else {
-    Write-Host "Home already setup skipping..." -ForegroundColor Yellow
+    Write-Host "Root already setup skipping..." -ForegroundColor Yellow
 }
 
-    # Setup cmd
+# Setup cmd
 if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
     Write-Host "Configurating CMD..." -ForegroundColor Blue
     #Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
@@ -183,31 +187,29 @@ if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1
 
 
 # Creating quick links for terminal
-if (![System.IO.Directory]::Exists("C:\ProgramData\Chocolatey\shims")) {
+if (![System.IO.Directory]::Exists("C:\Programs\Bin")) {
     Write-Host "Setting up shims..." -ForegroundColor Blue
-    New-Item -itemtype "directory" -path "C:\ProgramData\Chocolatey\shims"
-    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\shims", "Machine")
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\ProgramData\Chocolatey\shims\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
 } else {
     Write-Host "Shims already setup for common programs skipping..." -ForegroundColor Yellow
 }
@@ -216,24 +218,22 @@ if (![System.IO.Directory]::Exists("C:\ProgramData\Chocolatey\shims")) {
 Write-Host "Adjusting the context menu..." -ForegroundColor Blue
 reg import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
 
-reg import "$PSScriptRoot\..\CustomNewFileRegFiles\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\CustomNewFileRegFiles\addCreateNewCppFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\CustomNewFileRegFiles\addCreateNewHppFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\CustomNewFileRegFiles\addCreateNewMdFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\CustomNewFileRegFiles\addCreateNewPythonFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\CustomNewFileRegFiles\addCreateNewSqfFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewCppFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewHppFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewMdFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewPythonFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewSqfFile.reg" >$null 2>&1
 
 # Terminals
-reg import "$PSScriptRoot\..\WindowsTerminal\add_windowsTerminal.reg" >$null 2>&1
-#reg import "$PSScriptRoot\..\WindowsContextMenu\Cmd_Powershell\CMDOnShellHack.reg" >$null 2>&1
-#reg import "$PSScriptRoot\..\Powershell6\Add_Powershell6_context.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsTerminal\WindowsTerminal_Add.reg" >$null 2>&1
 
 # Change windows time
 reg import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
 
 # Cleanup Context Menus
-reg import "$PSScriptRoot\..\\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
 
 # Remove unwanted objects
 reg import "$PSScriptRoot\..\\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
