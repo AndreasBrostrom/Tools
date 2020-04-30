@@ -1,73 +1,64 @@
 #!/usr/bin/env python3
-import os, sys, subprocess
+import os, sys, subprocess, re, pathlib 
 
 def get_location(path='',data=''):
-    if not path:
-        sys.exit('create_symplink: missing param: path')
-    if not data:
-        sys.exit('create_symplink: missing param: data')
+    sys.exit('get_location: missing param: path') if not path else ''
+    sys.exit('get_location: missing param: data') if not data else ''
 
-    reg = subprocess.check_output(['REG.exe QUERY "{}" /f "{}"'.format(path,data)],
+    # checking windows regestry
+    reg = (subprocess.check_output(
+        ['REG.exe QUERY "{}" /f "{}" /t REG_SZ'.format(path,data)],
         stderr=subprocess.STDOUT,
-        shell=True)
-    if len(reg) >= 10:
-        reg = str(reg)
-        reg = reg[:-1]
-        reg = reg[2:]
-        reg = reg.replace('\\r','\n')
-        reg = reg.replace('\\n','')
-        reg = reg.replace('\\\\','/')
-        reg = reg.replace('    ','\n')
-        reg = reg.split('\n')
-
-        new_path = reg[5]
-        new_path = new_path[3:]
-        new_path = '/mnt/c/{}'.format(new_path)
-
-    if "End of search: 1 match(es) found." in reg[7]:
-        new_path = new_path
-    else:
-        new_path = path
-
-    return new_path
+        shell=True)).decode('utf-8')
+    
+    for key in reg.split('\n'):
+        if 'REG_SZ' in key:
+            reg = key
+            reg = re.sub(r'^(.*REG_SZ)|\s+', '', reg)
+            reg = re.sub(r'\\', '/', reg)
+            drive = reg[0].lower()
+            path = re.sub(r'.*:/', '/mnt/{}/'.format(drive), reg)
+            break
+    return path
 
 
 
 def create_symplink(path='', name=''):
-    if not path:
-        sys.exit('create_symplink: missing param: path')
-    if not name:
-        sys.exit('create_symplink: missing param: name')
+    sys.exit('create_symplink: missing param: path') if not path else ''
+    sys.exit('create_symplink: missing param: name') if not name else ''
+    fullHomePath = os.path.join(pathlib.Path.home(), name)
 
-    if not os.path.isdir('{}/{}'.format(os.path.expanduser('~'), name)):
-        os.symlink(path, name, True)
+    try:
+        os.symlink(path, fullHomePath, True)
         return print('Symplink for {} have been linked to your windows users corresponding directory.'.format(name))
-    else:
+    except:
         return print('Symplink for {} already exist.'.format(name))
-    
-    
+
+
 
 def main():
-    print('Prepering to set up symplinks...')
-
-    if not os.name == 'nt':
-        path = 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
-        regestry = 'Desktop'
-        create_symplink(get_location(path,regestry),regestry)
-        regestry = 'Download'
-        create_symplink(get_location(path,regestry),'Downloads')
-        regestry = 'Personal'
-        create_symplink(get_location(path,regestry),'Documents')
-        regestry = 'My Music'
-        create_symplink(get_location(path,regestry),'Music')
-        regestry = 'My Video'
-        create_symplink(get_location(path,regestry),'Videos')
-        regestry = 'My Pictures'
-        create_symplink(get_location(path,regestry),'Pictures')
-    else:
-        sys.exit('Your not running a linux subsystem on a windows computer')
-
-    print('Script completed, happy browsing!')
+    sys.exit('Your not running a linux subsystem on a windows computer') if os.name == 'nt' else print('Prepering to set up symplinks...')
+ 
+    # Get Home linked
+    winUserName = subprocess.run(['whoami.exe'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+    winUserName = re.sub(r'^(.*\\)|(\r)|(\n)', '', winUserName)
+    winHome = os.path.join(os.sep, 'mnt', 'c', 'Users', winUserName)
+    create_symplink(winHome, 'Home')
+       
+    # Link Home directories
+    regPath = 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders'
+    regestry = 'Desktop'
+    create_symplink(get_location(regPath,regestry), regestry)
+    regestry = 'Download'
+    create_symplink(get_location(regPath,regestry), 'Downloads')
+    regestry = 'Personal'
+    create_symplink(get_location(regPath,regestry), 'Documents')
+    regestry = 'My Music'
+    create_symplink(get_location(regPath,regestry), 'Music')
+    regestry = 'My Video'
+    create_symplink(get_location(regPath,regestry), 'Videos')
+    regestry = 'My Pictures'
+    create_symplink(get_location(regPath,regestry), 'Pictures')
 
 if __name__ == "__main__":
     sys.exit(main())
