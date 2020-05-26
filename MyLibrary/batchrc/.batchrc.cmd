@@ -7,10 +7,11 @@ SET PROMPT_DEF=%PROMPT_U%%PROMPT_P%%PROMPT_E%
 PROMPT %PROMPT_DEF%
 
 :: CD adjustments and path setting
-if "%CD%" == "C:\Windows\system32" set isWinSys32P=true
-if "%CD%" == "C:\Windows\System32" set isWinSys32P=true
-if "%CD%" == "C:\WINDOWS\System32" set isWinSys32P=true
-if "%CD%" == "C:\WINDOWS\SYSTEM32" set isWinSys32P=true
+if "%CD%" == "C:\Windows\system32" (set isWinSys32P=true)
+if "%CD%" == "C:\Windows\System32" (set isWinSys32P=true)
+if "%CD%" == "C:\WINDOWS\system32" (set isWinSys32P=true)
+if "%CD%" == "C:\WINDOWS\System32" (set isWinSys32P=true)
+if "%CD%" == "C:\WINDOWS\SYSTEM32" (set isWinSys32P=true)
 if "%isWinSys32P%" == "true" (
    cd %userprofile%
 )
