@@ -1,6 +1,8 @@
+# Set prompt title
+$host.ui.RawUI.WindowTitle = "Powershell Core"
 
 # Set prompt to unix like
-function prompt { (Write-Host (get-location)  -ForegroundColor Blue -NoNewline ) + (Write-Host ' PS>' -ForegroundColor DarkGray -NoNewline) + ' '}
+function prompt { (Write-Host ("$pwd".replace("$($home)", "~")) -ForegroundColor Blue -NoNewline) + (Write-Host ' PS>' -ForegroundColor DarkGray -NoNewline) + ' '}
 
 # Windows linux conversions
 $curren_path = ($pwd).path
