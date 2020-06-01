@@ -11,3 +11,5 @@ Here you can find scripts and regestry edits to customize your computer more.
 - **WindowsDefender** - Windows Defender Disable or Enable.
 - **WindowsNameSpaceFolders** - Windows Namespace Folders remove or enable them
 - **WindowsUTCTime** - Windows Linux Dualboot clock sync
+
+[![ko-fi](https://cdn.ko-fi.com/cdn/kofi2.png?v=2)](https://ko-fi.com/I2I01RWL4)
