@@ -12,6 +12,7 @@ $scoop_pkg        = 'git', 'curl',
                     'neovim', 'gdrive', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
                     'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
+		    'sharpkeys',
                     'armake', 'hemtt'
 
 $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017', 'KB2919355', 'KB2919442', 'KB2999226', 'KB3033929', 'KB3035131', 
