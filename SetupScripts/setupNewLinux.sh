@@ -15,7 +15,8 @@ sudo apt install openjdk-8-jdk -y
 
 # Setup and install snap
 if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
-    
+    sudo apt-get install gparted -y
+
     sudo apt install steam-installer -y
 
     sudo add-apt-repository ppa:gnome-terminator -y
