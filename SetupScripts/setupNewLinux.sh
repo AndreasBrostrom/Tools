@@ -11,9 +11,18 @@ sudo apt install neovim android-sdk dos2unix jq ripgrep -y
 
 sudo apt install cargo ninja-build -p
 sudo apt install python3 python3-pip -y
+sudo apt install openjdk-8-jdk -y
 
 # Setup and install snap
 if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
+    
+    sudo apt install steam-installer -y
+
+    sudo add-apt-repository ppa:gnome-terminator -y
+    sudo apt update -y
+    sudo apt install terminator -y
+    
+    # snap
     sudo apt install snapd -y
 
     sudo snap install code --classic
@@ -27,6 +36,7 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 
     sudo snap install scrcpy
     sudo snap install vlc
+    
 fi
 
 # Setup WSL if exist
@@ -34,12 +44,27 @@ if grep -iq 'microsoft' /proc/version &> /dev/null; then
     python3 setupNewWSL.py
 fi
 
+# Setup Android SDK location
+mkdir ~/.android
+mv ~/android-sdk ~/.android/android-sdk
+
 # Setup bashrc and home
-cp "$SCRIPTPATH/../Library/bashrc/.bashrc" ~/.bashrc
-cp "$SCRIPTPATH/../Library/bashrc/.bash_path" ~/.bash_path
-cp "$SCRIPTPATH/../Library/bashrc/.bash_aliases" ~/.bash_aliases
+cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bashrc" ~/.bashrc
+cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bash_path" ~/.bash_path
+cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bash_aliases" ~/.bash_aliases
+cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.profile" ~/.profile
+
+# Nemo
+mkdir -p ~/.local/share/nemo/actions/
+cp "$SCRIPTPATH/../MyLibrary/Unix/nemo/code.nemo_action" ~/.local/share/nemo/actions/code.nemo_action
+cp "$SCRIPTPATH/../MyLibrary/Unix/nemo/sort_actions.sh" ~/.local/share/nemo/actions/sort_actions.sh
+
+# Templates
+cp "$SCRIPTPATH/../MyLibrary/Unix/Templates/Bash script file.sh" "~/Templates/Bash script file.sh"
+cp "$SCRIPTPATH/../MyLibrary/Unix/Templates/Python script file.py" "~/Templates/Python script file.py"
+cp "$SCRIPTPATH/../MyLibrary/Unix/Templates/SQF script file.sqf" "~/Templates/SQF script file.sqf"
 
 # Setup some scripts
 mkdir ~/.scripts
-cp "$SCRIPTPATH/../Tools/adb-key" ~/.scripts/adb-key
-cp "$SCRIPTPATH/../Tools/adb-push" ~/.scripts/adb-push
+cp "$SCRIPTPATH/../Scripts/adb-key" ~/.bin/adb-key
+cp "$SCRIPTPATH/../Scripts/adb-push" ~/.bin/adb-push
