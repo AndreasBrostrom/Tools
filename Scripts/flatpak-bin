@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -z $* ]]; then
+  echo "Avalible programs"
+  find /var/lib/flatpak/exports/bin/ -type l -mtime -14 -printf '  %f\n'
+  exit 1
+fi
+
+if [ -f ~/Programs/bin/$2 ]; then
+  echo "Updating $2 with new path..."
+  rm ~/Programs/bin/$2
+fi
+
+ln -s /var/lib/flatpak/exports/bin/$1 ~/Programs/bin/$2
+
