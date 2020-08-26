@@ -1,63 +1,121 @@
-
 # Terminal style setup
+
+# Global
+PROMPT_PWD=$PWD
 
 # Handle creation of defult config
 if [ ! -f ~/.config/prompt/config ]; then
     mkdir -p ~/.config/prompt && touch ~/.config/prompt/config &&
     echo "[settings]" > ~/.config/prompt/config
     echo "    def_prompt_style  = default" >> ~/.config/prompt/config
-    echo "    git_prompt_style  = block" >> ~/.config/prompt/config
+    echo "    git_prompt_style  = disabled" >> ~/.config/prompt/config
+    echo "    def_title_style  = default" >> ~/.config/prompt/config
+    echo "    git_title_style  = disabled" >> ~/.config/prompt/config
+    echo "    replace_path_git  = false" >> ~/.config/prompt/config
 fi
 
 # Get config settings
+CONFIG_TITLE_STYLE=$(awk -F "=" '/def_title_style/ {print $2}' ~/.config/prompt/config | tr -d ' ')
 CONFIG_PROMPT_STYLE=$(awk -F "=" '/def_prompt_style/ {print $2}' ~/.config/prompt/config | tr -d ' ')
 CONFIG_GIT_PROMPT_STYLE=$(awk -F "=" '/git_prompt_style/ {print $2}' ~/.config/prompt/config | tr -d ' ')
+CONFIG_GIT_TITLE_STYLE=$(awk -F "=" '/git_title_style/ {print $2}' ~/.config/prompt/config | tr -d ' ')
 
-# Style lister picker
-# awk -F "=" '// {print $1}' ~/.config/prompt/styles | sed '/Git Prompt Styles/,$d'
-# [Prompt Styles]
-# "Default"      = "${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
-# "Slim"         = "\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
-# [Git Prompt Styles]
-
-
-# Get style
+# Get styles
 case $CONFIG_PROMPT_STYLE in
-1|slim)       # STYLE: ~ $
-  PROMPT_STYLE="\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+  1|path|slim)          # STYLE: ~ $
+    PROMPT_STYLE="\[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
   ;;
-*)            #STYLE: user@server ~ $
-  PROMPT_STYLE='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
+  2|slimLight)          # STYLE: ~ $
+    PROMPT_STYLE="\[\033[00m\]\[\033[01;36m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+  ;;
+  0|default|*)          # STYLE: user@server ~ $
+    PROMPT_STYLE='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] '
   ;;
 esac
 
 case $CONFIG_GIT_PROMPT_STYLE in
-1|block)
-  GIT_PROMPT_STYLE='\[\033[7;34m\] $(basename "$(git rev-parse --show-toplevel)" || echo "" &>/dev/null ) \[\033[00m\] \[\033[7;33m\] $(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)$(git status | grep -c "nothing to commit, working tree clean" &>/dev/null || echo "*") \[\033[00m\]'"\n${PROMPT_STYLE}"
+  1|block)
+    GIT_PROMPT_STYLE='\[\033[7;34m\] $(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null ) \[\033[00m\] \[\033[7;33m\] $(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)$(git status | grep -c "nothing to commit, working tree clean" &>/dev/null || echo "*") \[\033[00m\]'"\n${PROMPT_STYLE}"
   ;;
-2|minimalistic)
-  GIT_PROMPT_STYLE='\[\033[34m\]$(basename "$(git rev-parse --show-toplevel)" || echo "" &>/dev/null )\[\033[0m\] > \[\033[31m\]$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)$(git status | grep -c "nothing to commit, working tree clean" &>/dev/null || echo "*")\[\033[0m\]'"\n${PROMPT_STYLE}"
+  2|blockLight)
+    GIT_PROMPT_STYLE='\[\033[7;36m\] $(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null ) \[\033[00m\] \[\033[7;33m\] $(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)$(git status | grep -c "nothing to commit, working tree clean" &>/dev/null || echo "*") \[\033[00m\]'"\n${PROMPT_STYLE}"
   ;;
-*)
-  GIT_PROMPT_STYLE="$PROMPT_STYLE"
+  3|minimalistic)
+    GIT_PROMPT_STYLE='\[\033[34m\]$(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null )\[\033[0m\] > \[\033[31m\]($(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null))\[\033[0m\]'"\n${PROMPT_STYLE}"
+  ;;
+  0|default|disabled|*)
+    GIT_PROMPT_STYLE="$PROMPT_STYLE"
   ;;
 esac
 
-# Set propt
-PS1="${PROMPT_STYLE}"
+# Terminal function handler
+if [[ ! $(type -t prompt_terminal_title_handler) == "function" ]]; then
+  function prompt_terminal_title_handler() {
+    if [[ -d .git || $(git rev-parse --git-dir 2> /dev/null) ]]; then
+      case $CONFIG_GIT_TITLE_STYLE in
+        1|pathRoot)           # STYLE: ../
+          PROMPT_PWD_TITLE='../'`git rev-parse --show-prefix`
+        ;;
+        2|pathHome)           # STYLE: ~/
+          PROMPT_PWD_TITLE='~/'`git rev-parse --show-prefix`
+        ;;
+        3|verboseRoot)        # STYLE: repo (remote/branch) $ ../
+          PROMPT_PWD_TITLE=$(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null )' ('$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)')  ../'`git rev-parse --show-prefix`
+        ;;
+        4|verboseHome)        # STYLE: repo (remote/branch) $ ~/
+          PROMPT_PWD_TITLE=$(basename `git rev-parse --show-toplevel` || echo "" &>/dev/null )' ('$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || git rev-parse --abbrev-ref HEAD || echo "" &>/dev/null)')  ~/'`git rev-parse --show-prefix`
+        ;;
+        0|default|disabled|*) # STYLE: ~
+          PROMPT_PWD_TITLE=$PWD
+        ;;
+      esac
+      #
+    else 
+      PROMPT_PWD_TITLE=$PWD
+    fi
+    case $CONFIG_TITLE_STYLE in
+      1|path)
+        TITLE_STYLE="${PROMPT_PWD_TITLE}"
+      ;;
+      0|default|*)
+        TITLE_STYLE="${USER}@${HOSTNAME}: ${PROMPT_PWD_TITLE}"
+      ;;
+    esac
+    if [[ -d .git || $(git rev-parse --git-dir 2> /dev/null) ]]; then
+      echo -ne "\033]0;${TITLE_STYLE}\007"
+    else
+      case "$BASH_COMMAND" in
+        *\033]0*)
+        ;;
+        *)
+          echo -ne "\033]0;${TITLE_STYLE}\007"
+        ;;
+      esac
+    fi
+    if [ "$1" == "init" ]; then 
+      echo -ne "\033]0;${SHELL}\007"
+    fi
+  }
+fi
 
 # > Handle git directories
 if [[ ! $(type -t cd_function_handler) == "function" ]]; then
   cd_function_handler () {
     cd $*
-    echo -en "\033]0;$PWD\a"
-    PS1="${PROMPT_STYLE}"
+    PROMPT_PWD=$PWD
+    prompt_terminal_title_handler
     if [[ -d .git || $(git rev-parse --git-dir 2> /dev/null) ]]; then
       PS1="${GIT_PROMPT_STYLE}"
+    else
+      PS1="${PROMPT_STYLE}"
     fi
   }
+  alias cd="cd_function_handler"
 fi
-alias cd="cd_function_handler"
+
+# Set propt
+PS1="${PROMPT_STYLE}"
+prompt_terminal_title_handler init
 
 # Git directory on new terminal
 if [[ -d .git || $(git rev-parse --git-dir 2> /dev/null) ]]; then
