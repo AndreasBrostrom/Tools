@@ -54,6 +54,7 @@ cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bashrc" ~/.bashrc
 cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bash_path" ~/.bash_path
 cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bash_aliases" ~/.bash_aliases
 cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.profile" ~/.profile
+cp "$SCRIPTPATH/../MyLibrary/Unix/bashrc/.bash_prompt" ~/.bash_prompt
 
 # Nemo
 mkdir -p ~/.local/share/nemo/actions/
