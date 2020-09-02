@@ -31,6 +31,8 @@ shopt -s checkwinsize
 # > Check OS and set up prompt and terminals
 # Windows Linux SubSytstem Terminal
 if grep -iq 'microsoft' /proc/version &> /dev/null; then
+    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0
+    export LIBGL_ALWAYS_INDIRECT=1
     if [[ "$PWD" = "/mnt/c/Windows/system32" || "$PWD" = "/mnt/c/WINDOWS/system32" ]]; then
       cd ~
     fi
