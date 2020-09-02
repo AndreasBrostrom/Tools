@@ -17,6 +17,11 @@ sudo apt install openjdk-8-jdk -y
 if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
     sudo apt-get install gparted -y
 
+    # install I3
+    sudo apt install i3-wm
+    sudo apt install i3status
+    sudo apt install suckless-tools
+
     sudo apt install steam-installer -y
 
     sudo add-apt-repository ppa:gnome-terminator -y
@@ -65,6 +70,7 @@ cp "$SCRIPTPATH/../MyLibrary/Unix/nemo/sort_actions.sh" ~/.local/share/nemo/acti
 cp "$SCRIPTPATH/../MyLibrary/Unix/Templates/Bash script file.sh" "~/Templates/Bash script file.sh"
 cp "$SCRIPTPATH/../MyLibrary/Unix/Templates/Python script file.py" "~/Templates/Python script file.py"
 cp "$SCRIPTPATH/../MyLibrary/Unix/Templates/SQF script file.sqf" "~/Templates/SQF script file.sqf"
+cp -r "$SCRIPTPATH/../MyLibrary/Unix/.config" "~/."
 
 # Setup some scripts
 mkdir ~/.scripts
