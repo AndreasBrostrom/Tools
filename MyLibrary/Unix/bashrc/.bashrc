@@ -1,8 +1,8 @@
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+    *) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -31,26 +31,29 @@ shopt -s checkwinsize
 # > Check OS and set up prompt and terminals
 # Windows Linux SubSytstem Terminal
 if grep -iq 'microsoft' /proc/version &> /dev/null; then
-    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0
-    export LIBGL_ALWAYS_INDIRECT=1
-    if [[ "$PWD" = "/mnt/c/Windows/system32" || "$PWD" = "/mnt/c/WINDOWS/system32" ]]; then
-      cd ~
-    fi
+  export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0.0
+  export LIBGL_ALWAYS_INDIRECT=1
+  if [[ "$PWD" = "/mnt/c/Windows/system32" || "$PWD" = "/mnt/c/WINDOWS/system32" ]]; then
+    cd ~
+  fi
 fi
 # Termux Terminal
 if [[ -d "/data/data/com.termux/" ]]; then
-    cd
-    clear
+  cd
+  clear
+fi
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  echo -e "\e[2;1mssh login \e[0;32;1m$USER@$HOSTNAME\e[0m"
 fi
 
 # Handle Terminal Prompt
 if [ -f ~/.bash_prompt ]; then
-    . ~/.bash_prompt
+  . ~/.bash_prompt
 else
-    PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
+  PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\] \[\033[01;02m\]\$\[\033[00m\] "
 fi
 
-####################################################################################################
 # ls aliases
 alias ls='ls --color=auto'
 alias ll='ls -alF'
@@ -65,7 +68,6 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-####################################################################################################
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -75,7 +77,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+  . ~/.bash_aliases
 fi
 
 # enable programmable completion features (you don't need to enable
@@ -93,5 +95,5 @@ fi
 # You may want to put all your additions into a separate file like
 # ~/.bash_path, instead of adding them here directly.
 if [ -f ~/.bash_path ]; then
-    . ~/.bash_path
+  . ~/.bash_path
 fi
