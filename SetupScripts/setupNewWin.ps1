@@ -12,13 +12,13 @@ $scoop_pkg        = 'git', 'curl',
                     'neovim', 'gdrive', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
                     'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
-		    'sharpkeys',
+                    'sharpkeys',
                     'armake', 'hemtt'
 
 $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017', 'KB2919355', 'KB2919442', 'KB2999226', 'KB3033929', 'KB3035131', 
                     'googlechrome', 'vscode',
                     'microsoft-windows-terminal',
-                    'winrar', 'vlc', 'spotify', 'teamviewer', 
+                    'winrar', 'vlc', 'teamviewer', #'spotify',
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
@@ -85,9 +85,9 @@ if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
 
 # Chocolately packages
 Write-Host "Installing Chocolately packages..."
+$chocoInstalledPackages=choco list --localonly
 foreach ($pkg in $choco_pkg) {
-    choco search $pkg --local >$null 2>&1
-    if (!$?) {
+    if (!($chocoInstalledPackages -like "*$pkg*")) {
         Write-Host "Installing $pkg..."
         choco install $pkg >$null 2>&1
     } else {
@@ -109,20 +109,29 @@ Write-Host "Powershell module installation completed..." -ForegroundColor Green
 
 # Download drives and packages for gaming
 Write-Host "Downloading drives and programs for gaming..." -ForegroundColor Blue
-Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
-
-Invoke-WebRequest https://media.roccat.org/driver/Tyon/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip -OutFile "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" >$null 2>&1
-Expand-Archive "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" -DestinationPath "$Env:userprofile\Downloads\" >$null 2>&1
-Remove-Item "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" >$null 2>&1
-
-Invoke-WebRequest https://download01.logi.com/web/ftp/pub/techsupport/gaming/LGS_9.02.65_x64_Logitech.exe -OutFile "$Env:userprofile/Downloads/LGS_9.02.65_x64_Logitech.exe" >$null 2>&1
-
+if (![System.IO.File]::Exists("$Env:userprofile\Downloads\TrackIR_5.4.2.exe")) {
+    Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
+} else {
+        Write-Host "TrackIR already downloaded skipping..." -ForegroundColor Yellow
+}
+if (![System.IO.File]::Exists("$Env:userprofile\Downloads\Setup.exe")) {
+    Invoke-WebRequest https://media.roccat.org/driver/Tyon/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip -OutFile "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" >$null 2>&1
+    Expand-Archive "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" -DestinationPath "$Env:userprofile\Downloads\" >$null 2>&1
+    Remove-Item "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" >$null 2>&1
+} else {
+        Write-Host "ROCCAT Tyon already downloaded skipping..." -ForegroundColor Yellow
+}
+if (![System.IO.File]::Exists("$Env:userprofile\Downloads\LGS_9.02.65_x64_Logitech.exe")) {
+    Invoke-WebRequest https://download01.logi.com/web/ftp/pub/techsupport/gaming/LGS_9.02.65_x64_Logitech.exe -OutFile "$Env:userprofile/Downloads/LGS_9.02.65_x64_Logitech.exe" >$null 2>&1
+} else {
+        Write-Host "Logitech already downloaded skipping..." -ForegroundColor Yellow
+}
 Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 
 
 # Setting up home and root enviroment
-    Write-Host "Setting up home..."
+Write-Host "Setting up home..."
 if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     New-Item -itemtype "directory" -path "$Env:userprofile\.scripts"
     (get-item $Env:userprofile\.scripts).Attributes += 'Hidden'
@@ -146,6 +155,8 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
     Write-Host "Root already setup skipping..." -ForegroundColor Yellow
 }
 
+
+
 # Setup cmd
 if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
     Write-Host "Configurating CMD..." -ForegroundColor Blue
@@ -160,6 +171,8 @@ if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
 } else {
     Write-Host "CMD already configured skipping..." -ForegroundColor Yellow
 }
+
+
 
 # Setup powershell profile
 if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1")) {
@@ -188,29 +201,30 @@ if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1
 
 
 # Creating quick links for terminal
-if (![System.IO.Directory]::Exists("C:\Programs\Bin")) {
+if (![System.IO.Directory]::Exists("C:\Programs\bin")) {
     Write-Host "Setting up shims..." -ForegroundColor Blue
+    New-Item -ItemType "directory" -Path "C:\Programs\bin" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
 } else {
     Write-Host "Shims already setup for common programs skipping..." -ForegroundColor Yellow
 }
@@ -219,15 +233,15 @@ if (![System.IO.Directory]::Exists("C:\Programs\Bin")) {
 Write-Host "Adjusting the context menu..." -ForegroundColor Blue
 reg import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
 
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewCppFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewHppFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewMdFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewPythonFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFiles\addCreateNewSqfFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewCppFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewHppFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewMdFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
 
 # Terminals
-reg import "$PSScriptRoot\..\WindowsTerminal\WindowsTerminal_Add.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsContextMenu\WindowsTerminal_Add.reg" >$null 2>&1
 
 # Change windows time
 reg import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
@@ -235,6 +249,7 @@ reg import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$nul
 # Cleanup Context Menus
 reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
 reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
 
 # Remove unwanted objects
 reg import "$PSScriptRoot\..\\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1

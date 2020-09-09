@@ -4,7 +4,7 @@ param (
 )
 
 if ( $help ) {
-    Write-Host  "Usage: syskeybind [TARGET] [DEST]"
+    Write-Host  "Usage: syskey [TARGET] [DEST]"
     Write-Host  ""
     Write-Host  "    -h, -help          show this help"
     Write-Host  "    -l, -list          show current keybinding rule"

@@ -46,16 +46,6 @@ Windows Registry Editor Version 5.00
 [HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\powershell\command]
 @="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"Windows PowerShell\" -d ."
 
-
-; Debian
-[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\l_debian]
-@="Linux Shell (Debian)"
-"icon"="C:\\Programs\\.icon\\terminal.ico"
-
-[HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\l_debian\command]
-@="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"Debian\" -d ."
-
-
 ; Ubuntu
 [HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\l_ubuntu]
 @="Linux Shell (Ubuntu)"
