@@ -9,7 +9,7 @@ $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/ColdEvul/arma3-scoo
 $scoop_pkg        = 'git', 'curl',
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix',
                     'zip', '7zip',
-                    'neovim', 'gdrive', 'scrcpy',
+                    'neovim', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
                     'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
                     'sharpkeys',
@@ -89,7 +89,7 @@ $chocoInstalledPackages=choco list --localonly
 foreach ($pkg in $choco_pkg) {
     if (!($chocoInstalledPackages -like "*$pkg*")) {
         Write-Host "Installing $pkg..."
-        choco install $pkg >$null 2>&1
+        choco install $pkg -y >$null 2>&1
     } else {
         Write-Host "Choco $pkg already installed skipping..." -ForegroundColor Yellow
     }
@@ -100,8 +100,9 @@ Write-Host "Installation of chocolately packages completed..." -ForegroundColor 
 
 # Install powershell moduels
 Write-Host "Powershell modules..."
+Set-PSRepository PSGallery
 foreach ($module in $pwsh_modules) {
-    Install-Module -Name $module >$null 2>&1
+    Install-Module -Name $module -AllowClobber >$null 2>&1
 }
 Write-Host "Powershell module installation completed..." -ForegroundColor Green
 
@@ -129,6 +130,13 @@ if (![System.IO.File]::Exists("$Env:userprofile\Downloads\LGS_9.02.65_x64_Logite
 Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 
+ 
+Write-Host "Applying windows features..." -ForegroundColor Blue
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+wsl.exe --set-default-version 2
+Write-Host "windows features applied" -ForegroundColor Green
+
 
 # Setting up home and root enviroment
 Write-Host "Setting up home..."
@@ -139,7 +147,7 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
 } else {
     Write-Host "Home already setup skipping..." -ForegroundColor Yellow
 }
-if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
+if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
     New-Item -itemtype "directory" -path "C:\Programs"
     New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
 
@@ -252,7 +260,7 @@ reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 
 reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
 
 # Remove unwanted objects
-reg import "$PSScriptRoot\..\\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
+reg import "$PSScriptRoot\..\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
