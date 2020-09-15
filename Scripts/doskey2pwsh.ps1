@@ -1,3 +1,9 @@
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if ( !($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
+    Write-Host "You are not Administrator" -ForegroundColor Red
+    exit 1
+}
+
 if ( !(Test-Path "$env:userprofile\.batch_aliases.cmd" -PathType leaf) ) { Write-Host "No DOSKEY alieases can be descovered" -ForegroundColor Red; exit 1 }
 
 $dosaliases = Get-Content $env:userprofile\.batch_aliases.cmd |

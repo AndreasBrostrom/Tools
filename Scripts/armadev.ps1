@@ -62,11 +62,12 @@ function rpt() {
             Write-Host "No logfiles are avalible to watch"
             exit 1
         }
-        Write-Host "Starting watch of latest RPT log file: $($latestLog.name)"
-        if ( $latestLog -and -not $args[0] ) {
+        if ( $latestLog -and -not $args[1] ) {
+            Write-Host "Starting watch of latest RPT log file $($latestLog.name)"
             Get-Content $latestLog -wait -tail $($Host.UI.RawUI.WindowSize.Height-2)
         } else {
-            Get-Content $latestLog -wait -tail $($Host.UI.RawUI.WindowSize.Height-2) | Select-String -NoEmphasis -Patter $args[0]
+            Write-Host "Starting watch of latest RPT log file $($latestLog.name), with filter: `"$($args[1])`""
+            Get-Content $latestLog -wait -tail $($Host.UI.RawUI.WindowSize.Height-2) | Select-String -NoEmphasis -Patter $args[1]
         }
         exit 0
     }
@@ -120,7 +121,7 @@ function p() {
 
 if ( $args[0] -eq '--help' -or $args[0] -eq '-h' ) { help }
 if ( $args[0] -eq 'tools' ) { tools $args[1] }
-if ( $args[0] -eq 'rpt' ) { rpt $args[1] }
+if ( $args[0] -eq 'rpt' ) { rpt $args[1] $args[2] }
 if ( $args[0] -eq 'p' ) { p $args[1] $args[2] }
 
 if ( $args ) {

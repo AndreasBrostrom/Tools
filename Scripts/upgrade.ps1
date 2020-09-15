@@ -42,11 +42,11 @@ function runWindowsUpdate {
     Write-Host "Checking for updates..."
     Get-WindowsUpdate
     Write-Host "Installing updates..."
-    Install-WindowsUpdate -AcceptAll -IgnoreReboot -Install 
+    Install-WindowsUpdate -AcceptAll -IgnoreReboot -Install >$null 2>&1
 
     Write-Host "Windows update compleat...`n" -ForegroundColor Green
 }
-if ( -Not $Windows -And [bool](Get-Package -Name PSWindowsUpdate) ) {
+if ( -Not $Windows -And [bool](Get-Command -module PSWindowsUpdate) ) {
     Write-Host "Checking for windows updates..." -ForegroundColor Blue
     runWindowsUpdate
 }
