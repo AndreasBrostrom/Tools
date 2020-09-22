@@ -22,7 +22,7 @@ $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017'
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
-                    'linux-reader',
+                    'linux-reader', 'vcxsrv',
                     'powershell-core', 'winaero-tweaker'
 
 $pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
@@ -216,11 +216,11 @@ if (![System.IO.Directory]::Exists("C:\Programs\bin")) {
     C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
     C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome.exe" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome" -p="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
     C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
     C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1

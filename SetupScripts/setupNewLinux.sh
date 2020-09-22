@@ -7,11 +7,11 @@ aptInstallAllSystems=(
     openjdk-8-jdk
   )
 aptInstallLinuxSystem=(
-    gparted
-    i3-wm suckless-tools i3status
-    steam-installer
     terminator
+    gparted
+    i3-wm suckless-tools i3status i3lock
     grub-customizer
+    steam-installer
     snapd
   )
 aptInstallWinSystem=(

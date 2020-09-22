@@ -70,8 +70,8 @@ if grep -iq 'microsoft' /proc/version &> /dev/null; then
     alias explorer='explorer.exe'
     alias calc='calc.exe'
     
-    if [ command -v terminator >/dev/null 2>&1 ]; then terminator() { nohup terminator $* </dev/null >/dev/null 2>&1 & }; fi
-    if [ command -v nemo >/dev/null 2>&1 ]; then nemo() { nohup nemo $* </dev/null >/dev/null 2>&1 & }; fi
+    alias terminator='detach terminator'
+    alias nemo='detach nemo'
 fi
 
 if [[ -d "/data/data/com.termux/" ]]; then

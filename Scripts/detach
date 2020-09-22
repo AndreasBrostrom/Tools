@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+  echo "No arguments provided"
+  exit 1
+fi
+echo "Starting $1"
+nohup setsid $* </dev/null >/dev/null 2>&1 &
