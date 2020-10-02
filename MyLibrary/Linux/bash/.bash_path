@@ -26,6 +26,5 @@ export PATH=$PATH:/snap/bin
 export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64'
 
 # Variables
-export GIT_ASKPASS=/snap/code/40/usr/share/code/resources/app/extensions/git/dist/askpass.sh
 export VSCODE_GIT_ASKPASS_NODE=/snap/code/40/usr/share/code/code
 export VSCODE_GIT_ASKPASS_MAIN=/snap/code/40/usr/share/code/resources/app/extensions/git/dist/askpass-main.js
