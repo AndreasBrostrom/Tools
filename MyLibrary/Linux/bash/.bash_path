@@ -2,9 +2,9 @@
 export EDITOR=nvim
 export GIT_EDITOR=nvim
 
-[[ -d "~/Programs/bin"    ]] && export PATH=$PATH:~/Programs/bin
-[[ -d "~/.scripts"        ]] && export PATH=$PATH:~/.scripts
-[[ -d "~/.bin"            ]] && export PATH=$PATH:~/.bin
+[[ -d ~/Programs/bin      ]] && export PATH=$PATH:~/Programs/bin
+[[ -d ~/.scripts          ]] && export PATH=$PATH:~/.scripts
+[[ -d ~/.bin              ]] && export PATH=$PATH:~/.bin
 
 # Android
 if [ -d ~/.android ]; then
@@ -19,8 +19,8 @@ fi
 
 export PATH=$PATH:/snap/bin
 
-[[ -d "~/.yarn/bin"       ]] && export PATH=$PATH:~/.yarn/bin
-[[ -d "~/.cargo/bin"      ]] && export PATH=$PATH:~/.cargo/bin
+[[ -d ~/.yarn/bin         ]] && export PATH=$PATH:~/.yarn/bin
+[[ -d ~/.cargo/bin        ]] && export PATH=$PATH:~/.cargo/bin
 
 # JAVA
 export JAVA_HOME='/usr/lib/jvm/java-8-openjdk-amd64'
