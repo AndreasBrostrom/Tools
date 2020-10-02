@@ -1,0 +1,137 @@
+#!/bin/bash
+version="1.4"
+
+# Arguments
+if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
+echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [options]
+
+-c,  --clear            clear all node moduels directories and reinstall them
+-C,  --clear-all        clear all node moduels directories and reinstall and clear gradlew and pods
+-CC, --clear-all-cashe  clear all node moduels directories and all other project related cashe files
+-v,  --version          show version number
+
+-h,  --help            show this help"
+exit 0
+fi
+
+# Check arguments
+if [[ ! $# == 0 ]]; then
+    valid_commands="-c --clear -C --clear-all -CC --clear-cashe -v --version"
+    if [[ ! " $valid_commands " =~ .*\ $*\ .* ]]; then
+        echo "$(basename $0): $*: invalid option"
+        exit 1
+    fi
+fi
+
+if [ "$*" == "-v" ] || [ "$*" == "--version" ]; then
+    echo -e "$(basename "$(test -L "$0" && readlink "$0" || echo "$0")") Version: $version\n"
+    exit 0
+fi
+
+# check if git project 
+if [ ! $(git rev-parse --is-inside-work-tree 2>/dev/null) ]; then
+    echo -e '\e[91;7m ERROR \e[0m This is not a git project.'
+    exit 1
+fi
+
+# Set up empty package collection
+packageInstalledYarn=()
+packageInstalledNPM=()
+packageInstalledNPMERR=()
+
+currentpath=$(pwd)
+projectRoot=$(git rev-parse --show-toplevel)
+
+cd $projectRoot
+allModuels=$(find * -maxdepth 2 -name "package.json")
+
+# Clearing cashe
+if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cashe" ] || [ "$*" == "-CC" ]; then
+    allGradlewModuels=$(find * -maxdepth 2 -name "gradlew")
+    allPodsModuels=$(find * -maxdepth 2 -name "Pods")
+
+    if [ "$*" == "--clear-all-cashe" ] || [ "$*" == "-CC" ]; then
+        if command -v watchman &> /dev/null; then
+            echo "Cleaning watchman..."
+            watchman watch-del-all
+        fi
+
+        echo -e "\e[1mCleaning cache folders...\e[0m"
+        rm -rf /tmp/react-native-packager-cache-*
+        rm -rf /tmp/metro-bundler-cache-*
+        rm -rf /tmp/metro-bundler-cache-*
+        rm -rf ~/.gradle/caches/*
+        rm -rf ~/.react-native-cli/cache/*
+        rm -rf ~/.cache/yarn
+
+        echo -e "\e[1mClearing yarn cache...\e[0m"
+        yarn cache clean
+    fi
+fi
+
+for package in $allModuels; do
+    modulePath=$(dirname $(readlink -f "$package"))
+    cd $modulePath
+    if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cashe" ] || [ "$*" == "-CC" ] && [ -d node_modules ]; then
+        echo -e "\e[1mClearing '$(dirname $package)' moduels...\e[0m"
+        [ -d node_modules/ ] && rm -rf node_modules/
+        [ ! -d node_modules/ ] && echo -e "\e[0mModuels successfully cleared\e[0m"
+        
+        if [ "$*" == "--clear-all-cashe" ] || [ "$*" == "-CC" ]; then
+            echo -e "\e[1mCleaning android build cash...\e[0m"
+            [ -d android/.gradle/ ] && rm -rf android/.gradle/
+            [ -d android/app/build/ ] && rm -rf android/app/build/
+            [ -d android/app/src/main/java/com/playipp/connect/generated/ ] && rm -rf android/app/src/main/java/com/playipp/connect/generated/
+        fi
+    fi
+    echo -e "\e[1mInstalling '$(dirname $package)' moduels...\e[0m"
+    if [ -f package-lock.json ]; then
+        echo -e "\e[93;7m WARNING \e[0m \e[93mpackage-lock have been discoverd using npm instead...\e[0m"
+        if hash npm 2>/dev/null; then
+            echo -e "\e[1mnpm install v$(npm --v)\e[0m"
+            npm install
+            packageInstalledNPM=("${packageInstalledNPM[@]}" $(dirname $package))
+        else
+            echo -e "\e[93;7m WARNING \e[0m \e[91mnpm is not installed on using yarn. Note that this will cause a 'yarn.lock' to be created.\e[0m"
+            yarn
+            packageInstalledNPMERR=("${packageInstalledNPMERR[@]}" $(dirname $package))
+            packageInstalledYarn=("${packageInstalledYarn[@]}" $(dirname $package))
+        fi
+    else
+        yarn
+        packageInstalledYarn=("${packageInstalledYarn[@]}" $(dirname $package))
+    fi
+    echo -e "\e[32mModules in '$(dirname $package)' have been installed\e[0m"
+    cd $projectRoot
+done
+
+if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cashe" ] || [ "$*" == "-CC" ]; then
+    for gradlew in $allGradlewModuels; do
+        gradlewPath=$(dirname $(readlink -f "$gradlew"))
+        cd $gradlewPath
+        echo -e "\e[1mCleaning gradlew...\e[0m"
+        ./gradlew clean
+        echo -e "\e[32mGradlew in '$(dirname $gradlew)' have been cleared\e[0m"
+        cd $projectRoot
+    done
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        for pod in $allPodsModuels; do
+            podPath=$(dirname $(readlink -f "$pod"))
+            cd $podPath
+            echo -e "\e[1mCleaning pods...\e[0m"
+            pod cache clean --all
+            pod install
+            echo -e "\e[32mPods in '$(dirname $pod)' have been cleared\e[0m"
+            cd $projectRoot
+        done
+    fi
+fi
+
+#restore path
+cd $currentpath
+
+echo -e "\nAll packages have been updated."
+
+[ -z "$packageInstalledNPM" ] || for p in "$packageInstalledNPM"; do echo -e "\e[93;7m WARNING \e[0m packages in '$p' used npm instead of yarn.\e[0m"; done
+[ -z "$packageInstalledNPMERR" ] || for p in "$packageInstalledNPMERR"; do echo -e "\e[93;7m WARNING \e[0m packages in '$p' tried to use npm but used yarn instead.\e[0m"; done
+echo ""

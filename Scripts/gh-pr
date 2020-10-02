@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo -e "No pull request number provided"
+    gh pr list
+    echo -e "\nNote: that you cant use # in the name"
+    exit 1
+fi
+
+if [ $(gh pr list | grep -wc "$*") == 0 ]; then
+    echo -e "Can not find pull request #$*"
+    gh pr list
+    exit 1
+fi
+
+branch=$(gh pr list | grep "$*" | cut -f3 | sed 's/.*://')
+git checkout "${branch}"
