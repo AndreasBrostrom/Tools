@@ -12,6 +12,8 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 
+shopt -s expand_aliases
+
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
@@ -49,7 +51,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 fi
 
 # Black Order Logo in Home
-if [ -f $(which blackorder) ]; then
+if [ $(which blackorder 1>/dev/null 2>&1) ]; then
   [[ "$PWD" == "$HOME" ]] && blackorder
 fi
 
@@ -57,7 +59,11 @@ fi
 if [ -f ~/.bash_prompt ]; then
   . ~/.bash_prompt
 else
-  PS1="\u@\h \w \$ "
+  if [[ ${EUID} == 0 ]] ; then
+		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
+	else
+		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
+	fi
 fi
 
 # ls Aliases
@@ -76,6 +82,11 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# misc Aliases
+alias cp='cp -i'
+alias df='df -h'
+alias free='free -m'
+
 # ex - archive extractor
 # usage: ex <file>
 ex () {
@@ -84,7 +95,7 @@ ex () {
       *.tar.bz2)   tar xjf $1   ;;
       *.tar.gz)    tar xzf $1   ;;
       *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1     ;;
+      *.rar)       unrar x $1   ;;
       *.gz)        gunzip $1    ;;
       *.tar)       tar xf $1    ;;
       *.tbz2)      tar xjf $1   ;;
@@ -92,7 +103,7 @@ ex () {
       *.zip)       unzip $1     ;;
       *.Z)         uncompress $1;;
       *.7z)        7z x $1      ;;
-      *)           echo "'$1' cannot be extracted via ex()" ;;
+      *)           echo "'$1' cannot be extracted vixa ex()" ;;
     esac
   else
     echo "'$1' is not a valid file"
@@ -105,9 +116,16 @@ if [ "$DESKTOP_SESSION" == "cinnamon" ]; then
   # usage: alert
   alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 fi
+
 # i3 Desktop
-# if [ "$DESKTOP_SESSION" == "i3" ]; then
-# fi
+#if [ "$DESKTOP_SESSION" == "i3" ]; then
+#
+#fi
+
+# Bash Aliases
+if [ -f ~/.bash_aliases ]; then
+  . ~/.bash_aliases
+fi
 
 # Completion
 if ! shopt -oq posix; then
@@ -117,8 +135,3 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
-fi
-

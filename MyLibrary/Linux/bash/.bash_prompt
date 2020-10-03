@@ -48,6 +48,15 @@ case $CONFIG_GIT_PROMPT_STYLE in
   ;;
 esac
 
+case ${TERM} in
+  xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
+    PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\007"'
+    ;;
+  screen*)
+    PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
+    ;;
+esac
+
 # Terminal function handler
 if [[ ! $(type -t prompt_terminal_title_handler) == "function" ]]; then
   function prompt_terminal_title_handler() {

@@ -1,9 +1,9 @@
  
 # Upgrade
-if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=' &> /dev/null)" == "ubuntu" ]; then
+if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "ubuntu" ]; then
     alias upgrade='sudo -S echo "Upgrading all system..."; sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y && echo "Checking Flatpak..."; flatpak update -y && sudo snap refresh; echo "All updates are completed.";'
 fi
-if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=' &> /dev/null)" == "arch" ]; then
+if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "arch" ]; then
     alias upgrade='sudo -S echo "Upgrading all system..."; sudo pacman -Syyu && echo "Checking Flatpak...";flatpak update -y && sudo snap refresh; echo "All updates are completed.";'
 fi
 if [[ -d "/data/data/com.termux/" ]]; then
@@ -18,26 +18,25 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
 # Python
-[[ -f $(which pip3)             ]] && alias pip='pip3'
-[[ -f $(which python3)          ]] && alias py='python3'
-[[ -f $(which python3)          ]] && alias python='python3'
+[[ "$(which pip3 1>/dev/null 2>&1; echo $?)" == "0"          ]] && alias pip='pip3'
+[[ "$(which python3 1>/dev/null 2>&1; echo $?)" == "0"       ]] && alias py='python3'
+[[ "$(which python3 1>/dev/null 2>&1; echo $?)" == "0"       ]] && alias python='python3'
 
-[[ -f $(which scrcpy)           ]] && alias screen='scrcpy'
-[[ -f $(which emulator)         ]] && alias chrome='~/.scripts/emulator_proxy'
 
 # Program
-[[ -f $(which nvim)             ]] && alias vim='nvim'
-[[ -f $(which terminator)       ]] && alias terminal='terminator'
+[[ "$(which nvim 1>/dev/null 2>&1; echo $?)" == "0"          ]] && alias vim='nvim'
+[[ "$(which terminator 1>/dev/null 2>&1; echo $?)" == "0"    ]] && alias terminal='terminator'
 
-[[ -f $(which google-chrome)    ]] && alias chrome='google-chrome'
-[[ -f $(which scrcpy)           ]] && alias screen='echo Running: scrcpy; scrcpy'
+[[ "$(which google-chrome 1>/dev/null 2>&1; echo $?)" == "0" ]] && alias chrome='google-chrome'
+[[ "$(which emulator 1>/dev/null 2>&1; echo $?)" == "0"      ]] && alias chrome='~/.scripts/emulator_proxy'
+[[ "$(which scrcpy 1>/dev/null 2>&1; echo $?)" == "0"        ]] && alias screen='scrcpy'
 
 
 # ADB shorts
-if [[ -f $(which adb) ]]; then
+if [[ "$(which adb 1>/dev/null 2>&1; echo $?)" == "0" ]]; then
     alias adb-reverse='adb reverse tcp:8081 tcp:8081'
     alias adb-r='adb-reverse'
-    [[ -f $(which adb-push)           ]] && alias adb-p='adb-push'
+    [[ -f $(which adb-push 1>/dev/null 2>&1)  ]] && alias adb-p='adb-push'
 
     alias adb-reload='adb-key -r'
     alias adb-re='adb-reload'
@@ -48,7 +47,7 @@ if [[ -f $(which adb) ]]; then
 fi
 
 # React native
-if [[ -f $(which react-native) ]]; then
+if [[ "$(which react-native 1>/dev/null 2>&1; echo $?)" == "0" ]]; then
     alias rn='react-native'
     alias rn-s='
         if [[ $(grep -q "\"react-native\":" package.json 2&>/dev/null || echo "1") -eq 0 ]]; then
@@ -83,7 +82,7 @@ if [[ -f $(which react-native) ]]; then
 fi
 
 # Git shortcuts
-if [[ -f $(which git) ]]; then
+if [[ "$(which git 1>/dev/null 2>&1; echo $?)" == "0" ]]; then
     alias g-s='git status'
     alias g-c='git checkout'
     alias g-b='git branch'
