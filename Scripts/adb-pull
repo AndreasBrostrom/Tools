@@ -36,4 +36,10 @@ if [ "$1" == "-s" ] || [ "$1" == "--screenshot" ]; then
     exit 0
 fi
 
+if [ "$1" == "-p" ] || [ "$1" == "--photo" ]; then
+    file=$(adb shell ls -t /sdcard/DCIM/Camera | head -1)
+    adb pull /sdcard/DCIM/Camera/$file $HOME/Downloads/.
+    exit 0
+fi
+
 adb pull $1 $HOME/Downloads/.
