@@ -8,9 +8,6 @@ function prompt { (Write-Host ("$pwd".replace("$($home)", "~")) -ForegroundColor
 $curren_path = ($pwd).path
 if (!(Compare-Object "$curren_path" "C:\Windows\system32")) { set-location "$env:userprofile" }
 
-# Full system update
-Set-Alias -Name upgrade -Value "$env:userprofile\.scripts\upgrade.ps1"
-
 # Windows dir macro extentions
 $FileHiddenPrefix = ".*"
 
@@ -36,7 +33,19 @@ if ( Get-Module -ListAvailable -Name Get-ChildItemColor) {
 function reboot { shutdown -r -t 0 $args }
 function ifconfig { ipconfig /all $args }
 
-# Fetch Aliases
-if (Test-Path "$env:userprofile\Documents\PowerShell\profile_aliases.ps1" -PathType leaf) {
-    &"$env:userprofile\Documents\PowerShell\profile_aliases.ps1"
+# Aliases
+if (Test-Path "$env:userprofile\.pwsh_aliases.ps1" -PathType leaf) {
+    . "$env:userprofile\.pwsh_aliases.ps1"
 }
+if (Test-Path "$env:userprofile\.ps_aliases.ps1" -PathType leaf) {
+    . "$env:userprofile\.ps_aliases.ps1"
+}
+
+# Path
+if (Test-Path "$env:userprofile\.pwsh_path.ps1" -PathType leaf) {
+    . "$env:userprofile\.pwsh_path.ps1"
+}
+if (Test-Path "$env:userprofile\.pwsh_path.ps1" -PathType leaf) {
+    . "$env:userprofile\.pwsh_path.ps1"
+}
+

@@ -19,12 +19,12 @@ $scoop_pkg        = 'git', 'curl',
 $choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017', 'KB2919355', 'KB2919442', 'KB2999226', 'KB3033929', 'KB3035131', 
                     'googlechrome', 'vscode',
                     'microsoft-windows-terminal',
-                    'winrar', 'vlc', 'teamviewer', #'spotify',
+                    'winrar', 'vlc', 'teamviewer',
                     'teamspeak', 'discord', 'slack',
                     'steam',
                     'obs-studio',
                     'linux-reader', 'vcxsrv',
-                    'powershell-core', 'winaero-tweaker'
+                    'powershell-core', 'winaero-tweaker', "powertoys", "WinHotKey"
 
 $pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
 
@@ -142,10 +142,11 @@ Write-Host "windows features applied" -ForegroundColor Green
 
 # Setting up home and root enviroment
 Write-Host "Setting up home..."
-if (![System.IO.Directory]::Exists("$Env:userprofile\.scripts")) {
-    New-Item -itemtype "directory" -path "$Env:userprofile\.scripts"
-    (get-item $Env:userprofile\.scripts).Attributes += 'Hidden'
-    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.scripts", "User")
+if (![System.IO.Directory]::Exists("$Env:userprofile\.bin")) {
+    New-Item -itemtype "directory" -path "$Env:userprofile\.bin"
+    (get-item $Env:userprofile\.bin).Attributes += 'Hidden'
+    if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.bin", "User") }
+    
 } else {
     Write-Host "Home already setup skipping..." -ForegroundColor Yellow
 }
@@ -154,13 +155,19 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
     New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
 
     New-Item -itemtype "directory" -path "C:\Programs\Bin"
-    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine")
+    if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
+
+    New-Item -itemtype "directory" -path "C:\Programs\.icon"
 
     Write-Host "Setting up symbolic links and directories..."
     New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp"
 
     New-Item -itemtype "directory" -path "C:\Program Files (x86)\Steam\steamapps\common"
     New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Program Files (x86)\Steam\steamapps\common"
+
+    New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"
+    (get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
+
 } else {
     Write-Host "Root already setup skipping..." -ForegroundColor Yellow
 }
@@ -174,8 +181,11 @@ if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
     C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
 
     Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batchrc.cmd" -Destination "$Env:userprofile\"
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batch_path.cmd" -Destination "$Env:userprofile\"
     Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batch_aliases.cmd" -Destination "$Env:userprofile\"
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.scripts" -Destination "$Env:userprofile\" -Recurse
+    (get-item $Env:userprofile\.batchrc.cmd).Attributes += 'Hidden'
+    (get-item $Env:userprofile\.batch_path.cmd).Attributes += 'Hidden'
+    (get-item $Env:userprofile\.batch_aliases.cmd).Attributes += 'Hidden'
 
     Write-Host "Configuration of CMD complete..." -ForegroundColor Green
 } else {
@@ -191,18 +201,18 @@ if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1
     (get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
     New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
     (get-item $Env:userprofile\Documents\WindowsPowerShell).Attributes += 'Hidden'
+    
+    "if (Test-Path `"$env:userprofile\.pwshrc.ps1`" -PathType leaf) {`n    . `"$env:userprofile\.pwshrc.ps1`"`n}" | Out-File -FilePath "$Env:userprofile\Documents\PowerShell\profile.ps1"
 
-    if ([System.IO.File]::Exists("$PSScriptRoot\..\Library\PowershellProfile\profile.ps1")) {
-        Write-Host "Profile restored..."
-        Copy-Item "$PSScriptRoot\..\Library\PowershellProfile\profile.ps1" -Destination "$Env:userprofile\Documents\PowerShell\"
-    } else {
-        Write-Host "Creating empty profile..."
-        New-Item -itemtype "file" -path "$Env:userprofile\Documents\PowerShell\profile.ps1"
-    }
-    New-Item -itemtype SymbolicLink -path "$Env:userprofile" -name ".psrc" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    Write-Host "Restoring powershell profile..."
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\Home\.pwshrc.ps1" -Destination "$Env:userprofile"
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\Home\.pwsh_path.ps1" -Destination "$Env:userprofile"
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\Home\.pwsh_aliases.ps1" -Destination "$Env:userprofile"
+    (get-item $Env:userprofile\.pwshrc.ps1).Attributes += 'Hidden'
+    (get-item $Env:userprofile\.pwsh_path.ps1).Attributes += 'Hidden'
+    (get-item $Env:userprofile\.pwsh_aliases.ps1).Attributes += 'Hidden'
+
     New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
-    (get-item $Env:userprofile\.psrc).Attributes += 'Hidden'
-
     Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
 } else {
     Write-Host "Powershell already configured skipping..." -ForegroundColor Yellow
@@ -211,34 +221,38 @@ if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1
 
 
 # Creating quick links for terminal
-if (![System.IO.Directory]::Exists("C:\Programs\bin")) {
-    Write-Host "Setting up shims..." -ForegroundColor Magenta
-    New-Item -ItemType "directory" -Path "C:\Programs\bin" >$null 2>&1
-    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
-    
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+Write-Host "Setting up Programs and Terminal shims..." -ForegroundColor Magenta
+Invoke-WebRequest https://github.com/microsoft/terminal/raw/master/res/terminal.ico -OutFile "C:\Programs\.icon\terminal.ico" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\google-chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\spotify.exe" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\spotify" -p="$Env:userprofile\AppData\Roaming\Spotify\Spotify.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
 
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-    C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-} else {
-    Write-Host "Shims already setup for common programs skipping..." -ForegroundColor Yellow
-}
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
+
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
+
+
+# Autostart
+Write-Host "Setting up autostart..." -ForegroundColor Magenta
+$autostart=[Environment]::GetFolderPath('Startup')
+New-Item -itemtype Junction -path "C:\Programs" -name "Startup" -value "$autostart"
+Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\VcXSrv\config.xlaunch" -Destination "C:\Programs\Startup\"
 
 
 Write-Host "Adjusting the context menu..." -ForegroundColor Magenta

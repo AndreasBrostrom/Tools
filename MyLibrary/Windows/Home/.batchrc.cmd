@@ -16,10 +16,6 @@ if "%isWinSys32P%" == "true" (
    cd %userprofile%
 )
 
-:: Full system update
-DOSKEY sys-update=cmd.exe /c %USERPROFILE%/.scripts/upgrade.cmd
-DOSKEY upgrade=cmd.exe /c %USERPROFILE%/.scripts/upgrade.cmd
-
 :: Windows dir macro extentions
 DOSKEY ls=dir /B $*
 DOSKEY ll=dir $*
@@ -42,4 +38,8 @@ DOSKEY alias=DOSKEY /MACROS
 :: Additional aliases defined in batch aliases
 IF EXIST %USERPROFILE%/.batch_aliases.cmd (
     call %USERPROFILE%/.batch_aliases.cmd
+)
+:: Add path variables
+IF EXIST %USERPROFILE%/.batch_path.cmd (
+    call %USERPROFILE%/.batch_path.cmd
 )
