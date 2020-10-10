@@ -49,7 +49,7 @@ Windows Registry Editor Version 5.00
 ; Ubuntu
 [HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\l_ubuntu]
 @="Linux Shell (Ubuntu)"
-"icon"="C:\\Programs\\.icon\\terminal.ico"
+"icon"="C:\\Programs\\.icon\\ubuntu.ico"
 
 [HKEY_CLASSES_ROOT\Directory\ContextMenus\wt\shell\l_ubuntu\command]
 @="C:\\Users\\andre\\AppData\\Local\\Microsoft\\WindowsApps\\wt.exe -p \"Ubuntu\" -d ."

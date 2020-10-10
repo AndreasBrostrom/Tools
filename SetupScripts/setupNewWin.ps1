@@ -177,7 +177,6 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
 # Setup cmd
 if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
     Write-Host "Configurating CMD..." -ForegroundColor Magenta
-    #Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
     C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
 
     Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batchrc.cmd" -Destination "$Env:userprofile\"
@@ -222,7 +221,6 @@ if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1
 
 # Creating quick links for terminal
 Write-Host "Setting up Programs and Terminal shims..." -ForegroundColor Magenta
-Invoke-WebRequest https://github.com/microsoft/terminal/raw/master/res/terminal.ico -OutFile "C:\Programs\.icon\terminal.ico" >$null 2>&1
 
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
 
@@ -267,6 +265,8 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile
 
 # Terminals
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\WindowsTerminal_Add.reg" >$null 2>&1
+Invoke-WebRequest https://github.com/microsoft/terminal/raw/master/res/terminal.ico -OutFile "C:\Programs\.icon\terminal.ico" >$null 2>&1
+Invoke-WebRequest https://iconarchive.com/download/i75927/martz90/circle/ubuntu.ico -OutFile "C:\Programs\.icon\ubuntu.ico" >$null 2>&1
 
 # Change windows time
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
@@ -278,6 +278,12 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers
 
 # Remove unwanted objects
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
+
+# Restoring save files from programs
+Write-Host "Restoring keybindings and other systems..." -ForegroundColor Magenta
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\RebindCaps2Esc.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\winHotKeyTerminal.reg" >$null 2>&1
+
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
