@@ -7,6 +7,7 @@ if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shel
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/ColdEvul/arma3-scoop-bucket.git'
 
 $scoop_pkg        = 'git', 'curl',
+                    'aria2', '7zip',
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix',
                     'zip', '7zip',
                     'neovim', 'scrcpy',
@@ -30,13 +31,12 @@ $pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
 
 
 # Script start
-Write-Host "Starting up..." -ForegroundColor Blue
-
+Write-Host "Starting up..." -ForegroundColor Magenta
 
 # Installing scoop
-Write-Host "Setting up Scoop..." -ForegroundColor Blue
+Write-Host "Setting up Scoop..." -ForegroundColor Magenta
 if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
-    Write-Host "Installing Scoop..." -ForegroundColor Blue
+    Write-Host "Installing Scoop..." -ForegroundColor Magenta
     Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh') >$null 2>&1
 } else {
     Write-Host "Scoop already exist no need to install. Checking for updates..." -ForegroundColor Yellow
@@ -44,15 +44,8 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
 }
 
 # Add scoop buckets
-Write-Host "Adding Scoop buckets..."
-foreach ($buckets in $scoop_buckets) {
-    scoop bucket add $buckets >$null 2>&1
-}
-
-# Install scoop packages
-Write-Host "Installing Scoop packages..."
-# Basic Packages
-$scoop_defult_pkg = 'sudo', 'aria2', '7zip', 'gow'
+Write-Host "Installing Required Scoop Packages..."
+$scoop_defult_pkg = 'sudo', 'git', 'aria2', '7zip'
 foreach ($pkg in $scoop_defult_pkg) {
     if (![System.IO.Directory]::Exists("$env:USERPROFILE\scoop\apps\$pkg")) {
         Write-Host "Installing $pkg..."
@@ -61,6 +54,15 @@ foreach ($pkg in $scoop_defult_pkg) {
         Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
     }
 }
+
+Write-Host "Adding Scoop buckets..."
+foreach ($buckets in $scoop_buckets) {
+    scoop bucket add $buckets >$null 2>&1
+}
+
+# Install scoop packages
+Write-Host "Installing Scoop packages..."
+# Packages
 foreach ($pkg in $scoop_pkg) {
     if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
         Write-Host "Installing $pkg..."
@@ -74,7 +76,7 @@ Write-Host "Installation of scoop packages completed..." -ForegroundColor Green
 
 
 # Installing Chocolately
-Write-Host "Setting up Chocolately..." -ForegroundColor Blue
+Write-Host "Setting up Chocolately..." -ForegroundColor Magenta
 if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
     Write-Host "Installing Chocolately..." -ForegroundColor green
     Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
@@ -109,7 +111,7 @@ Write-Host "Powershell module installation completed..." -ForegroundColor Green
 
 
 # Download drives and packages for gaming
-Write-Host "Downloading drives and programs for gaming..." -ForegroundColor Blue
+Write-Host "Downloading drives and programs for gaming..." -ForegroundColor Magenta
 if (![System.IO.File]::Exists("$Env:userprofile\Downloads\TrackIR_5.4.2.exe")) {
     Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
 } else {
@@ -131,7 +133,7 @@ Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 
  
-Write-Host "Applying windows features..." -ForegroundColor Blue
+Write-Host "Applying windows features..." -ForegroundColor Magenta
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 wsl.exe --set-default-version 2
@@ -167,13 +169,13 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
 
 # Setup cmd
 if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
-    Write-Host "Configurating CMD..." -ForegroundColor Blue
+    Write-Host "Configurating CMD..." -ForegroundColor Magenta
     #Expand-Archive "$PSScriptRoot\..\WindowsBatchRC\batchrc.zip" -DestinationPath "$Env:userprofile"
-    reg import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
+    C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
 
-    Copy-Item "$PSScriptRoot\..\Library\batchrc\.batchrc.cmd" -Destination "$Env:userprofile\"
-    Copy-Item "$PSScriptRoot\..\Library\batchrc\.batch_aliases.cmd" -Destination "$Env:userprofile\"
-    Copy-Item "$PSScriptRoot\..\Library\batchrc\.scripts" -Destination "$Env:userprofile\" -Recurse
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batchrc.cmd" -Destination "$Env:userprofile\"
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batch_aliases.cmd" -Destination "$Env:userprofile\"
+    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.scripts" -Destination "$Env:userprofile\" -Recurse
 
     Write-Host "Configuration of CMD complete..." -ForegroundColor Green
 } else {
@@ -184,7 +186,7 @@ if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
 
 # Setup powershell profile
 if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1")) {
-    Write-Host "Configurating Powershell..." -ForegroundColor Blue
+    Write-Host "Configurating Powershell..." -ForegroundColor Magenta
     New-Item -itemtype "directory" -path "$Env:userprofile\Documents\PowerShell\"
     (get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
     New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
@@ -210,9 +212,10 @@ if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1
 
 # Creating quick links for terminal
 if (![System.IO.Directory]::Exists("C:\Programs\bin")) {
-    Write-Host "Setting up shims..." -ForegroundColor Blue
+    Write-Host "Setting up shims..." -ForegroundColor Magenta
     New-Item -ItemType "directory" -Path "C:\Programs\bin" >$null 2>&1
-
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
+    
     C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
     C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 
@@ -238,29 +241,29 @@ if (![System.IO.Directory]::Exists("C:\Programs\bin")) {
 }
 
 
-Write-Host "Adjusting the context menu..." -ForegroundColor Blue
-reg import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
+Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
 
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewCppFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewHppFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewMdFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewCppFile.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewHppFile.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewMdFile.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
 
 # Terminals
-reg import "$PSScriptRoot\..\WindowsContextMenu\WindowsTerminal_Add.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\WindowsTerminal_Add.reg" >$null 2>&1
 
 # Change windows time
-reg import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
 
 # Cleanup Context Menus
-reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
-reg import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
 
 # Remove unwanted objects
-reg import "$PSScriptRoot\..\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
 

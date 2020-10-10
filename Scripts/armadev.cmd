@@ -7,4 +7,4 @@ set args=%args:(=`(%
 set args=%args:)=`)%
 set invalid="='
 if !args! == !invalid! ( set args= )
-pwsh -noprofile -ex unrestricted -command "& '%USERPROFILE%\.scripts\armadev.ps1' %args%; exit $lastexitcode"
+pwsh -noprofile -ex unrestricted -command "& '%USERPROFILE%\.bin\armadev.ps1' %args%; exit $lastexitcode"

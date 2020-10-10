@@ -26,13 +26,25 @@ if ( ![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups 
                     "$env:PROGRAMDATA\scoop\shims\sudo",
                     "$env:PROGRAMDATA\scoop\shims\sudo.ps1",
                     "$env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
-                    "$env:USERPROFILE\.scripts\sudo.ps1"
+                    "$env:USERPROFILE\.bin\sudo.ps1"
 
     foreach ($sudoScript in $sudoScripts) { if ( [System.IO.File]::Exists("$sudoScript") ) { [bool] $hasSudo = 1; break } }
     if ($hasSudo) { Write-Host " or run with sudo" -ForegroundColor Red -NoNewline }
     
     Write-Host ", and then try running the script again." -ForegroundColor Red
     exit 1
+}
+
+# WSL Update
+function runWSLUpdate {
+    Write-Host "Windows Subsystem for Linux detected..." -ForegroundColor Blue
+    
+    bash.exe -c "sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y";
+    
+    Write-Host "Windows Subsystem for Linux update compleat...`n" -ForegroundColor Green
+}
+if ( -Not $Linux -And [bool](Test-Path "$env:WINDIR\system32\bash.exe" -PathType Leaf) ) {
+    runWSLUpdate
 }
 
 # Windows update
@@ -46,23 +58,16 @@ function runWindowsUpdate {
 
     Write-Host "Windows update compleat...`n" -ForegroundColor Green
 }
+
 if ( -Not $Windows -And [bool](Get-Command -module PSWindowsUpdate) ) {
-    Write-Host "Checking for windows updates..." -ForegroundColor Blue
-    runWindowsUpdate
+    if ( -Not [BOOL](Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty "DoNotConnectToWindowsUpdateInternetLocations" ) ) {
+        Write-Host "Checking for windows updates..." -ForegroundColor Blue
+        runWindowsUpdate
+    } else {
+        Write-Host "Windows update is currently disabled in regestry skipping...`n" -ForegroundColor Yellow
+    }
 }
 
-
-# WSL Update
-function runWSLUpdate {
-    Write-Host "Windows Subsystem for Linux detected..." -ForegroundColor Blue
-    
-    bash.exe -c "sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y; sudo snap refresh;";
-    
-    Write-Host "Windows Subsystem for Linux update compleat...`n" -ForegroundColor Green
-}
-if ( -Not $Linux -And [bool](Test-Path "$env:WINDIR\system32\bash.exe" -PathType Leaf) ) {
-    runWSLUpdate
-}
 
 # Scoop update
 function runScoopUpdate {
