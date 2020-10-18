@@ -23,7 +23,7 @@ if ($Version) {
     $versionNr = 1,10,0
     $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
     $newUpScriptStr = ($newUpScript.Content).ToString() -split '\n'
-    $newUpScriptVer = $newUpScriptStr | Select-String -Pattern 'versionNr' -ErrorAction SilentlyContinue
+    $newUpScriptVer = $newUpScriptStr | Select-String -Pattern 'versionNr'
     $newUpScriptVer = $newUpScriptVer -split "=" -split "," -replace " ", ""
 
     Write-Host "Version $($versionNr[0]).$($versionNr[1]).$($versionNr[2])"
@@ -54,7 +54,7 @@ if ($Version) {
 }
 if ($Upgrade) {
     $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
-    $newUpScript | Out-File -FilePath (Get-Item $PSCommandPath ).FullName
+    ($newUpScript.Content).ToString() | Out-File -FilePath (Get-Item $PSCommandPath ).FullName
 }
 
 if ( ![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
