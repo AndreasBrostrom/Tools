@@ -53,8 +53,11 @@ if ($Version) {
     exit 0
 }
 if ($Upgrade) {
+    Write-Host "Updating script"
     $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
     ($newUpScript.Content).ToString() | Out-File -FilePath (Get-Item $PSCommandPath ).FullName
+    Write-Host "Script update complete"
+    exit 0
 }
 
 if ( ![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
