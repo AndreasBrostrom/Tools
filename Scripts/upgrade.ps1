@@ -1,21 +1,60 @@
-
 # Check parameters
 param (
     [Parameter(Mandatory=$false)][Switch]$help,
     [Parameter(Mandatory=$false)][Switch]$Windows,
     [Parameter(Mandatory=$false)][Switch]$Linux,
     [Parameter(Mandatory=$false)][Switch]$Scoop,
-    [Parameter(Mandatory=$false)][Switch]$Chocolatey
+    [Parameter(Mandatory=$false)][Switch]$Chocolatey,
+    [Parameter(Mandatory=$false)][Switch]$Version,
+    [Parameter(Mandatory=$false)][Switch]$Upgrade
 )
 if ($help) {
-    Write-Host  "Usage: upgrade [-w] [-l] [-s] [-c] [-help]"
+    Write-Host  "Usage: $((Get-Item $PSCommandPath).Basename) [-w] [-l] [-s] [-c] [-v] [-help]"
     Write-Host  ""
     Write-Host  "    -h, -help          Show this help"
     Write-Host  "    -w, -windows       Disable update check for windows"
     Write-Host  "    -l, -linux         Disable update check for linux subsystem"
     Write-Host  "    -s, -scoop         Disable update check for Scoop"
     Write-Host  "    -c, -chocolatey    Disable update check for Chocolatey"
+    Write-Host  "    -v, -version       Show current version"
     exit 0
+}
+if ($Version) {
+    $versionNr = 1,10,0
+    $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
+    $newUpScriptStr = ($newUpScript.Content).ToString() -split '\n'
+    $newUpScriptVer = $newUpScriptStr | Select-String -Pattern 'versionNr' -ErrorAction SilentlyContinue
+    $newUpScriptVer = $newUpScriptVer -split "=" -split "," -replace " ", ""
+
+    Write-Host "Version $($versionNr[0]).$($versionNr[1]).$($versionNr[2])"
+
+    $newUpdateVersion = $false
+    if ($versionNr[0] -lt $newUpScriptVer[1]) {
+        $newUpdateVersion = $true
+    }
+    if ($versionNr[1] -lt $newUpScriptVer[2]) {
+        if ($versionNr[0] -le $newUpScriptVer[1]) {
+            $newUpdateVersion = $true
+        }
+    }
+    if ($versionNr[2] -lt $newUpScriptVer[3]) {
+        if ($versionNr[1] -le $newUpScriptVer[2]) {
+            if ($versionNr[0] -le $newUpScriptVer[1]) {
+                $newUpdateVersion = $true
+            }
+        }
+    }
+
+    if ($newUpdateVersion) {
+        Write-Host "New version avalible v$($newUpScriptVer[1]).$($newUpScriptVer[2]).$($newUpScriptVer[3])"
+        Write-Host "Run `"$((Get-Item $PSCommandPath).Basename) -upgrade`" to update the script."
+        exit 0
+    }
+    exit 0
+}
+if ($Upgrade) {
+    $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
+    $newUpScript | Out-File -FilePath (Get-Item $PSCommandPath ).FullName
 }
 
 if ( ![bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
