@@ -6,6 +6,9 @@ fi
 if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "arch" ]; then
     alias upgrade='sudo -S echo "Upgrading all system..."; sudo pacman -Syyu && echo "Checking Flatpak...";flatpak update -y && sudo snap refresh; echo "All updates are completed.";'
 fi
+if [ "$(cat /etc/os-release | grep ID | cut -f 2 -d '=' | head -1)" == "alpine" ]; then
+    alias upgrade='sudo -S echo "Upgrading all system..."; sudo apk update; sudo apk upgrade; echo "All updates are completed.";'
+fi
 if [[ -d "/data/data/com.termux/" ]]; then
     alias upgrade='echo "Upgrading all system..." && apt update && apt full-upgrade -y && apt autoremove -y && pkg upgrade -y; echo "All updates are completed.";'
 fi
