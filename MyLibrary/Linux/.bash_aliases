@@ -144,3 +144,5 @@ if [[ -d "/data/data/com.termux/" ]]; then
     alias vib='termux-vibrate -f'
     alias clip='termux-clipboard-set'
 fi
+
+eval "$(starship init bash)"

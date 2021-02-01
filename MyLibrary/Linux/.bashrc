@@ -50,22 +50,6 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
   echo -e "\e[2;1mssh login \e[0;32;1m$USER@$HOSTNAME\e[0m"
 fi
 
-# Black Order Logo in Home
-if [ $(which blackorder 1>/dev/null 2>&1) ]; then
-  [[ "$PWD" == "$HOME" ]] && blackorder
-fi
-
-# Terminal Prompt
-if [ -f ~/.bash_prompt ]; then
-  . ~/.bash_prompt
-else
-  if [[ ${EUID} == 0 ]] ; then
-		PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
-	else
-		PS1='\[\033[01;32m\][\u@\h\[\033[01;37m\] \W\[\033[01;32m\]]\$\[\033[00m\] '
-	fi
-fi
-
 # ls Aliases
 alias ls='ls --color=auto'
 alias ll='ls -alF'
@@ -135,3 +119,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+eval "$(starship init bash)"
