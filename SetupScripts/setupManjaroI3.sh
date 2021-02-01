@@ -9,7 +9,6 @@ pacmanInstall=(
     openjdk-8-jdk
     terminator
     gparted
-    grub-customizer
     steam-installer
     nemo
   )
