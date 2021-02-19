@@ -1,16 +1,52 @@
  
 # Upgrade
-if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "ubuntu" ]; then
-    alias upgrade='sudo -S echo "Upgrading all system..."; sudo apt update && sudo apt full-upgrade -y && sudo apt autoremove -y && echo "Checking Flatpak..."; flatpak update -y && sudo snap refresh; echo "All updates are completed.";'
+if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "ubuntu" ] || [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "debian" ]; then
+    alias upgrade='
+        sudo -v
+        echo -e "\033[1mUpgrading all system ...\033[0m"
+        echo "Ubuntu (Debian)"
+        echo -e "\033[32mapt\033[0m"
+        sudo apt update
+        sudo apt full-upgrade -y
+        sudo apt autoremove -y
+        echo -e "\033[32mflatpak\033[0m"
+        flatpak update -y
+        echo -e "\033[32msnap\033[0m"
+        sudo snap refresh
+        echo -e "\033[1mAll updates are completed.\033[0m"
+    '
 fi
 if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "arch" ]; then
-    alias upgrade='sudo -S echo "Upgrading all system..."; sudo pacman -Syyu && echo "Checking Flatpak...";flatpak update -y && sudo snap refresh; echo "All updates are completed.";'
+    alias upgrade='
+        sudo -v
+        echo -e "\033[1mUpgrading all system...\033[0m"
+        echo "Arch Linux"
+        echo -e "\033[32mPacman\033[0m"
+        yes | sudo pacman -Syyu
+        echo -e "\033[32mYey\033[0m"
+        yes | sudo yay -Syyu;
+    '
 fi
 if [ "$(cat /etc/os-release | grep ID | cut -f 2 -d '=' | head -1)" == "alpine" ]; then
-    alias upgrade='sudo -S echo "Upgrading all system..."; sudo apk update; sudo apk upgrade; echo "All updates are completed.";'
+    alias upgrade='
+        sudo -v
+        echo -e "\033[1mUpgrading all system...\033[0m"
+        sudo apk update;
+        sudo apk upgrade;
+        echo -e "\033[1mAll updates are completed.\033[0m"
+    '
 fi
 if [[ -d "/data/data/com.termux/" ]]; then
-    alias upgrade='echo "Upgrading all system..." && apt update && apt full-upgrade -y && apt autoremove -y && pkg upgrade -y; echo "All updates are completed.";'
+    alias upgrade='
+        echo -e "\033[1mUpgrading all system...\033[0m"
+        echo "Termux (Android)"
+        echo -e "\033[32mapt\033[0m"
+        apt update && apt full-upgrade -y
+        apt autoremove -y
+        echo -e "\033[32mpkg\033[0m"
+        pkg upgrade -y;
+        echo -e "\033[1mAll updates are completed.\033[0m"
+    '
 fi
 
 # cd
@@ -41,47 +77,10 @@ if [[ "$(which adb 1>/dev/null 2>&1; echo $?)" == "0" ]]; then
     alias adb-r='adb-reverse'
     [[ -f $(which adb-push 1>/dev/null 2>&1)  ]] && alias adb-p='adb-push'
 
-    alias adb-reload='adb-key -r'
+    alias adb-reload='adb-ksey -r'
     alias adb-re='adb-reload'
 
-    alias adb-u='adb uninstall com.playipp.connect &>/dev/null'
-
     alias logcat='adb logcat'
-fi
-
-# React native
-if [[ "$(which react-native 1>/dev/null 2>&1; echo $?)" == "0" ]]; then
-    alias rn='react-native'
-    alias rn-s='
-        if [[ $(grep -q "\"react-native\":" package.json 2&>/dev/null || echo "1") -eq 0 ]]; then
-            rn start
-        elif [[ $(grep -q "\"react\":" package.json 2&>/dev/null || echo "1") -eq 0 ]]; then
-            yarn start
-        else
-            echo "Not a react-native or react project..."
-        fi'
-    alias rn-p='
-        if [[ $(grep -q "\"react-native\":" package.json 2&>/dev/null || echo "1") -eq 0 ]]; then
-            [[ -d "./android" ]] && echo -e "\e[1mCleaning gradlew...\e[0m"; cd android; ./gradlew clean; cd .. &&
-            [[ -d "./node_modules" ]] && (echo -en "\e[1mClearing node_modules...\e[0m"; rm -fr node_modules/; echo -e "\e[1m Done\e[0m") &&
-            echo -e "\e[1mInstalling moduels...\e[0m"; yarn &&
-            rn start --reset-cache;
-        elif [[ $(grep -q "\"react\":" package.json 2&>/dev/null || echo "1") -eq 0 ]]; then
-            [[ -d "node_modules" ]] && (echo -en "\e[1mClearing node_modules...\e[0m"; rm -fr node_modules/; echo -e "\e[1m Done\e[0m") &&
-            echo -e "\e[1mInstalling moduels...\e[0m"; yarn &&
-            yarn start
-        else
-            echo "Not a react-native or react project..."
-        fi'
-    alias rn-a='rn run-android'
-    alias rn-i='rn run-ios'
-    alias rn-w='rn-s'
-
-    alias rn-au='adb-u; rn-a; adb-r'
-    alias rn-ua='rn-au'
-
-    alias rn-reload='adb-reload'
-    alias rn-re='adb-reload'
 fi
 
 # Git shortcuts
@@ -121,6 +120,11 @@ if [[ "$(which git 1>/dev/null 2>&1; echo $?)" == "0" ]]; then
     }
 fi
 
+# Arch
+if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "arch" ]; then
+    alias ifconfig='ip addr'
+fi
+
 # Windows Linux SubSytstem
 if grep -iq 'microsoft' /proc/version &> /dev/null; then
     alias explorer='explorer.exe'
@@ -132,17 +136,12 @@ fi
 
 # Android Termux Terminal
 if [[ -d "/data/data/com.termux/" ]]; then
-    alias upgrade='echo "Upgrading all system..." && apt update && apt full-upgrade -y && apt autoremove -y && pkg upgrade -y; echo "All updates are completed.";'
-    
     alias sudo='su'
     
     alias toast='termux-toast -g top'
     alias call='termux-telephony-call'
-    alias call-fluff='call 0764039604'
     alias contacts='termux-contact-list | jq'
     alias vol='termux-volume'
     alias vib='termux-vibrate -f'
     alias clip='termux-clipboard-set'
 fi
-
-eval "$(starship init bash)"
