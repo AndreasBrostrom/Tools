@@ -24,7 +24,7 @@ if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "arch" ]; then
         echo -e "\033[32mPacman\033[0m"
         yes | sudo pacman -Syyu
         echo -e "\033[32mYey\033[0m"
-        yes | sudo yay -Syyu;
+        yes | yay -Syyu;
     '
 fi
 if [ "$(cat /etc/os-release | grep ID | cut -f 2 -d '=' | head -1)" == "alpine" ]; then
