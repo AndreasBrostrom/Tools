@@ -13,11 +13,11 @@ pacmanInstall=(
     nemo
   )
 
-snapInstall=(
-    code--classic
+yayInstall=(
+    visual-studio-code-bin
     spotify
     discord
-    slack--classic
+    slack
     scrcpy
     vlc
   )
@@ -31,24 +31,22 @@ sudo pacman -Syu
 echo -e "\e[1;34mInstalling linux apt packages...\e[0m"
 for app in ${pacmanInstall[@]}; do
     echo "Installing $app and requirements..."
-    yes| sudo pacman -S $app
+    sudo pacman -Sy $app
 done
 
 
-echo -e "\e[1;34mInstalling snap packages...\e[0m"
-for snap in ${snapInstall[@]}; do
-    echo "Installing snap $(sed "s/--classic/ with classic/g" <<< $snap)..."
-    sudo snap install $(sed "s/--/ --/g" <<< $snap) 1>/dev/null 2>&1
+echo -e "\e[1;34mInstalling yay packages...\e[0m"
+for app in ${yayInstall[@]}; do
+    yay -Sy $app
 done
 
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
-sudo pacman -Syu
+sudo pacman -Syyu
 
 echo -e "\e[1;34mSetting up home...\e[0m"
 
 [ ! -f "$HOME/.hidden" ] && touch $HOME/.hidden
-echo "snap" >> $HOME/.hidden
 
 # Android sdk
 if [ -d "$HOME/android-sdk" ]; then 
