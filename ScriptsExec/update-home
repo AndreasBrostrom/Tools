@@ -1,0 +1,23 @@
+#!/bin/bash
+
+mkdir /tmp/toolmaster/
+git clone https://github.com/ColdEvul/Tools.git /tmp/toolmaster
+cd /tmp/toolmaster
+
+if [ "$(cat /etc/os-release | grep ID_LIKE | cut -f 2 -d '=')" == "arch" ]; then
+    echo -e "Updating Arch home"
+    cp -fr $PWD/MyLibrary/Linux/home/.i3/config             $HOME/.i3/config
+    cp -fr $PWD/MyLibrary/Linux/home/.bashrc                $HOME/.bashrc
+    cp -fr $PWD/MyLibrary/Linux/home/.profile               $HOME/.profile
+    cp -fr $PWD/MyLibrary/Linux/home/.bash_profile          $HOME/.bash_profile
+    cp -fr $PWD/MyLibrary/Linux/home/.bash_aliases          $HOME/.bash_aliases
+    cp -fr $PWD/MyLibrary/Linux/home/.bash_path             $HOME/.bash_path
+    cp -fr $PWD/MyLibrary/Linux/home/.config/starship.toml  $HOME/.config/starship.toml
+    
+    cp -fr $PWD/Scripts/start_conky_evul                    $HOME/.bin/start_conky_evul
+    cp -fr $PWD/Scripts/conky/conky_evul                    $HOME/.bin/conky/conky_evul
+    cp -fr $PWD/Scripts/conky/conky1.10_shortcuts_evul      $HOME/.bin/conky/conky1.10_shortcuts_evul
+fi
+
+echo -e "Cleaning up"
+rm -rf /tmp/toolmaster
