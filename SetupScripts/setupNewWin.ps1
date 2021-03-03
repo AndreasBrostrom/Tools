@@ -168,6 +168,9 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
     New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"
     (get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
 
+    New-Item -itemtype "directory" -path "C:\Programs\Lib"
+    New-Item -itemtype "directory" -path "C:\Programs\Src"
+
 } else {
     Write-Host "Root already setup skipping..." -ForegroundColor Yellow
 }
@@ -284,7 +287,17 @@ Write-Host "Restoring keybindings and other systems..." -ForegroundColor Magenta
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\RebindCaps2Esc.reg" >$null 2>&1
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\winHotKeyTerminal.reg" >$null 2>&1
 
-
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
+
+# Setup Keyboard and languishes
+Write-Host "Setting up languages..." -ForegroundColor Magenta
+
+$LanguageList = Get-WinUserLanguageList 
+$LanguageList.Add("en-GB") Set-WinUserLanguageList 
+$LanguageList.Add("sv-SE") Set-WinUserLanguageList 
+Set-WinUserLanguageList en-GB -Force
+
+Write-Host "Language completed..." -ForegroundColor green
+
 
 Write-Host "Script completed." -ForegroundColor green

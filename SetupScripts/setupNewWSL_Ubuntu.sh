@@ -6,13 +6,18 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 fi
 
 aptInstall=(
-    git neovim
-    dos2unix jq ripgrep cargo ninja-build
-    python3 python3-pip
-    openjdk-8-jdk
-    terminator
-    nemo
-  )
+  git
+  neovim
+  dos2unix
+  jq
+  ripgrep
+  cargo
+  ninja-build
+  python3 python3-pip
+  openjdk-8-jdk
+  terminator
+  nemo
+)
 
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
@@ -37,19 +42,22 @@ sudo apt autoclean -y 1>/dev/null 2>&1
 echo -e "\e[1;34mSetting up home...\e[0m"
 cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.profile" $HOME/.profile
 cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bashrc" $HOME/.bashrc
+cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_profile" $HOME/.bash_profile
 cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_path" $HOME/.bash_path
 cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_aliases" $HOME/.bash_aliases
-cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_prompt" $HOME/.bash_prompt
 dos2unix $HOME/.bash*
 dos2unix $HOME/.profile
 
 # Setup some scripts
 mkdir $HOME/.bin  1>/dev/null 2>&1
 mkdir -p $HOME/Programs/bin 1>/dev/null 2>&1
+mkdir -p $HOME/Repositories 1>/dev/null 2>&1
 cp "$SCRIPTPATH/../Scripts/adb-key" $HOME/.bin/adb-key
+cp "$SCRIPTPATH/../Scripts/adb-pull" $HOME/.bin/adb-pull
 cp "$SCRIPTPATH/../Scripts/adb-push" $HOME/.bin/adb-push
+cp "$SCRIPTPATH/../Scripts/detach" $HOME/.bin/detach
 dos2unix $HOME/.bin/*
 
-
+python3 $SCRIPTPATH/setupNewWSLHome.py
 
 echo -e "done"
