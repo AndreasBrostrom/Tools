@@ -16,8 +16,6 @@ pacmanInstall=(
   python3-pip
   ripgrep
   terminator
-  yay
-
 )
 
 
@@ -30,7 +28,7 @@ sudo pacman -Suyy
 echo -e "\e[1;34mInstalling general packages and tools...\e[0m"
 for app in ${pacmanInstall[@]}; do
   echo "Installing $app and requirements..."
-  sudo pacman install $app -y
+  sudo pacman -Sy $app
 done
 
 echo -e "\e[1;34mInstalling starfish prompt...\e[0m"
