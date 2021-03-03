@@ -6,19 +6,19 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 fi
 
 pacmanInstall=(
-    git
-    gh
-    neovim
-    android-sdk
-    dos2unix
-    jq
-    ripgrep
-    python3
-    python3-pip
-    terminator
-    nemo
-    yay
-  )
+  dos2unix
+  gh
+  git
+  jq
+  nemo
+  neovim
+  python3
+  python3-pip
+  ripgrep
+  terminator
+  yay
+
+)
 
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
@@ -32,6 +32,9 @@ for app in ${pacmanInstall[@]}; do
   echo "Installing $app and requirements..."
   sudo pacman install $app -y
 done
+
+echo -e "\e[1;34mInstalling starfish prompt...\e[0m"
+curl -fsSL https://starship.rs/install.sh | bash
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
 sudo pacman -Suyy

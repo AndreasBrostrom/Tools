@@ -6,17 +6,16 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 fi
 
 aptInstall=(
-  git
-  neovim
   dos2unix
+  gh
+  git
   jq
-  ripgrep
-  cargo
-  ninja-build
-  python3 python3-pip
-  openjdk-8-jdk
-  terminator
   nemo
+  neovim
+  python3
+  python3-pip
+  ripgrep
+  terminator
 )
 
 
@@ -40,17 +39,22 @@ sudo apt autoclean -y 1>/dev/null 2>&1
 
 # Setup bashrc and home
 echo -e "\e[1;34mSetting up home...\e[0m"
-cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.profile" $HOME/.profile
-cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bashrc" $HOME/.bashrc
-cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_profile" $HOME/.bash_profile
-cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_path" $HOME/.bash_path
-cp "$SCRIPTPATH/../MyLibrary/Linux/bash/.bash_aliases" $HOME/.bash_aliases
+mkdir $HOME/.config  1>/dev/null 2>&1
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.profile" $HOME/.profile
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bashrc" $HOME/.bashrc
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_profile" $HOME/.bash_profile
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_path" $HOME/.bash_path
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_aliases" $HOME/.bash_aliases
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.config/starship.toml" $HOME/.config/starship.toml
+
 dos2unix $HOME/.bash*
 dos2unix $HOME/.profile
 
 # Setup some scripts
 mkdir $HOME/.bin  1>/dev/null 2>&1
 mkdir -p $HOME/Programs/bin 1>/dev/null 2>&1
+mkdir -p $HOME/Programs/src 1>/dev/null 2>&1
+mkdir -p $HOME/Programs/lib 1>/dev/null 2>&1
 mkdir -p $HOME/Repositories 1>/dev/null 2>&1
 cp "$SCRIPTPATH/../Scripts/adb-key" $HOME/.bin/adb-key
 cp "$SCRIPTPATH/../Scripts/adb-pull" $HOME/.bin/adb-pull
