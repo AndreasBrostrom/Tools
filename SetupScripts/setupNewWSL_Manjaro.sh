@@ -28,7 +28,7 @@ sudo pacman -Suyy
 echo -e "\e[1;34mInstalling general packages and tools...\e[0m"
 for app in ${pacmanInstall[@]}; do
   echo "Installing $app and requirements..."
-  sudo pacman -Sy $app
+  sudo pacman -Syy $app
 done
 
 echo -e "\e[1;34mInstalling starfish prompt...\e[0m"
@@ -39,11 +39,13 @@ sudo pacman -Suyy
 
 # Setup bashrc and home
 echo -e "\e[1;34mSetting up home...\e[0m"
+mkdir $HOME/.config  1>/dev/null 2>&1
 cp "$SCRIPTPATH/../MyLibrary/Linux/home/.profile" $HOME/.profile
 cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bashrc" $HOME/.bashrc
 cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_profile" $HOME/.bash_profile
 cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_path" $HOME/.bash_path
 cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_aliases" $HOME/.bash_aliases
+cp "$SCRIPTPATH/../MyLibrary/Linux/home/.config/starship.toml" $HOME/.config/starship.toml
 dos2unix $HOME/.bash*
 dos2unix $HOME/.profile
 
