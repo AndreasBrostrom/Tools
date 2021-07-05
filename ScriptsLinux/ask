@@ -1,0 +1,18 @@
+#!/bin/bash
+
+message="$1"
+[ "$1" == "" ] && message="Are you sure?"
+command=$2
+[ "$2" == "" ] && command="echo Action done"
+i=0
+printf "$message (Yes or No): "
+while [ True ]; do
+    read -p "" -r
+    case "$REPLY" in 
+        Yes|yes|Y|y|1|true ) $command;;
+        No|no|N|n|0|false  ) echo; exit 1;;
+    esac
+    ((i=i+1))
+    [ $i == 4 ] && exit 1
+    printf "You need to awnser Yes or No: "
+done

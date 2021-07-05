@@ -1,0 +1,21 @@
+#!/bin/bash
+echo "
+   WNXXXXXXXXXXXXXXXXXXXXXXXXXXXNW
+   O,...ckkkkkkkkkkkkkkkkkkkkkkOKW
+   Nk;..,dKXxcccccccccccccclxKNWW
+    WKo'..lOx,.;oxxxxxxxxxxkKW
+      Nk;..,dxc,oKWW
+       WKo'..cxo;:okN
+         NO:..,dxc,,oKW
+          WKo'..cxkd;:kN
+            NO:..,:oxc,lKW
+             Nk,....cxd;:kN
+          WXkl,......,oxc,dN
+       WNOo;..':xOOd,..:xddX
+     WKd:'..;o0N   WOc..,o0W
+  WXkc,..,lkXW       Xd,..:OW
+ Wk;..'cxKW           W0c..'oKW
+ Nd';d0N               WXx;',l0W
+ WKONW                   WXKKKNW
+
+"

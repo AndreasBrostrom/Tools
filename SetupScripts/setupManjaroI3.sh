@@ -3,7 +3,6 @@
 pacmanInstall=(
     git gh neovim
     android-sdk
-    snapd
     dos2unix jq ripgrep
     python3 python3-pip
     openjdk-8-jdk
@@ -11,6 +10,7 @@ pacmanInstall=(
     gparted
     steam-installer
     nemo
+    starship
   )
 
 yayInstall=(
@@ -25,24 +25,24 @@ yayInstall=(
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
 
 echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
-sudo pacman -Syu
+yes | sudo pacman -Syyu
 
 # Setup and install snap
 echo -e "\e[1;34mInstalling linux apt packages...\e[0m"
 for app in ${pacmanInstall[@]}; do
     echo "Installing $app and requirements..."
-    sudo pacman -Sy $app
+    yes | sudo pacman -Sy $app
 done
 
 
 echo -e "\e[1;34mInstalling yay packages...\e[0m"
 for app in ${yayInstall[@]}; do
-    yay -Sy $app
+    yes | yay -Sy $app
 done
 
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
-sudo pacman -Syyu
+yes | sudo pacman -Syyu
 
 echo -e "\e[1;34mSetting up home...\e[0m"
 
@@ -58,17 +58,17 @@ fi
 # Setting up home
 [ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/bin
+[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/lib
+[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/src
+[ ! -d "$HOME/Reposetories" ] && mkdir -p $HOME/Reposetories
 
-cp $SCRIPTPATH/../MyLibrary/Linux/bash/.bash_aliases $HOME/.
-cp $SCRIPTPATH/../MyLibrary/Linux/bash/.bash_path $HOME/.
-cp $SCRIPTPATH/../MyLibrary/Linux/bash/.bash_prompt $HOME/.
-cp $SCRIPTPATH/../MyLibrary/Linux/bash/.bashrc $HOME/.
-cp $SCRIPTPATH/../MyLibrary/Linux/bash/.profile $HOME/.
+cd $SCRIPTPATH/ScriptsLinux
+cp * $HOME/.bin
 
-cp $SCRIPTPATH/../Scripts/adb-key $HOME/.bin/.
-cp $SCRIPTPATH/../Scripts/adb-pull $HOME/.bin/.
-cp $SCRIPTPATH/../Scripts/adb-push $HOME/.bin/.
-cp $SCRIPTPATH/../Scripts/detach $HOME/.bin/.
-cp $SCRIPTPATH/../Scripts/gh-pr $HOME/.bin/.
+cd $SCRIPTPATH/Reposetories
+git clone https://github.com/ColdEvul/dotfiles.git
+cd dotfiles
+chmod +x install
+./install
 
 echo -e "done"

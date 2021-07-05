@@ -5,7 +5,7 @@ conky.config = {
 	cpu_avg_samples = 2,
 	default_color = 'F9FAF9',
 	double_buffer = true,
-	font = 'Bitstream Vera Sans:size=8',
+	font = 'Bitstream Vera Sans:size=9',
 	draw_shades = false,
 	gap_x = 25,
 	gap_y = 45,
@@ -19,10 +19,7 @@ conky.config = {
 }
 conky.text = [[
 ${color2}open new terminal - ${color}mod+Enter
-${color2}kill focused - ${color}mod+Shift+q || alt+F4
-${color2}open browser - ${color}mod+F2
-
-${color2}toggle split direction - ${color}mod+q
+${color2}kill focused - ${color}mod+Shift+q || alt+f4
 
 ${color2}dmenu - ${color}mod+d
 ${color2}morc_menu - ${color}mod+z
@@ -31,8 +28,11 @@ ${color2}switch to workspace 1-8 - ${color}mod+1-8
 ${color2}send to workspace 1-8 - ${color}mod+Ctrl+1-8
 ${color2}navigate workspaces - ${color}mod+Ctrl+arrowkeys
 ${color2}toggle floating - ${color}mod+Shift+Space
-${color2}exit - ${color}mod+0
 
-${color2}help - ${color}mod+Shift+h
-default mod=<Super>
+${color2}nemo - ${color}mod+n
+${color2}code - ${color}mod+ctrl+c
+
+${color2}lock - ${color}mod+l
+${color2}logout - ${color}mod+ctrl+l
+${color2}exit - ${color}mod+0
 ]]

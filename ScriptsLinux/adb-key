@@ -1,22 +1,21 @@
 #!/bin/bash
 set -e
+version="1.1"
+scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
-# Help
-scrtiptPathName="$0"
-scriptName=${scrtiptPathName##*/}
+if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
+echo "Usage: $scriptName [FILE] [OPTION]
+Downloads a file you define or if a latest screenshot or photo from your phone.
 
-if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
-    echo "Usage: $scriptName [OPTION]"
-    echo ""
-    echo "Mandatory arguments to long options are mandatory for short options too."
-    echo "  -k [KEY] --key [KEY]     send a keyevent to a connected device"
-    echo "  -i [TEXT] --input [TEXT] send a text input to a connected device"
-    echo ""
-    echo "  -s, --shake              send a shake event to a connected device"
-    echo "  -r, --refresh            send a shake and enter, enter event to connected device"
-    echo "  -h, --help               show this help document"
-    echo ""
-    exit 0
+  -k [KEY] --key [KEY]     send a keyevent to a connected device
+  -i [TEXT] --input [TEXT] send a text input to a connected device
+
+  -s, --shake              send a shake event to a connected device
+  -r, --refresh            send a shake and enter, enter event to connected device
+
+  -v, --version         show version number
+  -h, --help            show this help"
+exit 0
 fi
 
 # Shake event

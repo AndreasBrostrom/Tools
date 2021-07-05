@@ -1,2 +1,0 @@
-
-[[ -f $HOME/.bashrc ]] && . ~/.bashrc

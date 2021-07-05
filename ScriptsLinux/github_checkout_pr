@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# This script Require GIT and GH to function propperly
+# Best usage is to add the script to your git aliases
+# > [alias]
+# >	checkout-pr = "!bash git-checkout-pr"
 
 if [ $# -eq 0 ]; then
     echo -e "No pull request number provided"
@@ -15,3 +20,8 @@ fi
 
 branch=$(gh pr list | grep "$*" | cut -f3 | sed 's/.*://')
 git checkout "${branch}"
+
+if [ $? -eq 1 ]; then
+    echo "Obtaining remote and checking out branch."
+    gh pr checkout $1
+fi

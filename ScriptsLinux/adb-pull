@@ -1,7 +1,6 @@
 #!/bin/bash
-version="1.0"
-
 set -e
+version="1.1"
 
 # Check arguments
 if [[ $# == 0 ]]; then
@@ -11,13 +10,15 @@ fi
 
 # Arguments
 if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
-echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") FILE [options]
+echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [FILE] [OPTION]
+Downloads a file you define or if a latest screenshot or photo from your phone.
 
--s, --s               download latest screenshot
--l, --ls              list provied path files [/sdcard to find your files]
--v, --version         show version number
+  -s, --screenshot      download latest screenshot
+  -p, --photo           download latest photo
+  -l, --ls              list provied path files [/sdcard to find your files]
 
--h, --help            show this help"
+  -v, --version         show version number
+  -h, --help            show this help"
 exit 0
 fi
 
@@ -25,6 +26,7 @@ if [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
     echo -e "$(basename "$(test -L "$0" && readlink "$0" || echo "$0")") Version: $version"
     exit 0
 fi
+
 if [ "$1" == "-l" ] || [ "$1" == "--ls" ]; then
     adb shell ls $2
     exit 0
