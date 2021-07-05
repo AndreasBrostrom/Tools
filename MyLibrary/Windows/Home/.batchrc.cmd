@@ -1,11 +1,5 @@
 @echo off
 
-:: Set prompt to unix like
-SET PROMPT_P=[34m$P[0m$S
-SET PROMPT_E=$G$S
-SET PROMPT_DEF=%PROMPT_U%%PROMPT_P%%PROMPT_E%
-PROMPT %PROMPT_DEF%
-
 :: CD adjustments and path setting
 if "%CD%" == "C:\Windows\system32" (set isWinSys32P=true)
 if "%CD%" == "C:\Windows\System32" (set isWinSys32P=true)
