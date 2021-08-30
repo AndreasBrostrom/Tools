@@ -25,12 +25,10 @@ yayInstall=(
     slack
     scrcpy
     vlc
-    nerd-fonts-hack
-    nerd-fonts-noto-sans-mono
-    nerd-fonts-terminus
-    ttf-nerd-fonts-symbols
-    ttf-nerd-fonts-symbols-mono
-    ttf-ms-fonts
+
+    nerd-fonts-hack nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
+    ttf-ms-fonts ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade ttf-google-fonts-git ttf-inconsolata
+
   )
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
