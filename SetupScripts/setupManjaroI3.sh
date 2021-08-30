@@ -20,6 +20,12 @@ yayInstall=(
     slack
     scrcpy
     vlc
+    nerd-fonts-hack
+    nerd-fonts-noto-sans-mono
+    nerd-fonts-terminus
+    ttf-nerd-fonts-symbols
+    ttf-nerd-fonts-symbols-mono
+    ttf-ms-fonts
   )
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
