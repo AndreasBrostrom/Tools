@@ -13,6 +13,11 @@ pacmanInstall=(
     starship
   )
 
+pacmanRemove=(
+    snapd
+    flatpak
+  )
+
 yayInstall=(
     visual-studio-code-bin
     spotify
@@ -34,18 +39,29 @@ echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
 yes | sudo pacman -Syyu
 
 # Setup and install snap
-echo -e "\e[1;34mInstalling linux apt packages...\e[0m"
+echo -e "\e[1;34mInstalling pacman packages...\e[0m"
 for app in ${pacmanInstall[@]}; do
     echo "Installing $app and requirements..."
     yes | sudo pacman -Sy $app
 done
 
-
 echo -e "\e[1;34mInstalling yay packages...\e[0m"
 for app in ${yayInstall[@]}; do
+    echo "Installing $app and requirements..."
     yes | yay -Sy $app
 done
 
+echo -e "\e[1;34mRemoving preinstalled packages...\e[0m"
+for app in ${pacmanRemove[@]}; do
+    echo "Installing $app and requirements..."
+    yes | sudo pacman -R $app
+    if [ "$app" == "snapd" ]; then
+      sudo rm -r /var/lib/snapd
+    elif [ "$app" == "snap" ]; then
+      sudo rm -r /var/lib/flatpak
+      rm -r ~/.local/share/flatpak
+    fi
+done
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
 yes | sudo pacman -Syyu
