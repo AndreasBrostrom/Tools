@@ -26,8 +26,8 @@ yayInstall=(
     scrcpy
     vlc
 
-    nerd-fonts-hack nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
-    ttf-ms-fonts
+    nerd-fonts-hack nerd-fonts-dejavu-complete nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
+    ttf-ms-fonts 
 
   )
 
