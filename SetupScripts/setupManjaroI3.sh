@@ -26,8 +26,8 @@ yayInstall=(
     scrcpy
     vlc
 
-    nerd-fonts-hack nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
-    ttf-ms-fonts ttf-amiri ttf-arabeyes-fonts ttf-qurancomplex-fonts ttf-sil-lateef ttf-sil-scheherazade ttf-google-fonts-git ttf-inconsolata
+    nerd-fonts-hack nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
+    ttf-ms-fonts
 
   )
 
@@ -63,6 +63,9 @@ done
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
 yes | sudo pacman -Syyu
+
+echo -e "\e[1;34mUpdating Font Repository...\e[0m"
+fc-cache -rfv
 
 echo -e "\e[1;34mSetting up home...\e[0m"
 
