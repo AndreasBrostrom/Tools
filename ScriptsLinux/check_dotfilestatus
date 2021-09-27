@@ -1,0 +1,25 @@
+#!/bin/bash
+# .config/i3status/config
+#    read_file dotfiles {
+#            format_bad = ""
+#            path = "/home/andre/.cache/dotfileWatcher/log"
+#    }
+
+while true; do 
+    sleep 10
+
+    [ ! -d "$HOME/.cache/dotfileWatcher" ] && mkdir -p "$HOME/.cache/dotfileWatcher"
+
+    if [[ ! $(git -C ~/Reposetories/dotfiles status | grep nothin) || $(git -C ~/Reposetories/dotfiles status | grep Untracked) ]]; then
+        echo "Changes detected (dotfiles)"
+        echo "!"  > $HOME/.cache/dotfileWatcher/log
+        continue
+    fi
+    if [[ ! $(git -C ~/Reposetories/dotfiles_private status | grep nothin) || $(git -C ~/Reposetories/dotfiles_private status | grep Untracked) ]]; then
+        echo "Changes detected (dotfiles_private)"
+        echo "!"  > $HOME/.cache/dotfileWatcher/log
+        continue
+    fi
+    echo "No Changed detected"
+    echo "" > $HOME/.cache/dotfileWatcher/log
+done

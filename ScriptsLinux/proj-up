@@ -1,0 +1,165 @@
+#!/bin/bash
+version="1.7"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    shopt -s expand_aliases
+    alias basename='gbasename'
+    alias readlink='greadlink'
+    alias dirname='gdirname'
+fi
+
+# Arguments
+if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
+echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [options]
+-i   --install           install node modules
+-c,  --clear             clear all node moduels directories and reinstall them
+-C,  --clear-all         clear all node moduels directories and reinstall and clear gradlew and pods
+-CC, --clear-all-cache   clear all node moduels directories and all other project related cache files
+-v,  --version           show version number
+-l, --check              list detected package.json
+
+-h,  --help              show this help"
+exit 0
+fi
+
+# Check arguments
+#if [[ ! $# == 0 ]]; then
+#    valid_commands="-c --clear -C --clear-all -CC --clear-cache -v --version -i --install"
+#    if [[ ! " $valid_commands " =~ .*\ $*\ .* ]]; then
+#        echo "$(basename $0): $*: invalid option"
+#        exit 1
+#    fi
+#fi
+
+# check if git project 
+if [ ! $(git rev-parse --is-inside-work-tree 2>/dev/null) ]; then
+    echo -e '\033[91;7m ERROR \033[0m This is not a git project.'
+    exit 1
+fi
+
+# Set up empty package collection
+packageInstalledYarn=()
+packageInstalledNPM=()
+packageInstalledNPMERR=()
+
+projectRoot=$(git rev-parse --show-toplevel)
+
+cd $projectRoot
+
+allModuels=$(find * -maxdepth 2 -name "package.json")
+allGradlewModuels=$(find * -maxdepth 2 -name "gradlew")
+allPodsModuels=$(find * -maxdepth 2 -name "Pods")
+
+function program_show_version() {
+    echo -e "$(basename "$(test -L "$0" && readlink "$0" || echo "$0")") Version: $version\n"
+}
+
+function program_clear_outside_cache() {
+    if command -v watchman &> /dev/null; then
+        echo "Cleaning watchman..."
+        watchman watch-del-all
+    fi
+
+    echo -e "\033[1mCleaning cache folders...\033[0m"
+    rm -rf /tmp/react-native-packager-cache-*
+    rm -rf /tmp/metro-cache*
+    rm -rf /tmp/metro-bundler-cache-*
+    rm -rf /tmp/yarn*
+    rm -rf /tmp/gradle*
+    
+    rm -rf $HOME/.gradle/caches/*
+    rm -rf $HOME/.react-native-cli/cache/*
+    rm -rf $HOME/.cache/yarn
+
+    echo -e "\033[1mClearing yarn cache...\033[0m"
+    yarn cache clean
+}
+
+function program_clear_android_ios_build_cache() {
+    if [ -d android ]; then 
+        echo -e "\033[1mDetected android folder...\033[0m"
+        echo -e "\033[1mCleaning android cash...\033[0m"
+        [ -d .gradle ]                                                 && rm -rf .gradle
+        [ -d android/.gradle ]                                         && rm -rf android/.gradle
+        [ -d android/app/build ]                                       && rm -rf android/app/build
+        [ -d android/app/src/main/java/com/playipp/connect/generated ] && rm -rf android/app/src/main/java/com/playipp/connect/generated
+        
+        [ -f android/app/google-services.json ]                        && rm -rf android/android/app/google-services.json
+    fi
+    if [ -d ios ]; then 
+        echo -e "\033[1mDetected ios folder...\033[0m"
+        echo -e "\033[1mCleaning ios cash...\033[0m"
+        [ -f ios/app/GoogleService-Info.plist ]                        && rm -rf ios/app/GoogleService-Info.plist
+    fi
+}
+
+function program_clear_pod_gradlew_build_cache() {
+        echo -e "\033[1mClearing program spesific cache...\033[0m"
+        for gradlew in $allGradlewModuels; do
+            gradlewPath=$(dirname $(readlink -f "$gradlew"))
+            cd $gradlewPath
+            echo -e "\033[1mCleaning gradlew...\033[0m"
+            ./gradlew clean
+            echo -e "\033[32mGradlew in '$(dirname $gradlew)' have been cleared\033[0m"
+            cd $projectRoot
+        done
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            for pod in $allPodsModuels; do
+                podPath=$(dirname $(readlink -f "$pod"))
+                cd $podPath
+                echo -e "\033[1mCleaning pods...\033[0m"
+                pod cache clean --all
+                pod install
+                echo -e "\033[32mPods in '$(dirname $pod)' have been cleared\033[0m"
+                cd $projectRoot
+            done
+        fi
+}
+
+function program_clear_install_moduels() {
+    for package in $allModuels; do
+        modulePath=$(dirname $(readlink -f "$package"))
+        cd $modulePath
+        if [ -d node_modules/ ]; then
+            relPath=$(realpath --relative-to="$projectRoot" "$modulePath")
+            echo -e "\033[34;1mChecking directory '$relPath'\033[0m"
+            if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] && [ -d node_modules ]; then
+                echo -e "\033[1mClearing '$(dirname $package)' moduels...\033[0m"
+                echo -e "\033[2m./$relPath\033[0m"
+
+                [ -d node_modules/ ] && rm -rf node_modules/
+                [ ! -d node_modules/ ] && echo -e "\033[0mModuels successfully cleared\033[0m"
+
+                if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ]; then
+                    program_clear_android_ios_build_cache $*
+                fi
+            fi
+            if [ "$*" == "-i" ]; then 
+                echo -e "\033[1mInstalling '$(dirname $package)' moduels...\033[0m"
+                yarn
+            fi
+        fi
+        cd $projectRoot
+    done   
+}
+
+if [ "$*" == "-v" ] || [ "$*" == "--version" ]; then
+    program_show_version
+    exit 0
+fi
+
+if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ]; then
+    program_clear_outside_cache
+fi
+
+if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "-i" ] || [ "$*" == "--install" ]; then
+     program_clear_install_moduels $*
+fi 
+
+if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ]; then
+    program_clear_pod_gradlew_build_cache
+fi
+
+[ -z "$packageInstalledNPM" ] || for p in "$packageInstalledNPM"; do echo -e "\033[93;7m WARNING \033[0m packages in '$p' used npm instead of yarn.\033[0m"; done
+[ -z "$packageInstalledNPMERR" ] || for p in "$packageInstalledNPMERR"; do echo -e "\033[93;7m WARNING \033[0m packages in '$p' tried to use npm but used yarn instead.\033[0m"; done
+echo ""

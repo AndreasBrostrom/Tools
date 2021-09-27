@@ -4,7 +4,11 @@ emulator_proxy_function () {
     if [ ! -f $ANDROID_HOME/emulator/emulator-x86 ]; then
         ln $ANDROID_HOME/emulator/emulator $ANDROID_HOME/emulator/emulator-x86
     fi
+    
+    # setup config dir
+    if [ ! -d ~/.config/emulator_proxy/ ]; then mkdir ~/.config/emulator_proxy; fi
 
+    # Read config
     if [ -f ~/.config/emulator_proxy/default ]; then
         defaultEmulator=$(cat ~/.config/emulator_proxy/default)
     else
@@ -29,7 +33,6 @@ emulator_proxy_function () {
     fi
     if [ "$1" == "--set" ]; then
         if [ "$2" == "" ]; then echo "No default emulator defined"; exit 1; fi
-        if [ ! -d ~/.config/emulator_proxy/ ]; then mkdir ~/.config/emulator_proxy/default; fi
         avalibleEmulators="$(emulator -list-avds)"
         if ! echo ${avalibleEmulators[@]} | grep -q -w "$2"; then echo "'$2' is not a valid emulator"; exit 1; fi
         echo "$2" > ~/.config/emulator_proxy/default
