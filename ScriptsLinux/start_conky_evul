@@ -1,6 +1,0 @@
-#!/bin/bash
-
-conky -c $HOME/.bin/conky/conky1.10_shortcuts_evul &&
-conky -c $HOME/.bin/conky/conky_evul &&
-
-exit 0

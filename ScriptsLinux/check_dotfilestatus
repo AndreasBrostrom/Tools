@@ -10,12 +10,12 @@ while true; do
 
     [ ! -d "$HOME/.cache/dotfileWatcher" ] && mkdir -p "$HOME/.cache/dotfileWatcher"
 
-    if [[ ! $(git -C ~/Reposetories/dotfiles status | grep nothin) || $(git -C ~/Reposetories/dotfiles status | grep Untracked) ]]; then
+    if [[ ! $(git -C ~/Repositories/dotfiles status | grep nothin) || $(git -C ~/Repositories/dotfiles status | grep Untracked) ]]; then
         echo "Changes detected (dotfiles)"
         echo "!"  > $HOME/.cache/dotfileWatcher/log
         continue
     fi
-    if [[ ! $(git -C ~/Reposetories/dotfiles_private status | grep nothin) || $(git -C ~/Reposetories/dotfiles_private status | grep Untracked) ]]; then
+    if [[ ! $(git -C ~/Repositories/dotfiles_private status | grep nothin) || $(git -C ~/Repositories/dotfiles_private status | grep Untracked) ]]; then
         echo "Changes detected (dotfiles_private)"
         echo "!"  > $HOME/.cache/dotfileWatcher/log
         continue
