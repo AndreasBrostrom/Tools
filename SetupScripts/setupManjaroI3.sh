@@ -9,7 +9,7 @@ pacmanInstall=(
     terminator
     gparted
     steam-installer
-    nemo
+    #nemo
     starship
   )
 
