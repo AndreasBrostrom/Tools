@@ -69,7 +69,7 @@ fc-cache -rfv
 
 echo -e "\e[1;34mSetting up home...\e[0m"
 
-[ ! -f "$HOME/.hidden" ] && touch $HOME/.hidden
+#[ ! -f "$HOME/.hidden" ] && touch $HOME/.hidden
 
 # Android sdk
 if [ -d "$HOME/android-sdk" ]; then 
