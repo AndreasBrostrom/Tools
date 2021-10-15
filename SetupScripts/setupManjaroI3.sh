@@ -20,6 +20,8 @@ yayInstall=(
     android-sdk
 
     visual-studio-code-bin
+    node
+    ts-node
     
     spotify
     discord
