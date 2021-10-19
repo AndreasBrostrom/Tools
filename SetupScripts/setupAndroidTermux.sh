@@ -3,6 +3,7 @@ pkgInstall=(
     git gh neovim
     dos2unix jq ripgrep
     python3
+    starship
   )
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
