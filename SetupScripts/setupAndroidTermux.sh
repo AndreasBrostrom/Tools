@@ -3,6 +3,7 @@ pkgInstall=(
     git gh neovim
     dos2unix jq ripgrep
     python3
+    openssh
     starship
   )
 
@@ -44,7 +45,7 @@ if [ ! -d "$HOME/Repositories/dotfiles" ]; then
   cd $HOME/Repositories
   git clone https://github.com/AndreasBrostrom/dotfiles.git
 fi
-cd dotfiles
+cd $HOME/Repositories/dotfiles
 chmod +x install
 ./install
 
