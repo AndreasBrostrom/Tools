@@ -43,13 +43,13 @@ echo -e "\e[1;34mSetting up home...\e[0m"
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/bin
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/lib
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/src
-[ ! -d "$HOME/Reposetories" ] && mkdir -p $HOME/Reposetories
+[ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 
 cd $SCRIPTPATH/ScriptsLinux
 cp * $HOME/.bin
 
-cd $SCRIPTPATH/Reposetories
-git clone https://github.com/ColdEvul/dotfiles.git
+cd $SCRIPTPATH/Repositories
+git clone https://github.com/AndreasBrostrom/dotfiles.git
 cd dotfiles
 chmod +x install
 ./install

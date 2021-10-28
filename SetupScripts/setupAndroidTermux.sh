@@ -38,7 +38,7 @@ cp * $HOME/.bin
 
 cd $SCRIPTPATH/Repositories
 if [ ! -d "$HOME/Repositories/dotfiles" ]; then
-  git clone https://github.com/ColdEvul/dotfiles.git
+  git clone https://github.com/AndreasBrostrom/dotfiles.git
 fi
 cd dotfiles
 chmod +x install

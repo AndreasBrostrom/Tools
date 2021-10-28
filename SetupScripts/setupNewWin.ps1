@@ -4,7 +4,7 @@ if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shel
 # Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
 # GLOBALS
-$scoop_buckets    = 'extras', 'Arma3Tools https://github.com/ColdEvul/arma3-scoop-bucket.git'
+$scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
 
 $scoop_pkg        = 'git', 'curl',
                     'aria2', '7zip',

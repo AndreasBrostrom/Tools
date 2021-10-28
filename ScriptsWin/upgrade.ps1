@@ -21,7 +21,7 @@ if ($help) {
 }
 if ($Version) {
     $versionNr = 1,10,0
-    $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
+    $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/Scripts/upgrade.ps1"
     $newUpScriptStr = ($newUpScript.Content).ToString() -split '\n'
     $newUpScriptVer = $newUpScriptStr | Select-String -Pattern 'versionNr'
     $newUpScriptVer = $newUpScriptVer -split "=" -split "," -replace " ", ""
@@ -54,7 +54,7 @@ if ($Version) {
 }
 if ($Upgrade) {
     Write-Host "Updating script"
-    $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/ColdEvul/Tools/master/Scripts/upgrade.ps1"
+    $newUpScript = Invoke-WebRequest "https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/Scripts/upgrade.ps1"
     ($newUpScript.Content).ToString() | Out-File -FilePath (Get-Item $PSCommandPath ).FullName
     Write-Host "Script update complete"
     exit 0

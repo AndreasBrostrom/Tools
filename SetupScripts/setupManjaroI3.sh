@@ -92,7 +92,7 @@ cd $SCRIPTPATH/ScriptsLinux
 cp * $HOME/.bin
 
 cd $SCRIPTPATH/Repositories
-git clone https://github.com/ColdEvul/dotfiles.git
+git clone https://github.com/AndreasBrostrom/dotfiles.git
 cd dotfiles
 chmod +x install
 ./install
