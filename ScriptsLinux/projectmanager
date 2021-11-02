@@ -12,10 +12,10 @@ fi
 if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
 echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [options]
 -i   --install             install node modules
+-CB, --clear-buildfolders  clear build folders
 -c,  --clear               clear all node moduels directories and reinstall them
 -C,  --clear-all           clear all node moduels directories and reinstall and clear gradlew and pods
 -CC, --clear-all-cache     clear all node moduels directories and all other project related cache files
--CB, --clear-buildfolders  clear build folders
 -v,  --version             show version number
 -l, --check                list detected package.json
 
@@ -77,43 +77,49 @@ function program_clear_outside_cache() {
 }
 
 function program_clear_android_ios_build_cache() {
-    if [ -d android ]; then 
-        echo -e "\033[1mCleaning android cash...\033[0m"
-        for objectPath in .gradle android/.gradle android/build android/app/build android/app/src/main/java/com/playipp/connect/generated android/android/app/google-services.json; do
-            if [ -d $objectPath ]; then
-                rm -rf $objectPath
-                echo " \033[2mremoved $objectPath\033[0m"
+    for package in $allModuels; do
+        modulePath=$(dirname $(readlink -f "$package"))
+        cd $modulePath
+        if [ -d android ]; then 
+            echo -e "\033[1mCleaning android cash...\033[0m"
+            for objectPath in .gradle android/.gradle android/build android/app/build android/app/src/main/java/com/playipp/connect/generated android/android/app/google-services.json; do
+                if [ -d $objectPath ]; then
+                    rm -rf $objectPath
+                    echo -e " \033[2mremoved $objectPath\033[0m"
+                fi
+            done
+        fi
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            if [ -d ios ]; then 
+                echo -e "\033[1mCleaning ios cash...\033[0m"
+                [ -f ios/app/GoogleService-Info.plist ]                        && rm -rf ios/app/GoogleService-Info.plist
             fi
-        done
-    fi
-    if [ -d ios ]; then 
-        echo -e "\033[1mDetected ios folder...\033[0m"
-        echo -e "\033[1mCleaning ios cash...\033[0m"
-        [ -f ios/app/GoogleService-Info.plist ]                        && rm -rf ios/app/GoogleService-Info.plist
-    fi
+        fi
+        cd $projectRoot
+    done
 }
 
 function program_clear_pod_gradlew_build_cache() {
-        echo -e "\033[1mClearing program spesific cache...\033[0m"
-        for gradlew in $allGradlewModuels; do
-            gradlewPath=$(dirname $(readlink -f "$gradlew"))
-            cd $gradlewPath
-            echo -e "\033[1mCleaning gradlew...\033[0m"
-            ./gradlew clean
-            echo -e "\033[32mGradlew in '$(dirname $gradlew)' have been cleared\033[0m"
+    echo -e "\033[1mClearing program spesific cache...\033[0m"
+    for gradlew in $allGradlewModuels; do
+        gradlewPath=$(dirname $(readlink -f "$gradlew"))
+        cd $gradlewPath
+        echo -e "\033[1mCleaning gradlew...\033[0m"
+        ./gradlew clean
+        echo -e "\033[32mGradlew in '$(dirname $gradlew)' have been cleared\033[0m"
+        cd $projectRoot
+    done
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        for pod in $allPodsModuels; do
+            podPath=$(dirname $(readlink -f "$pod"))
+            cd $podPath
+            echo -e "\033[1mCleaning pods...\033[0m"
+            pod cache clean --all
+            pod install
+            echo -e "\033[32mPods in '$(dirname $pod)' have been cleared\033[0m"
             cd $projectRoot
         done
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            for pod in $allPodsModuels; do
-                podPath=$(dirname $(readlink -f "$pod"))
-                cd $podPath
-                echo -e "\033[1mCleaning pods...\033[0m"
-                pod cache clean --all
-                pod install
-                echo -e "\033[32mPods in '$(dirname $pod)' have been cleared\033[0m"
-                cd $projectRoot
-            done
-        fi
+    fi
 }
 
 function program_clear_install_moduels() {
@@ -129,10 +135,6 @@ function program_clear_install_moduels() {
 
                 [ -d node_modules/ ] && rm -rf node_modules/
                 [ ! -d node_modules/ ] && echo -e "\033[0mModuels successfully cleared\033[0m"
-
-                if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ]; then
-                    program_clear_android_ios_build_cache $*
-                fi
             fi
             if [ "$*" == "-i" ]; then 
                 echo -e "\033[1mInstalling '$(dirname $package)' moduels...\033[0m"
@@ -140,7 +142,7 @@ function program_clear_install_moduels() {
             fi
         fi
         cd $projectRoot
-    done   
+    done
 }
 
 if [ "$*" == "-v" ] || [ "$*" == "--version" ]; then
