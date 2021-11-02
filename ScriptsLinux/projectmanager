@@ -78,14 +78,13 @@ function program_clear_outside_cache() {
 
 function program_clear_android_ios_build_cache() {
     if [ -d android ]; then 
-        echo -e "\033[1mDetected android folder...\033[0m"
         echo -e "\033[1mCleaning android cash...\033[0m"
-        [ -d .gradle ]                                                 && rm -rf .gradle
-        [ -d android/.gradle ]                                         && rm -rf android/.gradle
-        [ -d android/app/build ]                                       && rm -rf android/app/build
-        [ -d android/app/src/main/java/com/playipp/connect/generated ] && rm -rf android/app/src/main/java/com/playipp/connect/generated
-        
-        [ -f android/app/google-services.json ]                        && rm -rf android/android/app/google-services.json
+        for objectPath in .gradle android/.gradle android/build android/app/build android/app/src/main/java/com/playipp/connect/generated android/android/app/google-services.json; do
+            if [ -d $objectPath ]; then
+                rm -rf $objectPath
+                echo " \033[2mremoved $objectPath\033[0m"
+            fi
+        done
     fi
     if [ -d ios ]; then 
         echo -e "\033[1mDetected ios folder...\033[0m"
@@ -151,6 +150,10 @@ fi
 
 if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
     program_clear_outside_cache
+fi
+
+if [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
+    program_clear_android_ios_build_cache
 fi
 
 if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "-i" ] || [ "$*" == "--install" ]; then
