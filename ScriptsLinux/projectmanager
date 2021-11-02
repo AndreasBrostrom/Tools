@@ -11,14 +11,15 @@ fi
 # Arguments
 if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
 echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [options]
--i   --install           install node modules
--c,  --clear             clear all node moduels directories and reinstall them
--C,  --clear-all         clear all node moduels directories and reinstall and clear gradlew and pods
--CC, --clear-all-cache   clear all node moduels directories and all other project related cache files
--v,  --version           show version number
--l, --check              list detected package.json
+-i   --install             install node modules
+-c,  --clear               clear all node moduels directories and reinstall them
+-C,  --clear-all           clear all node moduels directories and reinstall and clear gradlew and pods
+-CC, --clear-all-cache     clear all node moduels directories and all other project related cache files
+-CB, --clear-buildfolders  clear build folders
+-v,  --version             show version number
+-l, --check                list detected package.json
 
--h,  --help              show this help"
+-h,  --help                show this help"
 exit 0
 fi
 
@@ -123,7 +124,7 @@ function program_clear_install_moduels() {
         if [ -d node_modules/ ]; then
             relPath=$(realpath --relative-to="$projectRoot" "$modulePath")
             echo -e "\033[34;1mChecking directory '$relPath'\033[0m"
-            if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] && [ -d node_modules ]; then
+            if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] && [ -d node_modules/ ]; then
                 echo -e "\033[1mClearing '$(dirname $package)' moduels...\033[0m"
                 echo -e "\033[2m./$relPath\033[0m"
 
@@ -148,7 +149,7 @@ if [ "$*" == "-v" ] || [ "$*" == "--version" ]; then
     exit 0
 fi
 
-if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ]; then
+if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
     program_clear_outside_cache
 fi
 
@@ -156,7 +157,7 @@ if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "
      program_clear_install_moduels $*
 fi 
 
-if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ]; then
+if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
     program_clear_pod_gradlew_build_cache
 fi
 
