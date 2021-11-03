@@ -1,11 +1,11 @@
 #!/bin/bash
 
 pacmanInstall=(
-    git gh neovim
+    git neovim
     dos2unix jq ripgrep
     python3 python3-pip
     terminator
-    gparted
+    gparted gnome-disk-utility
     steam
     starship
   )
@@ -17,7 +17,8 @@ pacmanRemove=(
 
 yayInstall=(
     jdk8-openjdk
-    android-sdk
+    android-sdk-cmdline-tools-latest #android-studio
+    github-cli
 
     visual-studio-code-bin
     node
@@ -31,7 +32,6 @@ yayInstall=(
 
     nerd-fonts-hack nerd-fonts-dejavu-complete nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
     ttf-ms-fonts
-
   )
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
@@ -91,10 +91,13 @@ fi
 cd $SCRIPTPATH/ScriptsLinux
 cp * $HOME/.bin
 
-cd $SCRIPTPATH/Repositories
+cd $HOME/Repositories
 git clone https://github.com/AndreasBrostrom/dotfiles.git
 cd dotfiles
+sed 's/https:\/\/github.com\//git@github.com:/g' .git/config
+cd dotfiles
 chmod +x install
+cd dotfiles
 ./install
 
 echo -e "done"
