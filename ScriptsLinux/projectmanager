@@ -1,5 +1,5 @@
 #!/bin/bash
-version="1.7"
+version="1.12"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     shopt -s expand_aliases
@@ -11,15 +11,14 @@ fi
 # Arguments
 if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
 echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [options]
--i   --install             install node modules
--CB, --clear-buildfolders  clear build folders
--c,  --clear               clear all node moduels directories and reinstall them
--C,  --clear-all           clear all node moduels directories and reinstall and clear gradlew and pods
--CC, --clear-all-cache     clear all node moduels directories and all other project related cache files
--v,  --version             show version number
--l, --check                list detected package.json
+-i   --install               install node modules
+-c,  --clear                 clear all node moduels and install node moduels
+-C,  --clear-all             clear all node moduels and reinstall as well as cashe
+-b,  --clear-build-folders   clear build folders
+-l,  --list                  list disoverd node moduels
+-v,  --version               show version number
 
--h,  --help                show this help"
+-h,  --help                  show this help"
 exit 0
 fi
 
@@ -122,24 +121,45 @@ function program_clear_pod_gradlew_build_cache() {
     fi
 }
 
-function program_clear_install_moduels() {
+function program_clear_node_moduels() {
     for package in $allModuels; do
         modulePath=$(dirname $(readlink -f "$package"))
         cd $modulePath
         if [ -d node_modules/ ]; then
             relPath=$(realpath --relative-to="$projectRoot" "$modulePath")
             echo -e "\033[34;1mChecking directory '$relPath'\033[0m"
-            if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] && [ -d node_modules/ ]; then
-                echo -e "\033[1mClearing '$(dirname $package)' moduels...\033[0m"
-                echo -e "\033[2m./$relPath\033[0m"
+            echo -e "\033[1mClearing '$(dirname $package)' moduels...\033[0m"
+            echo -e "\033[2m./$relPath\033[0m"
 
-                [ -d node_modules/ ] && rm -rf node_modules/
-                [ ! -d node_modules/ ] && echo -e "\033[0mModuels successfully cleared\033[0m"
-            fi
-            if [ "$*" == "-i" ]; then 
-                echo -e "\033[1mInstalling '$(dirname $package)' moduels...\033[0m"
-                yarn
-            fi
+            [ -d node_modules/ ] && rm -rf node_modules/
+            [ ! -d node_modules/ ] && echo -e "\033[0mModuels successfully cleared\033[0m"
+        fi
+        cd $projectRoot
+    done
+}
+
+function program_install_node_moduels() {
+    for package in $allModuels; do
+        modulePath=$(dirname $(readlink -f "$package"))
+        cd $modulePath
+        if [ -d node_modules/ ]; then
+            relPath=$(realpath --relative-to="$projectRoot" "$modulePath")
+            echo -e "\033[34;1mChecking directory '$relPath'\033[0m"
+            echo -e "\033[1mInstalling '$(dirname $package)' moduels...\033[0m"
+            yarn
+        fi
+        cd $projectRoot
+    done
+}
+
+function program_list_all_node_moduels() {
+    echo -e "\033[34;1mDiscoverd moduels\033[0m"
+    for package in $allModuels; do
+        modulePath=$(dirname $(readlink -f "$package"))
+        cd $modulePath
+        if [ -d node_modules/ ]; then
+            relPath=$(realpath --relative-to="$projectRoot" "$modulePath")
+            echo -e " - $(dirname $package)"
         fi
         cd $projectRoot
     done
@@ -150,22 +170,32 @@ if [ "$*" == "-v" ] || [ "$*" == "--version" ]; then
     exit 0
 fi
 
-if [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
+if [ "$*" == "-l" ] || [ "$*" == "--list" ]; then
+    program_list_all_node_moduels
+    exit 0
+fi
+
+if [ "$*" == "--clear" ] || [ "$*" == "-c" ]; then
+    program_clear_node_moduels
+    program_install_node_moduels
+fi
+
+if [ "$*" == "-i" ] || [ "$*" == "--install" ]; then
+    program_install_node_moduels
+fi
+
+if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ]; then
     program_clear_outside_cache
-fi
-
-if [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
+    program_clear_node_moduels
+    program_install_node_moduels
     program_clear_android_ios_build_cache
-fi
-
-if [ "$*" == "--clear" ] || [ "$*" == "-c" ] || [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "-i" ] || [ "$*" == "--install" ]; then
-     program_clear_install_moduels $*
-fi 
-
-if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ] || [ "$*" == "--clear-all-cache" ] || [ "$*" == "-CC" ] || [ "$*" == "--clear-buildfolders" ] || [ "$*" == "-CB" ]; then
     program_clear_pod_gradlew_build_cache
 fi
 
-[ -z "$packageInstalledNPM" ] || for p in "$packageInstalledNPM"; do echo -e "\033[93;7m WARNING \033[0m packages in '$p' used npm instead of yarn.\033[0m"; done
-[ -z "$packageInstalledNPMERR" ] || for p in "$packageInstalledNPMERR"; do echo -e "\033[93;7m WARNING \033[0m packages in '$p' tried to use npm but used yarn instead.\033[0m"; done
+if [ "$*" == "--clear-build-folders" ] || [ "$*" == "-b" ]; then
+    program_clear_outside_cache
+    program_clear_android_ios_build_cache
+    program_clear_pod_gradlew_build_cache
+fi
+
 echo ""

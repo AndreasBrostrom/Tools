@@ -1,0 +1,38 @@
+#!/bin/bash
+
+NAME=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
+
+
+
+android () {
+    if [[ $(adb devices -l | grep "device usb:") ]]; then 
+        LOREM="$(lorem-ipsum-generator -p $(($RANDOM%10+1)))"
+        LOREM=`echo $LOREM | sed "s/\s/\%s/g"`
+        LOREM=`echo $LOREM | sed "s/\n/\%n/g"`
+        echo "Sending text to devices/emulators:\n$LOREM"
+        adb shell input text "$LOREM"
+        exit 0
+    fi
+    echo "$NAME error: No devices/emulators found"
+    exit 1
+}
+
+main () {
+    if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
+        echo "Usage: $NAME [FILE] [OPTION]
+        print a random length of Lorem Ipsum text
+
+        -a, --android         sends a random lorem ipsum text to device/emulator
+
+        -h, --help            show this help"
+        exit 0
+    fi
+
+    if [ "$*" == "--android" ] || [ "$*" == "-a" ]; then
+        android
+        echo "$(lorem-ipsum-generator -p $(($RANDOM%10+1)))"
+        exit 0
+    fi
+}
+
+main $*
