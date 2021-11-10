@@ -11,11 +11,18 @@ while true; do
 
     [ ! -d "$HOME/.cache/androidDeviceWatcher" ] && mkdir -p "$HOME/.cache/androidDeviceWatcher"
 
-    if [[ $(adb devices -l | grep "device usb:") ]]; then
-        echo "Android device connected"
-        echo "✆"  > $HOME/.cache/androidDeviceWatcher/log
+    if [[ $(pgrep adb) ]]; then
+        if [[ $(adb devices -l | grep "device usb:") ]]; then
+            echo "Android device connected"
+            echo "✆"  > $HOME/.cache/androidDeviceWatcher/log
+            continue
+        fi
+    else
+        echo "Warning: adb server not running"
+        echo "" > $HOME/.cache/androidDeviceWatcher/log
         continue
     fi
+
     echo "No device connected"
     echo "" > $HOME/.cache/androidDeviceWatcher/log
 done
