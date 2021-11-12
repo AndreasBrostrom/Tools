@@ -55,7 +55,9 @@ fi
 if [ "$1" == "-i" ]; then
     if [ "$2" == "" ]; then echo "$scriptName: missing TEXT operator"; exit 1; fi
     if [ "$#" -ne 2 ]; then echo "$scriptName: illegal number of parameters"; exit 2; fi
-    adb shell input text "$2"
+    text=`echo $2 | sed "s/\s/\%s/g"`
+    adb shell input text "$text"
+    echo "Written to device > $2" 
     exit 0
 fi
 
