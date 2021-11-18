@@ -1,7 +1,8 @@
 #Requires -RunAsAdministrator
 if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shell..." -ForegroundColor Red; exit }    
 
-# Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+# User ExecutionPolicy
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
 # GLOBALS
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
@@ -16,17 +17,18 @@ $scoop_pkg        = 'git', 'curl',
                     'sharpkeys',
                     'armake', 'hemtt'
 
-$choco_pkg        = 'DotNet4.5.2', 'vcredist140', 'vcredist2015', 'vcredist2017', 'KB2919355', 'KB2919442', 'KB2999226', 'KB3033929', 'KB3035131', 
-                    'googlechrome', 'vscode',
-                    'microsoft-windows-terminal',
-                    'winrar', 'vlc', 'teamviewer',
-                    'teamspeak', 'discord', 'slack',
-                    'steam',
-                    'obs-studio',
-                    'linux-reader', 'vcxsrv',
-                    'powershell-core', 'winaero-tweaker', "powertoys", "WinHotKey"
+$choco_pkg        = 'linux-reader', 'vcxsrv', "WinHotKey"
 
-$pwsh_modules     = 'PSWindowsUpdate', 'Get-ChildItemColor'
+$winget_pkg       = 'Microsoft.WindowsTerminal'
+                    'Google.Chrome',
+                    'Microsoft.VisualStudioCode',
+                    'VideoLAN.VLC', 'OBSProject.OBSStudio',
+                    'Valve.Steam',
+                    'Discord.Discord', 'SlackTechnologies.Slack',  'TeamSpeakSystems.TeamSpeakClient',
+                    'RARLab.WinRAR', 'Microsoft.PowerToys',
+                    'Microsoft.PowerShell'
+
+$pwsh_modules     = 'PSWindowsUpdate'
 
 
 
@@ -100,6 +102,24 @@ Write-Host "Installation of chocolately packages completed..." -ForegroundColor 
 
 
 
+# Installing Winget
+Write-Host "Setting up WinGet..." -ForegroundColor Magenta
+if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\winget.exe")) {
+    Write-Host "Installing WinGet..." -ForegroundColor green
+    Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    Write-Host "Changeing and setting some paths for WinGet..."
+} else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
+
+# Winget packages
+Write-Host "Installing WinGet packages..."
+foreach ($pkg in $winget_pkg) {
+    Write-Host "Installing $pkg..."
+    winget install -e --id $winget
+}
+Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
+
+
+
 # Install powershell moduels
 Write-Host "Powershell modules..."
 Set-PSRepository PSGallery
@@ -115,19 +135,14 @@ Write-Host "Downloading drives and programs for gaming..." -ForegroundColor Mage
 if (![System.IO.File]::Exists("$Env:userprofile\Downloads\TrackIR_5.4.2.exe")) {
     Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
 } else {
-        Write-Host "TrackIR already downloaded skipping..." -ForegroundColor Yellow
+    Write-Host "TrackIR already downloaded skipping..." -ForegroundColor Yellow
 }
 if (![System.IO.File]::Exists("$Env:userprofile\Downloads\Setup.exe")) {
-    Invoke-WebRequest https://media.roccat.org/driver/Tyon/ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip -OutFile "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" >$null 2>&1
-    Expand-Archive "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" -DestinationPath "$Env:userprofile\Downloads\" >$null 2>&1
-    Remove-Item "$Env:userprofile\Downloads\ROCCAT_Tyon_DRV1.17_FW1.34forAlienFx-v1.zip" >$null 2>&1
+    Invoke-WebRequest https://api.roccat-neon.com/device/Support/Driver/Download/315/Tyon.zip -OutFile "$Env:userprofile\Downloads\Tyon.zip" >$null 2>&1
+    Expand-Archive "$Env:userprofile\Downloads\Tyon.zip" -DestinationPath "$Env:userprofile\Downloads\" >$null 2>&1
+    Remove-Item "$Env:userprofile\Downloads\Tyon.zip" >$null 2>&1
 } else {
-        Write-Host "ROCCAT Tyon already downloaded skipping..." -ForegroundColor Yellow
-}
-if (![System.IO.File]::Exists("$Env:userprofile\Downloads\LGS_9.02.65_x64_Logitech.exe")) {
-    Invoke-WebRequest https://download01.logi.com/web/ftp/pub/techsupport/gaming/LGS_9.02.65_x64_Logitech.exe -OutFile "$Env:userprofile/Downloads/LGS_9.02.65_x64_Logitech.exe" >$null 2>&1
-} else {
-        Write-Host "Logitech already downloaded skipping..." -ForegroundColor Yellow
+    Write-Host "ROCCAT Tyon already downloaded skipping..." -ForegroundColor Yellow
 }
 Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
@@ -140,16 +155,24 @@ wsl.exe --set-default-version 2
 Write-Host "windows features applied" -ForegroundColor Green
 
 
-# Setting up home and root enviroment
+# Setting up home
 Write-Host "Setting up home..."
 if (![System.IO.Directory]::Exists("$Env:userprofile\.bin")) {
     New-Item -itemtype "directory" -path "$Env:userprofile\.bin"
     (get-item $Env:userprofile\.bin).Attributes += 'Hidden'
     if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.bin", "User") }
-    
 } else {
-    Write-Host "Home already setup skipping..." -ForegroundColor Yellow
+    Write-Host "Home/.bin already setup skipping..." -ForegroundColor Yellow
 }
+# .config
+if (![System.IO.Directory]::Exists("$Env:userprofile\.config")) {
+    New-Item -itemtype "directory" -path "$Env:userprofile\.config"
+    (get-item $Env:userprofile\.config).Attributes += 'Hidden'
+} else {
+    Write-Host "Home/.config already setup skipping..." -ForegroundColor Yellow
+}
+
+# Setting up root enviroment
 if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
     New-Item -itemtype "directory" -path "C:\Programs"
     New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
@@ -174,26 +197,6 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
 } else {
     Write-Host "Root already setup skipping..." -ForegroundColor Yellow
 }
-
-
-
-# Setup cmd
-if (![System.IO.File]::Exists("$Env:userprofile\.batchrc.cmd")) {
-    Write-Host "Configurating CMD..." -ForegroundColor Magenta
-    C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsBatchRC\add_batchrc.reg" >$null 2>&1
-
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batchrc.cmd" -Destination "$Env:userprofile\"
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batch_path.cmd" -Destination "$Env:userprofile\"
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\batchrc\.batch_aliases.cmd" -Destination "$Env:userprofile\"
-    (get-item $Env:userprofile\.batchrc.cmd).Attributes += 'Hidden'
-    (get-item $Env:userprofile\.batch_path.cmd).Attributes += 'Hidden'
-    (get-item $Env:userprofile\.batch_aliases.cmd).Attributes += 'Hidden'
-
-    Write-Host "Configuration of CMD complete..." -ForegroundColor Green
-} else {
-    Write-Host "CMD already configured skipping..." -ForegroundColor Yellow
-}
-
 
 
 # Setup powershell profile
@@ -242,9 +245,6 @@ C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Pr
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer.exe" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\TeamViewer" -p="C:\Program Files (x86)\TeamViewer\TeamViewer.exe" >$null 2>&1
-
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
 
@@ -266,11 +266,6 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
 
-# Terminals
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\WindowsTerminal_Add.reg" >$null 2>&1
-Invoke-WebRequest https://github.com/microsoft/terminal/raw/master/res/terminal.ico -OutFile "C:\Programs\.icon\terminal.ico" >$null 2>&1
-Invoke-WebRequest https://iconarchive.com/download/i75927/martz90/circle/ubuntu.ico -OutFile "C:\Programs\.icon\ubuntu.ico" >$null 2>&1
-
 # Change windows time
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
 
@@ -280,7 +275,6 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
 
 # Remove unwanted objects
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsNameSpaceFolders\Remove_3DObjects_Folder.reg" >$null 2>&1
 
 # Restoring save files from programs
 Write-Host "Restoring keybindings and other systems..." -ForegroundColor Magenta
