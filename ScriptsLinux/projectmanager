@@ -1,5 +1,5 @@
 #!/bin/bash
-version="1.12"
+version="1.16"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     shopt -s expand_aliases
@@ -12,24 +12,15 @@ fi
 if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
 echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [options]
 -i   --install               install node modules
--c,  --clear                 clear all node moduels and install node moduels
--C,  --clear-all             clear all node moduels and reinstall as well as cashe
--b,  --clear-build-folders   clear build folders
+-c,  --clear                 clear all node moduels
+-C,  --clear-all             clear all build cashe, node moduels and outside cashe
+-b,  --clear-cash-folders    clear all build cashe, node moduels and outside cashe
 -l,  --list                  list disoverd node moduels
 -v,  --version               show version number
 
 -h,  --help                  show this help"
 exit 0
 fi
-
-# Check arguments
-#if [[ ! $# == 0 ]]; then
-#    valid_commands="-c --clear -C --clear-all -CC --clear-cache -v --version -i --install"
-#    if [[ ! " $valid_commands " =~ .*\ $*\ .* ]]; then
-#        echo "$(basename $0): $*: invalid option"
-#        exit 1
-#    fi
-#fi
 
 # check if git project 
 if [ ! $(git rev-parse --is-inside-work-tree 2>/dev/null) ]; then
@@ -177,7 +168,6 @@ fi
 
 if [ "$*" == "--clear" ] || [ "$*" == "-c" ]; then
     program_clear_node_moduels
-    program_install_node_moduels
 fi
 
 if [ "$*" == "-i" ] || [ "$*" == "--install" ]; then
@@ -187,9 +177,7 @@ fi
 if [ "$*" == "--clear-all" ] || [ "$*" == "-C" ]; then
     program_clear_outside_cache
     program_clear_node_moduels
-    program_install_node_moduels
     program_clear_android_ios_build_cache
-    program_clear_pod_gradlew_build_cache
 fi
 
 if [ "$*" == "--clear-build-folders" ] || [ "$*" == "-b" ]; then
