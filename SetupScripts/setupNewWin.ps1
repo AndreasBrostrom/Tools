@@ -1,8 +1,10 @@
 #Requires -RunAsAdministrator
+Set-ExecutionPolicy Bypass -Scope Process -Force
 if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shell..." -ForegroundColor Red; exit }    
+Import-Module Appx -usewindowspowershell
 
 # User ExecutionPolicy
-Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+# Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
 # GLOBALS
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
@@ -13,11 +15,11 @@ $scoop_pkg        = 'git', 'curl',
                     'zip', '7zip',
                     'neovim', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
-                    'steamcmd', 'qbittorrent-portable', 'android-sdk', 'rufus',
-                    'sharpkeys',
+                    'steamcmd', 'android-sdk', 'rufus',
+                    'sharpkeys', 'starship',
                     'armake', 'hemtt'
 
-$choco_pkg        = 'linux-reader', 'vcxsrv', "WinHotKey"
+$choco_pkg        = 'linux-reader'
 
 $winget_pkg       = 'Microsoft.WindowsTerminal'
                     'Google.Chrome',
@@ -106,7 +108,9 @@ Write-Host "Installation of chocolately packages completed..." -ForegroundColor 
 Write-Host "Setting up WinGet..." -ForegroundColor Magenta
 if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\winget.exe")) {
     Write-Host "Installing WinGet..." -ForegroundColor green
-    Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+    Add-AppxPackage "https://aka.ms/getwinget" -InstallAllResources 
+
     Write-Host "Changeing and setting some paths for WinGet..."
 } else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
 
@@ -114,7 +118,7 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsA
 Write-Host "Installing WinGet packages..."
 foreach ($pkg in $winget_pkg) {
     Write-Host "Installing $pkg..."
-    winget install -e --id $winget
+    winget install -e --id $pkg
 }
 Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
 
@@ -173,30 +177,24 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.config")) {
 }
 
 # Setting up root enviroment
-if (![System.IO.Directory]::Exists("$Env:userprofile\Programs")) {
-    New-Item -itemtype "directory" -path "C:\Programs"
-    New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
+New-Item -itemtype "directory" -path "C:\Programs" >$null 2>&1
+New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
 
-    New-Item -itemtype "directory" -path "C:\Programs\Bin"
-    if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
+New-Item -itemtype "directory" -path "C:\Programs\Bin" >$null 2>&1
+if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
 
-    New-Item -itemtype "directory" -path "C:\Programs\.icon"
+Write-Host "Setting up symbolic links and directories..."
+New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp" >$null 2>&1
 
-    Write-Host "Setting up symbolic links and directories..."
-    New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp"
+New-Item -itemtype "directory" -path "C:\Programs\Lib\Steam\steamapps\common" >$null 2>&1
+New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Lib\Steam\steamapps\common"
 
-    New-Item -itemtype "directory" -path "C:\Program Files (x86)\Steam\steamapps\common"
-    New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Program Files (x86)\Steam\steamapps\common"
+New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"
+(get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
 
-    New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"
-    (get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
+New-Item -itemtype "directory" -path "C:\Programs\Lib" >$null 2>&1
+New-Item -itemtype "directory" -path "C:\Programs\Src" >$null 2>&1
 
-    New-Item -itemtype "directory" -path "C:\Programs\Lib"
-    New-Item -itemtype "directory" -path "C:\Programs\Src"
-
-} else {
-    Write-Host "Root already setup skipping..." -ForegroundColor Yellow
-}
 
 
 # Setup powershell profile
@@ -257,14 +255,14 @@ Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\VcXSrv\config.xlaunch" -Destinatio
 
 
 Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
 
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewCppFile.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewHppFile.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewMdFile.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\!cleanUnwantedCreateNewFile.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewCppFile.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewHppFile.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewMdFile.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
 
 # Change windows time
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
@@ -284,14 +282,14 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\winHotKeyTermina
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
 # Setup Keyboard and languishes
-Write-Host "Setting up languages..." -ForegroundColor Magenta
+#Write-Host "Setting up languages..." -ForegroundColor Magenta
 
-$LanguageList = Get-WinUserLanguageList 
-$LanguageList.Add("en-GB") Set-WinUserLanguageList 
-$LanguageList.Add("sv-SE") Set-WinUserLanguageList 
-Set-WinUserLanguageList en-GB -Force
+#$LanguageList = Get-WinUserLanguageList 
+#$LanguageList.Add("en-GB") Set-WinUserLanguageList 
+#$LanguageList.Add("sv-SE") Set-WinUserLanguageList 
+#Set-WinUserLanguageList en-GB -Force
 
-Write-Host "Language completed..." -ForegroundColor green
+#Write-Host "Language completed..." -ForegroundColor green
 
 
 Write-Host "Script completed." -ForegroundColor green
