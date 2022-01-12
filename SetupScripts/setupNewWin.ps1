@@ -228,28 +228,17 @@ Write-Host "Setting up Programs and Terminal shims..." -ForegroundColor Magenta
 
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
 
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
-
+#C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome-stable.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
-
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
 
 
 # Autostart
 Write-Host "Setting up autostart..." -ForegroundColor Magenta
-$autostart=[Environment]::GetFolderPath('Startup')
+$autostart=[Environment]::GetFolderPath('CommonStartup')
 New-Item -itemtype Junction -path "C:\Programs" -name "Startup" -value "$autostart"
 Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\VcXSrv\config.xlaunch" -Destination "C:\Programs\Startup\"
 
