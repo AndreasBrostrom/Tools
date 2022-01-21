@@ -1,12 +1,12 @@
 #!/bin/bash
 # .config/i3status/config
-#    read_file dotfiles {
-#            path = "/home/andre/.cache/dotfileWatcher/log"
-#            format = "%content"
-#            format_bad = ""
-#            color_good = "#DC322F"
-#            color_bad = "#DC322F"
-#    }
+#       read_file dotfiles {
+#               path = "/home/andre/.cache/dotfileWatcher/log"
+#               format = "%content"
+#               format_bad = ""
+#               color_good = "#DC322F"
+#               color_bad = "#DC322F"
+#       }
 
 while true; do 
     sleep 10

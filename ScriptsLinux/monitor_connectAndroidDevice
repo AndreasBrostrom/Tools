@@ -1,10 +1,10 @@
 #!/bin/bash
 # .config/i3status/config
-#        read_file android {
-#                path = "/home/andre/.cache/androidDeviceWatcher/log"
-#                format = "%content"
-#                format_bad = ""
-#        }
+#       read_file android {
+#               path = "/home/andre/.cache/androidDeviceWatcher/log"
+#               format = "%content"
+#               format_bad = ""
+#       }
 
 while true; do 
     sleep 10
