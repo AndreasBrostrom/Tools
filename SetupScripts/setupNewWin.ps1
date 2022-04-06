@@ -240,7 +240,7 @@ C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:
 Write-Host "Setting up autostart..." -ForegroundColor Magenta
 $autostart=[Environment]::GetFolderPath('CommonStartup')
 New-Item -itemtype Junction -path "C:\Programs" -name "Startup" -value "$autostart"
-Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\VcXSrv\config.xlaunch" -Destination "C:\Programs\Startup\"
+#Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\VcXSrv\config.xlaunch" -Destination "C:\Programs\Startup\"
 
 
 Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
