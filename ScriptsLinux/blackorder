@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo "
    WNXXXXXXXXXXXXXXXXXXXXXXXXXXXNW
    O,...ckkkkkkkkkkkkkkkkkkkkkkOKW
@@ -17,5 +18,9 @@ echo "
  Wk;..'cxKW           W0c..'oKW
  Nd';d0N               WXx;',l0W
  WKONW                   WXKKKNW
-
 "
+if [ -p /dev/stdin ]; then
+  while IFS= read line; do
+    echo -e "${line}"
+  done
+fi
