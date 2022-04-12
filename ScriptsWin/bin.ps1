@@ -3,7 +3,7 @@ $altName    = $args[1]
 
 $target = which $name
 
-if (!$altName) {
+if ($altName) {
     $name = $altName
 }
 
