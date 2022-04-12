@@ -28,11 +28,11 @@ echo -e "\e[1;34mSetting up home...\e[0m"
 [ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 [ ! -d "$HOME/.bin" ]         && mkdir -p $HOME/.bin
 
-[ ! -d "$HOME/sdcard" ]       && ln -s /sdcard/ storage
-[ ! -d "$HOME/Documents" ]    && ln -s /sdcard/Documents/ Documents
-[ ! -d "$HOME/Downloads" ]    && ln -s /sdcard/Downloads/ Downloads
-[ ! -d "$HOME/Pictures" ]     && ln -s /sdcard/Pictures/ Pictures
-[ ! -d "$HOME/Music" ]        && ln -s /sdcard/Music/ Music
+[ ! -d "$HOME/sdcard" ]       && ln -s /storage/emulated/0 storage
+[ ! -d "$HOME/Documents" ]    && ln -s /storage/emulated/0/Documents Documents
+[ ! -d "$HOME/Downloads" ]    && ln -s /storage/emulated/0/Download Downloads
+[ ! -d "$HOME/Pictures" ]     && ln -s /storage/emulated/0/Pictures Pictures
+[ ! -d "$HOME/Music" ]        && ln -s /storage/emulated/0/Music Music
 
 if [ ! -d "$HOME/Repositories/Tools" ]; then
   cd $HOME/Repositories
