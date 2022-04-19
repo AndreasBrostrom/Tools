@@ -180,11 +180,21 @@ if (![System.IO.Directory]::Exists("$Env:userprofile\.config")) {
 New-Item -itemtype "directory" -path "C:\Programs" >$null 2>&1
 New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
 
+# bin
 New-Item -itemtype "directory" -path "C:\Programs\Bin" >$null 2>&1
 if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
 
+New-Item -itemtype Junction -path "C:\bin\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
+(get-item "C:\bin\").Attributes += 'Hidden'
+
+New-Item -itemtype "directory" -path "C:\usr\" >$null 2>&1
+New-Item -itemtype Junction -path "C:\usr\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
+(get-item "C:\usr\").Attributes += 'Hidden'
+
+
 Write-Host "Setting up symbolic links and directories..."
-New-Item -itemtype Junction -path "C:\" -name "Tmp" -value "$Env:temp" >$null 2>&1
+New-Item -itemtype Junction -path "C:\" -name "tmp" -value "$Env:temp" >$null 2>&1
+(get-item "C:\tmp\").Attributes += 'Hidden'
 
 New-Item -itemtype "directory" -path "C:\Programs\Lib\Steam\steamapps\common" >$null 2>&1
 New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Lib\Steam\steamapps\common"
@@ -230,10 +240,13 @@ Write-Host "Setting up Programs and Terminal shims..." -ForegroundColor Magenta
 
 #C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome-stable.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome-stable" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\code.exe" -p="C:\Program Files\Microsoft VS Code\Code.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
 
 
 # Autostart
