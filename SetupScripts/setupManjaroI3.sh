@@ -2,11 +2,13 @@
 
 pacmanInstall=(
     git neovim
+    yay
     dos2unix jq ripgrep
     python3 python3-pip
     terminator
+    fish
     gparted gnome-disk-utility
-    steam
+    #steam
     starship
   )
 
