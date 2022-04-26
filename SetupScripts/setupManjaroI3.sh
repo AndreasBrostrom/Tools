@@ -3,7 +3,7 @@
 pacmanInstall=(
     git neovim
     yay
-    dos2unix jq ripgrep
+    dos2unix jq ripgrep xdotool
     python3 python3-pip
     terminator
     fish
