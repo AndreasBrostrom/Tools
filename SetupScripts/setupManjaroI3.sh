@@ -8,7 +8,7 @@ pacmanInstall=(
     terminator
     fish
     gparted gnome-disk-utility
-    #steam
+    steam
     starship
   )
 
@@ -30,6 +30,7 @@ yayInstall=(
     discord
     slack
     scrcpy
+    obs-studio
     vlc
 
     nerd-fonts-hack nerd-fonts-dejavu-complete nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
