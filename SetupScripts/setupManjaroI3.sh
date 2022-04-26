@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo -v
 
 pacmanInstall=(
     git neovim
@@ -26,6 +27,7 @@ yayInstall=(
     node
     ts-node
     
+    google-chrome
     spotify
     discord
     slack
@@ -103,4 +105,5 @@ chmod +x install
 cd dotfiles
 ./install
 
+sudo --reset-timestamp
 echo -e "done"
