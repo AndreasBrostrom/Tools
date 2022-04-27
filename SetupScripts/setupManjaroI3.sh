@@ -23,6 +23,8 @@ yayInstall=(
     android-sdk-cmdline-tools-latest #android-studio
     github-cli
 
+    nemo nemo-fileroller nemo-share
+    
     visual-studio-code-bin
     node
     ts-node
