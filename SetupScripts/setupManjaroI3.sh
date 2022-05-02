@@ -23,8 +23,9 @@ yayInstall=(
     android-sdk-cmdline-tools-latest #android-studio
     github-cli
 
-    nemo nemo-fileroller nemo-share
-    
+    nemo
+    samba manjaro-settings-samba
+
     visual-studio-code-bin
     node
     ts-node
