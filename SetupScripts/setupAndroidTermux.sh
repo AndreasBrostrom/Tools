@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/data/data/com.termux/files/usr/bin/bash
 pkgInstall=(
     git gh neovim
     dos2unix jq ripgrep
@@ -29,7 +29,7 @@ cd $HOME
 [ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 [ ! -d "$HOME/.bin" ]         && mkdir -p $HOME/.bin
 
-[ ! -d "$HOME/sdcard" ]       && ln -s /storage/emulated/0 storage
+[ ! -d "$HOME/storage" ]       && ln -s /storage/emulated/0 storage
 [ ! -d "$HOME/Documents" ]    && ln -s /storage/emulated/0/Documents Documents
 [ ! -d "$HOME/Downloads" ]    && ln -s /storage/emulated/0/Download Downloads
 [ ! -d "$HOME/Pictures" ]     && ln -s /storage/emulated/0/Pictures Pictures
@@ -39,7 +39,7 @@ if [ ! -d "$HOME/Repositories/Tools" ]; then
   cd $HOME/Repositories
   git clone https://github.com/AndreasBrostrom/Tools.git
 fi
-cd $HOME/Repositories/Tools
+cd $HOME/Repositories/Tools/ScriptsLinux/
 cp * $HOME/.bin
 
 if [ ! -d "$HOME/Repositories/dotfiles" ]; then
