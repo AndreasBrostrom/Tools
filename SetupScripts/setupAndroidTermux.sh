@@ -7,7 +7,7 @@ pkgInstall=(
     starship
   )
 
-SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
+echo -e "\033[34;1mSetting up a new terminal...\033[0m"
 
 echo -e "\033[1mPreforming full upgrade for all packages stand by...\033[0m"
 pkg upgrade -y
@@ -15,7 +15,7 @@ pkg upgrade -y
 # Setup and install snap
 echo -e "\033[1mInstalling pkg packages\033[0m"
 for app in ${pkgInstall[@]}; do
-  echo -e " \033[2mInstalling $app and requirements...\033[0m"
+  echo -e "\033[2mInstalling $app and requirements...\033[0m"
   pkg install -y $app
 done
 
@@ -49,7 +49,6 @@ if [ -d "$HOME/.ssh" ]; then
 fi
 
 # clone and install tools and dotfiles
-echo -e "\033[1mSeting up dotfiles and tools\033[0m"
 if [ ! -d "$HOME/Repositories/dotfiles" ]; then
   cd $HOME/Repositories
   git clone git@github.com:AndreasBrostrom/Tools.git
