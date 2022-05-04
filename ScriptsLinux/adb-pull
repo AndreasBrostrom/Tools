@@ -15,7 +15,7 @@ Downloads a file you define or if a latest screenshot or photo from your phone.
 
   -s, --screenshot      download latest screenshot
   -p, --photo           download latest photo
-  -l, --ls              list provied path files [/sdcard to find your files]
+  -l, --ls              list provied path files [default is /storage/emulated/0/ or /sdcard/]
 
   -v, --version         show version number
   -h, --help            show this help"
@@ -27,21 +27,23 @@ if [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
     exit 0
 fi
 
-if [ "$1" == "-l" ] || [ "$1" == "--ls" ]; then
-    adb -d shell ls $2
+if [ "$1" == "-l" ] || [ "$1" == "-ls" ] || [ "$1" == "--ls" ]; then
+    path="$2"
+    [ -z "$path" ] && path="/storage/emulated/0/"
+    adb -d shell ls $path
     exit 0
 fi
 
 if [ "$1" == "-s" ] || [ "$1" == "--screenshot" ]; then
-    file=$(adb shell ls -t /sdcard/Pictures/Screenshots | head -1)
-    adb -d pull /sdcard/Pictures/Screenshots/$file $HOME/Downloads/.
+    file=$(adb -d shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+    adb -d pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
     echo $file: have been pulled down to your download folder.
     exit 0
 fi
 
 if [ "$1" == "-p" ] || [ "$1" == "--photo" ]; then
-    file=$(adb shell ls -t /sdcard/DCIM/Camera | head -1)
-    adb -d pull /sdcard/DCIM/Camera/$file $HOME/Downloads/.
+    file=$(adb -d shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
+    adb -d pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
     echo $file: have been pulled down to your download folder.
     exit 0
 fi

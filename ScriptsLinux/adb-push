@@ -25,4 +25,4 @@ fi
 
 
 adb -d push $1 /storage/emulated/0/Download/$2
-echo $1: have been pushed to ./sdcard/Download/$2
+echo $1: have been pushed to ./storage/emulated/0/Download/$2
