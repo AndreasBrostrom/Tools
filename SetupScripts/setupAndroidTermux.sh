@@ -23,6 +23,7 @@ echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
 pkg upgrade -y
 
 echo -e "\e[1;34mSetting up home...\e[0m"
+cd $HOME
 
 # Setting up home
 [ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
