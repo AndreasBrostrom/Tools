@@ -39,7 +39,7 @@ if [ ! -d "$HOME/Repositories/Tools" ]; then
   cd $HOME/Repositories
   git clone https://github.com/AndreasBrostrom/Tools.git
 fi
-sed 's#https://github.com/AndreasBrostrom/Tools.git#git@github.com:AndreasBrostrom/Tools.git#g' $HOME/Repositories/Tools/.git/config
+sed -n 's#https://github.com/AndreasBrostrom/Tools.git#git@github.com:AndreasBrostrom/Tools.git#g' $HOME/Repositories/Tools/.git/config
 cd $HOME/Repositories/Tools/ScriptsLinux/
 cp * $HOME/.bin
 
@@ -47,7 +47,7 @@ if [ ! -d "$HOME/Repositories/dotfiles" ]; then
   cd $HOME/Repositories
   git clone https://github.com/AndreasBrostrom/dotfiles.git
 fi
-sed 's#https://github.com/AndreasBrostrom/dotfiles.git#git@github.com:AndreasBrostrom/dotfiles.git#g' $HOME/Repositories/dotfiles/.git/config
+sed -n 's#https://github.com/AndreasBrostrom/dotfiles.git#git@github.com:AndreasBrostrom/dotfiles.git#g' $HOME/Repositories/dotfiles/.git/config
 cd $HOME/Repositories/dotfiles
 chmod +x install
 ./install
