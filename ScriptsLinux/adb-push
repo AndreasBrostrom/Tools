@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-version="1.1"
+version="1.2"
 
 # Check arguments
 if [[ $# == 0 ]]; then
@@ -24,6 +24,5 @@ if [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
 fi
 
 
-
-adb push $1 /sdcard/Download/$2
+adb -d push $1 /storage/emulated/0/Download/$2
 echo $1: have been pushed to ./sdcard/Download/$2

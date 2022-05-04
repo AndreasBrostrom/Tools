@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-version="1.1"
+version="1.2"
 
 # Check arguments
 if [[ $# == 0 ]]; then
@@ -28,20 +28,24 @@ if [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
 fi
 
 if [ "$1" == "-l" ] || [ "$1" == "--ls" ]; then
-    adb shell ls $2
+    adb -d shell ls $2
     exit 0
 fi
 
 if [ "$1" == "-s" ] || [ "$1" == "--screenshot" ]; then
     file=$(adb shell ls -t /sdcard/Pictures/Screenshots | head -1)
-    adb pull /sdcard/Pictures/Screenshots/$file $HOME/Downloads/.
+    adb -d pull /sdcard/Pictures/Screenshots/$file $HOME/Downloads/.
+    echo $file: have been pulled down to your download folder.
     exit 0
 fi
 
 if [ "$1" == "-p" ] || [ "$1" == "--photo" ]; then
     file=$(adb shell ls -t /sdcard/DCIM/Camera | head -1)
-    adb pull /sdcard/DCIM/Camera/$file $HOME/Downloads/.
+    adb -d pull /sdcard/DCIM/Camera/$file $HOME/Downloads/.
+    echo $file: have been pulled down to your download folder.
     exit 0
 fi
 
-adb pull $1 $HOME/Downloads/.
+
+adb -d pull $1 $HOME/Downloads/.
+echo $1: have been pulled down to your download folder.
