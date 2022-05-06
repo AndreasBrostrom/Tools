@@ -22,6 +22,8 @@ Normal \e[1mBold\e[0m              \e[92mLight green\e[0m          \e[43mYellow\
 echo -e "\e[38;5;82mHello \e[38;5;198mWorld"
 for i in {16..21} {21..16} ; do echo -en "\e[38;5;${i}m#\e[0m" ; done ; echo
 
+echo ""
+
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
 # and/or modify it under the terms of the Do What The Fuck You Want
