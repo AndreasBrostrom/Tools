@@ -1,26 +1,23 @@
 #!/bin/bash
 echo -e """
-Normal \e[8mHidden\e[0m            \e[97mWhite\e[0m                \e[49mDefault\e[0m
-Normal \e[7minverted\e[0m          \e[96mLight cyan\e[0m           \e[47mLight gray\e[0m
-Normal \e[5mBlink\e[0m             \e[95mLight magenta\e[0m        \e[46mCyan\e[0m
-Normal \e[4mUnderlined\e[0m        \e[94mLight blue\e[0m           \e[45mMagenta\e[0m
-Normal \e[2mDim\e[0m               \e[93mLight yellow\e[0m         \e[44mBlue\e[0m
-Normal \e[1mBold\e[0m              \e[92mLight green\e[0m          \e[43mYellow\e[0m
-                         \e[91mLight red\e[0m            \e[42mGreen\e[0m
-                         \e[90mDark gray\e[0m            \e[41mRed\e[0m
-                         \e[39mDefault\e[0m              \e[40mBlack\e[0m
-                         \e[37mLight gray\e[0m           \e[107mWhite\e[0m
-                         \e[36mCyan\e[0m                 \e[106mLight cyan\e[0m
-                         \e[35mMagenta\e[0m              \e[105mLight magenta\e[0m
-                         \e[34mBlue\e[0m                 \e[104mLight blue\e[0m
-                         \e[33mYellow\e[0m               \e[103mLight yellow\e[0m
-                         \e[32mGreen\e[0m                \e[102mLight green\e[0m
-                         \e[31mRed\e[0m                  \e[101mLight red\e[0m
-                         \e[30mBlack\e[0m                \e[100mDark gray\e[0m
+Normal \e[8mHidden\e[0m            \e[39mDefault\e[0m               \e[49mDefault\e[0m
+Normal \e[7minverted\e[0m          \e[30mBlack\e[0m                 \e[40mBlack\e[0m
+Normal \e[5mBlink\e[0m             \e[90mDark gray\e[0m             \e[100mDark gray\e[0m
+Normal \e[4mUnderlined\e[0m        \e[37mLight gray\e[0m            \e[47mLight gray\e[0m
+Normal \e[2mDim\e[0m               \e[36mCyan\e[0m                  \e[46mCyan\e[0m
+Normal \e[1mBold\e[0m              \e[96mLight cyan\e[0m            \e[106mLight cyan\e[0m
+                         \e[35mMagenta\e[0m               \e[45mMagenta\e[0m
+                         \e[95mLight magenta\e[0m         \e[105mLight magenta\e[0m
+                         \e[34mBlue\e[0m                  \e[44mBlue\e[0m
+                         \e[94mLight blue\e[0m            \e[104mLight blue\e[0m
+                         \e[33mYellow\e[0m                \e[43mYellow\e[0m
+                         \e[93mLight yellow\e[0m          \e[103mLight yellow\e[0m
+                         \e[32mGreen\e[0m                 \e[42mGreen\e[0m
+                         \e[92mLight green\e[0m           \e[102mLight green\e[0m
+                         \e[31mRed\e[0m                   \e[41mRed\e[0m
+                         \e[91mLight red\e[0m             \e[101mLight red\e[0m
+                         \e[97mWhite\e[0m                 \e[107mWhite\e[0m
 """
-
-echo -e "\e[38;5;82mHello \e[38;5;198mWorld"
-for i in {16..21} {21..16} ; do echo -en "\e[38;5;${i}m#\e[0m" ; done ; echo
 
 echo ""
 
