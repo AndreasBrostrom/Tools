@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-version="1.2"
+version="1.4"
 
 # Check arguments
 if [[ $# == 0 ]]; then
@@ -37,17 +37,17 @@ fi
 if [ "$1" == "-s" ] || [ "$1" == "--screenshot" ]; then
     file=$(adb -d shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
     adb -d pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
-    echo $file: have been pulled down to your download folder.
+    printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
     exit 0
 fi
 
 if [ "$1" == "-p" ] || [ "$1" == "--photo" ]; then
     file=$(adb -d shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
     adb -d pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
-    echo $file: have been pulled down to your download folder.
+    printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
     exit 0
 fi
 
 
 adb -d pull $1 $HOME/Downloads/.
-echo $1: have been pulled down to your download folder.
+printf "\e]8;;file:$HOME/Downloads/$1\e\\$1\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
