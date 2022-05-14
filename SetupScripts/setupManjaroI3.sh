@@ -83,6 +83,7 @@ yes "" | yay -Syyu
 echo -e "\e[1;34mUpdating Font Repository...\e[0m"
 fc-cache -rfv
 
+
 echo -e "\e[1;34mSetting up home...\e[0m"
 
 # Android sdk
@@ -93,11 +94,15 @@ if [ -d "$HOME/android-sdk" ]; then
 fi
 
 # Setting up home
-[ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
-[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/bin
-[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/lib
-[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/src
-[ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
+
+mkdir -p $HOME/.bin
+mkdir -p $HOME/.ssh
+
+mkdir -p $HOME/Programs/bin
+mkdir -p $HOME/Programs/lib
+mkdir -p $HOME/Programs/src
+
+mkdir -p $HOME/Repositories
 
 # Setting up ssh permissions
 if [ -d "$HOME/.ssh" ]; then
