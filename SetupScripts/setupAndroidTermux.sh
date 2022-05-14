@@ -27,9 +27,13 @@ cd $HOME
 
 # Setting up home
 echo -e " \033[2mCreating folders\033[0m"
-[ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
-[ ! -d "$HOME/.bin" ]         && mkdir -p $HOME/.bin
-[ ! -d "$HOME/.ssh" ]         && mkdir -p $HOME/.ssh
+mkdir -p $HOME/Repositories
+mkdir -p $HOME/.bin
+mkdir -p $HOME/.ssh
+
+mkdir -p $HOME/Programs/bin
+mkdir -p $HOME/Programs/lib
+mkdir -p $HOME/Programs/src
 
 echo -e " \033[2mLinking sdcard paths\033[0m"
 [ ! -d "$HOME/storage" ]      && ln -s /storage/emulated/0 storage
