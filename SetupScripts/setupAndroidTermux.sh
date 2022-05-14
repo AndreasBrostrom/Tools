@@ -25,15 +25,17 @@ pkg upgrade -y
 echo -e "\033[1mSetting up home directory\033[0m"
 cd $HOME
 
+
 # Setting up home
 echo -e " \033[2mCreating folders\033[0m"
-mkdir -p $HOME/Repositories
 mkdir -p $HOME/.bin
 mkdir -p $HOME/.ssh
 
 mkdir -p $HOME/Programs/bin
 mkdir -p $HOME/Programs/lib
 mkdir -p $HOME/Programs/src
+
+mkdir -p $HOME/Repositories
 
 echo -e " \033[2mLinking sdcard paths\033[0m"
 [ ! -d "$HOME/storage" ]      && ln -s /storage/emulated/0 storage
