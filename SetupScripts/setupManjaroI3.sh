@@ -4,13 +4,6 @@ sudo -v
 pacmanInstall=(
     git neovim
     yay
-    dos2unix jq ripgrep xdotool
-    python3 python3-pip
-    terminator
-    fish
-    gparted gnome-disk-utility
-    steam
-    starship
   )
 
 pacmanRemove=(
@@ -22,6 +15,14 @@ yayInstall=(
     jdk8-openjdk
     android-sdk-cmdline-tools-latest #android-studio
     github-cli
+    
+    dos2unix jq ripgrep exa xdotool
+    python3 python3-pip
+
+    terminator
+
+    gparted gnome-disk-utility
+    fish starship
 
     nemo
     samba manjaro-settings-samba
@@ -37,6 +38,8 @@ yayInstall=(
     scrcpy
     obs-studio
     vlc
+
+    steam
 
     nerd-fonts-hack nerd-fonts-dejavu-complete nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
     ttf-ms-fonts
