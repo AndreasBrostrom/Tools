@@ -48,11 +48,10 @@ if [ -d "$HOME/.ssh" ]; then
   chmod 644 $HOME/.ssh/*.pub
 fi
 
+
 # clone and install tools and dotfiles
-if [ ! -d "$HOME/Repositories/dotfiles" ]; then
-  cd $HOME/Repositories
-  git clone git@github.com:AndreasBrostrom/dotfiles.git
-fi
+cd $HOME/Repositories
+git clone git@github.com:AndreasBrostrom/dotfiles.git
 cd $HOME/Repositories/dotfiles
 chmod +x install
 ./install
