@@ -99,6 +99,16 @@ fi
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/src
 [ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 
+# Setting up ssh permissions
+if [ -d "$HOME/.ssh" ]; then
+  echo -e "\033[1mFixing permission for ssh\033[0m"
+  chmod 700 $HOME/.ssh
+  chmod 600 $HOME/.ssh/config
+  chmod 600 $HOME/.ssh/authorized_keys
+  chmod 600 $HOME/.ssh/*id_rsa
+  chmod 644 $HOME/.ssh/*.pub
+fi
+
 cd $HOME/Repositories
 git clone git@github.com:AndreasBrostrom/dotfiles.git
 cd $HOME/Repositories/dotfiles
