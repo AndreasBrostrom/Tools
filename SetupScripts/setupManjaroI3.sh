@@ -94,7 +94,6 @@ if [ -d "$HOME/android-sdk" ]; then
 fi
 
 # Setting up home
-
 mkdir -p $HOME/.bin
 mkdir -p $HOME/.ssh
 
