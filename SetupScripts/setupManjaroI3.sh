@@ -100,12 +100,9 @@ cd $SCRIPTPATH/ScriptsLinux
 cp * $HOME/.bin
 
 cd $HOME/Repositories
-git clone https://github.com/AndreasBrostrom/dotfiles.git
-cd dotfiles
-sed 's/https:\/\/github.com\//git@github.com:/g' .git/config
-cd dotfiles
+git clone git@github.com:AndreasBrostrom/dotfiles.git
+cd $HOME/Repositories/dotfiles
 chmod +x install
-cd dotfiles
 ./install
 
 sudo --reset-timestamp
