@@ -99,9 +99,6 @@ fi
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs/src
 [ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 
-cd $SCRIPTPATH/ScriptsLinux
-cp * $HOME/.bin
-
 cd $HOME/Repositories
 git clone git@github.com:AndreasBrostrom/dotfiles.git
 cd $HOME/Repositories/dotfiles
