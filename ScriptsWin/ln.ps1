@@ -28,8 +28,12 @@ if ( !$args[0] ) { Write-Host "Missing options" -ForegroundColor Red; exit }
 
 $targetFullPath = (Get-ChildItem $target).fullname
 
+if ( $operator -eq "-j" -and (Get-Item $targetFullPath) -is [System.IO.DirectoryInfo] ) { 
+    Write-Host "Target $target is not a directory." -ForegroundColor Red; exit 
+}
+
 if ( [System.IO.File]::Exists($targetFullPath) -or [System.IO.Directory]::Exists($targetFullPath) ) { 
-    New-Item -ItemType $option -Value $targetFullPath -Path $name #>$null 2>&1
+    New-Item -ItemType $option -Value $targetFullPath -Path $name >$null 2>&1
 } else {
     Write-Host "Target '$target' does not exist..." -ForegroundColor Red
 }
