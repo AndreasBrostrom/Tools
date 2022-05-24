@@ -7,7 +7,9 @@ if ($altName) {
     $name = $altName
 }
 
-shimgen -p "$target" -o "C:\bin\$name" >$null 2>&1
+if($altName.Contains('.exe')) {
+    shimgen -p "$target" -o "C:\bin\$name" >$null 2>&1
+}
 shimgen -p "$target" -o "C:\bin\$name.exe" >$null 2>&1
 
 write-host "bin: '$target' have been added to windows bin as '$name'."
