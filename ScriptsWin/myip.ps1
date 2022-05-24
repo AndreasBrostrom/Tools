@@ -1,0 +1,1 @@
+ipconfig.exe | Select-String -Pattern 'IPv4'
