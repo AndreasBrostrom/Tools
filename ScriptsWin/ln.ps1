@@ -28,7 +28,7 @@ if ( !$args[0] ) { Write-Host "Missing options" -ForegroundColor Red; exit }
 
 $targetFullPath = (Get-ChildItem $target).fullname
 
-if ( $operator -eq "-j" -and (Get-Item $targetFullPath) -is [System.IO.DirectoryInfo] ) { 
+if ( $operator -eq "-j" -and ((Get-Item $targetFullPath) -is [System.IO.DirectoryInfo]) ) { 
     Write-Host "Target $target is not a directory." -ForegroundColor Red; exit 
 }
 
