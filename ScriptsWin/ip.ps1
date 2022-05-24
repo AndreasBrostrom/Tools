@@ -16,7 +16,7 @@ if ( $operator -eq "help" ) { $option = "help" }
 
 if ( !$args ) { "ln: missing file operand`nTry 'ln --help' for more information."; exit }
 
-if ( ($operator -eq "help") -or !($args) ) -or !($args[0]) ) {
+if ( ($operator -eq "help") -or !($args) -or !($args[0]) ) {
     "Usage: ip OBJECT { COMMAND | help }"
     "where  OBJECT := { address }"
     ""
