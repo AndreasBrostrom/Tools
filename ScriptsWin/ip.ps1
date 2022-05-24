@@ -25,6 +25,6 @@ if ( ($operator -eq "help") -or !($args) -or !($args[0]) ) {
 
 if ( $option -notin "address" ) { Write-Host "'$operator' invalid option" -ForegroundColor Red; exit }
 
-if ( $operator -eq "address" { 
+if ( $operator -eq "address" ) { 
     Get-NetIPConfiguration -All; exit 0
 }
