@@ -11,5 +11,5 @@ bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/Se
 
 #### WSL Manjaro
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSL_Manjaro.sh)
+bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSL_Arch.sh)
 ```
