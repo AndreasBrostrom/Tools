@@ -84,12 +84,12 @@ chmod 600 $HOME/.ssh/*id_rsa
 chmod 644 $HOME/.ssh/*.pub
 
 cd $SCRIPTPATH/Repositories
-git clone https://github.com/AndreasBrostrom/Tools.git
-git clone https://github.com/AndreasBrostrom/dotfiles.git
+git clone git@github.com:AndreasBrostrom/Tools.git
+git clone git@github.com:AndreasBrostrom/dotfiles.git
 cd dotfiles
 chmod +x install
 ./install
 
-python3 $SCRIPTPATH/setupNewWSLHome.py
+python3 $HOME/Repositories/SetupScripts/setupNewWSLHome.py
 
 echo -e "done"
