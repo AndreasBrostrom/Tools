@@ -6,13 +6,7 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 fi
 
 pacmanInstall=(
-    git neovim
-    yay
-  )
-
-pacmanRemove=(
-    snapd
-    flatpak
+    neovim
   )
 
 yayInstall=(
@@ -29,7 +23,7 @@ yayInstall=(
     fish starship
 
     thunar
-    samba manjaro-settings-samba
+    samba
 
     node
     ts-node
@@ -40,7 +34,16 @@ SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
 
 echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
 yes "" | sudo pacman -Syyu
-yes "" | yay -Syyu
+
+echo -e "\e[1;34mInstalling yay...\e[0m"
+mkdir -p $HOME/Programs/src
+cd $HOME/Programs/src
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+cd $HOME
+
 
 # Setup and install snap
 echo -e "\e[1;34mInstalling pacman packages...\e[0m"
@@ -53,18 +56,6 @@ echo -e "\e[1;34mInstalling yay packages...\e[0m"
 for app in ${yayInstall[@]}; do
     echo "Installing $app and requirements..."
     yes "" | yay -Sy $app
-done
-
-echo -e "\e[1;34mRemoving preinstalled packages...\e[0m"
-for app in ${pacmanRemove[@]}; do
-    echo "Installing $app and requirements..."
-    yes "" | sudo pacman -R $app
-    if [ "$app" == "snapd" ]; then
-      sudo rm -r /var/lib/snapd
-    elif [ "$app" == "snap" ]; then
-      sudo rm -r /var/lib/flatpak
-      rm -r ~/.local/share/flatpak
-    fi
 done
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
@@ -85,10 +76,15 @@ echo -e "\e[1;34mSetting up home...\e[0m"
 [ ! -d "$HOME/Programs/src" ] && mkdir -p $HOME/Programs/src
 [ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 
-cd $SCRIPTPATH/ScriptsLinux
-cp * $HOME/.bin
+echo -e " \033[2mFixing SSH permissions\033[0m"
+chmod 700 $HOME/.ssh
+chmod 600 $HOME/.ssh/config
+chmod 600 $HOME/.ssh/authorized_keys
+chmod 600 $HOME/.ssh/*id_rsa
+chmod 644 $HOME/.ssh/*.pub
 
 cd $SCRIPTPATH/Repositories
+git clone https://github.com/AndreasBrostrom/Tools.git
 git clone https://github.com/AndreasBrostrom/dotfiles.git
 cd dotfiles
 chmod +x install
