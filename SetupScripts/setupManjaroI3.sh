@@ -38,6 +38,7 @@ yayInstall=(
     scrcpy
     obs-studio
     vlc
+    barrier
 
     steam
 

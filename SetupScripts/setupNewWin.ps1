@@ -28,7 +28,8 @@ $winget_pkg       = 'Microsoft.WindowsTerminal'
                     'Valve.Steam',
                     'Discord.Discord', 'SlackTechnologies.Slack',  'TeamSpeakSystems.TeamSpeakClient',
                     'RARLab.WinRAR', 'Microsoft.PowerToys',
-                    'Microsoft.PowerShell'
+                    'Microsoft.PowerShell',
+                    'DebaucheeOpenSourceGroup.Barrier'
 
 $pwsh_modules     = 'PSWindowsUpdate'
 
@@ -255,6 +256,11 @@ $autostart=[Environment]::GetFolderPath('CommonStartup')
 New-Item -itemtype Junction -path "C:\Programs" -name "Startup" -value "$autostart"
 #Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\VcXSrv\config.xlaunch" -Destination "C:\Programs\Startup\"
 
+# Change windows time (dualboot)
+Write-Host "Adjusting the clock..." -ForegroundColor Magenta
+C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
+Write-Host "Clock adjustment completed..." -ForegroundColor green
+
 
 Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
 #C:\Windows\System32\reg.exe import "$PSScriptRoot\..\VSCode\Elevation_Add.reg" >$null 2>&1
@@ -266,15 +272,10 @@ Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
 #C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewPythonFile.reg" >$null 2>&1
 #C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
 
-# Change windows time
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
-
 # Cleanup Context Menus
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
-
-# Remove unwanted objects
 
 # Restoring save files from programs
 Write-Host "Restoring keybindings and other systems..." -ForegroundColor Magenta
@@ -282,6 +283,7 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\RebindCaps2Esc.r
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\winHotKeyTerminal.reg" >$null 2>&1
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
+
 
 # Setup Keyboard and languishes
 #Write-Host "Setting up languages..." -ForegroundColor Magenta

@@ -8,3 +8,8 @@ bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/Se
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupManjaroI3.sh)
 ```
+
+#### WSL Manjaro
+```bash
+bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSL_Manjaro.sh)
+```
