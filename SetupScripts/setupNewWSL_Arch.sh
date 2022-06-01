@@ -29,9 +29,6 @@ yayInstall=(
     ts-node
   )
 
-
-SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
-
 echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
 yes "" | sudo pacman -Syyu
 
@@ -83,7 +80,7 @@ chmod 600 $HOME/.ssh/authorized_keys
 chmod 600 $HOME/.ssh/*id_rsa
 chmod 644 $HOME/.ssh/*.pub
 
-cd $SCRIPTPATH/Repositories
+cd $HOME/Repositories
 git clone git@github.com:AndreasBrostrom/Tools.git
 git clone git@github.com:AndreasBrostrom/dotfiles.git
 cd dotfiles
