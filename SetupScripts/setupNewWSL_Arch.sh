@@ -6,7 +6,7 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 fi
 
 pacmanInstall=(
-    neovim
+    neovim openssh
   )
 
 yayInstall=(
@@ -87,6 +87,6 @@ cd dotfiles
 chmod +x install
 ./install
 
-python3 $HOME/Repositories/SetupScripts/setupNewWSLHome.py
+python3 $HOME/Repositories/Tools/SetupScripts/setupNewWSLHome.py
 
 echo -e "done"
