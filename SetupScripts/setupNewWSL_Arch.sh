@@ -19,7 +19,6 @@ yayInstall=(
 
     terminator
 
-    gparted gnome-disk-utility
     fish starship
 
     thunar

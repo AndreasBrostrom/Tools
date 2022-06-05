@@ -9,31 +9,57 @@ Import-Module Appx -usewindowspowershell
 # GLOBALS
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
 
-$scoop_pkg        = 'git', 'curl',
-                    'aria2', '7zip',
-                    'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix',
-                    'zip', '7zip',
+$scoop_pkg        = 'sudo', 'git', 'aria2', '7zip',         # Required
+                    'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget',
+                    'zip', 'unzip',
                     'neovim', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
+                    'gh', 
+                    'starship',
                     'steamcmd', 'android-sdk', 'rufus',
-                    'sharpkeys', 'starship',
-                    'armake', 'hemtt'
+                    'ntop',                                 # htop-like system-monitor
+                    'sharpkeys',                            # Key rebinding
+                    'armake', 'hemtt'                       # Arma 3 tools
 
 $choco_pkg        = 'linux-reader'
 
 $winget_pkg       = 'Microsoft.WindowsTerminal'
                     'Google.Chrome',
                     'Microsoft.VisualStudioCode',
-                    'VideoLAN.VLC', 'OBSProject.OBSStudio',
                     'Valve.Steam',
-                    'Discord.Discord', 'SlackTechnologies.Slack',  'TeamSpeakSystems.TeamSpeakClient',
-                    'RARLab.WinRAR', 'Microsoft.PowerToys',
+                    'Discord.Discord', 'TeamSpeakSystems.TeamSpeakClient',
+                    'Microsoft.PowerToys',
                     'Microsoft.PowerShell',
-                    'DebaucheeOpenSourceGroup.Barrier'
+                    'TimKosse.FileZilla.Client'             # FTP Client
+                    'VideoLAN.VLC', 'OBSProject.OBSStudio',
+                    'DiskInternals.LinuxReader'             # EXT disk reader
+                    'DebaucheeOpenSourceGroup.Barrier'      # Screen passover tool
+                    'ShiningLight.OpenSSL'                  # Needed by: Barrier
+                    #'rcmaehl.MSEdgeRedirect'               # Deflect from edge
+                    #'marha.VcXsrv'                         # xServer
+
+$winget_rm_pkg    = 'Microsoft.GamingApp_8wekyb3d8bbwe',
+                    'Microsoft.WindowsMaps_8wekyb3d8bbwe',
+                    'Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe',
+                    'Microsoft.Xbox.TCUI_8wekyb3d8bbwe',
+                    'Microsoft.XboxGameOverlay_8wekyb3d8bbwe',
+                    'Microsoft.XboxGamingOverlay_8wekyb3d8bbwe',
+                    'Microsoft.XboxIdentityProvider_8wekyb3d8bbwe',
+                    'Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe',
+                    'Microsoft.Edge',
+                    'Microsoft.Edge.Update',
+                    'Microsoft.EdgeWebView2Runtime',
+                    'Microsoft.549981C3F5F10_8wekyb3d8bbwe',
+                    'Microsoft.BingNews_8wekyb3d8bbwe',
+                    'Microsoft.BingWeather_8wekyb3d8bbwe',
+                    'Microsoft.People_8wekyb3d8bbwe',
+                    'Microsoft.WindowsAlarms_8wekyb3d8bbwe',
+                    'Microsoft.Todos_8wekyb3d8bbwe',
+                    'Microsoft.YourPhone_8wekyb3d8bbwe',
+                    'Microsoft.ZuneMusic_8wekyb3d8bbwe',
+                    'Microsoft.ZuneVideo_8wekyb3d8bbwe'
 
 $pwsh_modules     = 'PSWindowsUpdate'
-
-
 
 # Script start
 Write-Host "Starting up..." -ForegroundColor Magenta
@@ -48,22 +74,12 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
     scoop update scoop >$null 2>&1
 }
 
-# Add scoop buckets
-Write-Host "Installing Required Scoop Packages..."
-$scoop_defult_pkg = 'sudo', 'git', 'aria2', '7zip'
-foreach ($pkg in $scoop_defult_pkg) {
-    if (![System.IO.Directory]::Exists("$env:USERPROFILE\scoop\apps\$pkg")) {
-        Write-Host "Installing $pkg..."
-        scoop install $pkg >$null 2>&1
-    } else {
-        Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
-    }
-}
-
 Write-Host "Adding Scoop buckets..."
 foreach ($buckets in $scoop_buckets) {
     scoop bucket add $buckets >$null 2>&1
 }
+Write-Host "Updating repos..."
+scoop update * >$null 2>&1
 
 # Install scoop packages
 Write-Host "Installing Scoop packages..."
@@ -71,7 +87,7 @@ Write-Host "Installing Scoop packages..."
 foreach ($pkg in $scoop_pkg) {
     if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
         Write-Host "Installing $pkg..."
-        scoop install $pkg -g >$null 2>&1
+        scoop install $pkg --global >$null 2>&1
     } else {
         Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
     }
@@ -121,8 +137,16 @@ foreach ($pkg in $winget_pkg) {
     Write-Host "Installing $pkg..."
     winget install -e --id $pkg
 }
-Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
+Write-Host
+ "Installation of WinGet packages completed..." -ForegroundColor Green
 
+# Remove bloatware
+Write-Host "Removing bloatware..."
+foreach ($pkg in $winget_rm_pkg) {
+    Write-Host "Removing $pkg..."
+    winget uninstall $pkg
+}
+Write-Host "Bloatware removal completed..." -ForegroundColor Green
 
 
 # Install powershell moduels
@@ -278,9 +302,8 @@ C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
 
 # Restoring save files from programs
-Write-Host "Restoring keybindings and other systems..." -ForegroundColor Magenta
+Write-Host "Setting keybindings..." -ForegroundColor Magenta
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\RebindCaps2Esc.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\winHotKeyTerminal.reg" >$null 2>&1
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
