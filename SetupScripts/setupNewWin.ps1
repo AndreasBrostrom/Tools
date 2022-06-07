@@ -1,10 +1,11 @@
 #Requires -RunAsAdministrator
 Set-ExecutionPolicy Bypass -Scope Process -Force
-if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shell..." -ForegroundColor Red; exit }    
-Import-Module Appx -usewindowspowershell
 
-# User ExecutionPolicy
-# Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shell..." -ForegroundColor Red; exit }    
+Import-Module Appx -usewindowspo
+
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+
 
 # GLOBALS
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
@@ -41,14 +42,14 @@ $winget_pkg       = 'Microsoft.WindowsTerminal'
 $winget_rm_pkg    = 'Microsoft.GamingApp_8wekyb3d8bbwe',
                     'Microsoft.WindowsMaps_8wekyb3d8bbwe',
                     'Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe',
-                    'Microsoft.Xbox.TCUI_8wekyb3d8bbwe',
-                    'Microsoft.XboxGameOverlay_8wekyb3d8bbwe',
-                    'Microsoft.XboxGamingOverlay_8wekyb3d8bbwe',
-                    'Microsoft.XboxIdentityProvider_8wekyb3d8bbwe',
-                    'Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe',
-                    'Microsoft.Edge',
-                    'Microsoft.Edge.Update',
-                    'Microsoft.EdgeWebView2Runtime',
+                    #'Microsoft.Xbox.TCUI_8wekyb3d8bbwe',
+                    #'Microsoft.XboxGameOverlay_8wekyb3d8bbwe',
+                    #'Microsoft.XboxGamingOverlay_8wekyb3d8bbwe',
+                    #'Microsoft.XboxIdentityProvider_8wekyb3d8bbwe',
+                    #'Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe',
+                    #'Microsoft.Edge',
+                    #'Microsoft.Edge.Update',
+                    #'Microsoft.EdgeWebView2Runtime',
                     'Microsoft.549981C3F5F10_8wekyb3d8bbwe',
                     'Microsoft.BingNews_8wekyb3d8bbwe',
                     'Microsoft.BingWeather_8wekyb3d8bbwe',
@@ -64,8 +65,13 @@ $pwsh_modules     = 'PSWindowsUpdate'
 # Script start
 Write-Host "Starting up..." -ForegroundColor Magenta
 
+
+
 # Installing scoop
 Write-Host "Setting up Scoop..." -ForegroundColor Magenta
+$env:SCOOP_GLOBAL="C:\Programs\Lib\scoop"
+[Environment]::SetEnvironmentVariable('SCOOP_GLOBAL', $env:SCOOP_GLOBAL, 'Machine')
+
 if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
     Write-Host "Installing Scoop..." -ForegroundColor Magenta
     Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh') >$null 2>&1
@@ -176,12 +182,29 @@ if (![System.IO.File]::Exists("$Env:userprofile\Downloads\Setup.exe")) {
 Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 
- 
+
 Write-Host "Applying windows features..." -ForegroundColor Magenta
+
+Write-Host "Setting up WSL" -ForegroundColor green
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 wsl.exe --set-default-version 2
-Write-Host "windows features applied" -ForegroundColor Green
+
+Write-Host "Setting up open ssh" -ForegroundColor green
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+# Default shell to pwsh
+New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value $((Get-Command pwsh.exe).source) -PropertyType String -Force
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
+    Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
+    New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+} else {
+    Write-Output "Firewall rule 'OpenSSH-Server-In-TCP' has been created and exists."
+}
+Write-Host "Windows features and ssh setup..." -ForegroundColor Green
+
 
 
 # Setting up home
@@ -265,13 +288,19 @@ Write-Host "Setting up Programs and Terminal shims..." -ForegroundColor Magenta
 
 #C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\choco.exe" -p="C:\ProgramData\Chocolatey\choco.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\chrome" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome-stable.exe" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\google-chrome-stable" -p="C:\Program Files\Google\Chrome\Application\chrome.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam.exe" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\steam" -p="C:\Program Files (x86)\Steam\Steam.exe" >$null 2>&1
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
-C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh" -p="C:\Program Files\PowerShell\7\pwsh.exe" >$null 2>&1
+C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\shimgen.exe" -p="C:\ProgramData\Chocolatey\tools\shimgen.exe" >$null 2>&1
+
+"Start-Process -FilePath `"$env:userprofile\AppData\Local\Discord\Update.exe`" -ArgumentList `"--processStart Discord.exe`"" | Out-File -FilePath "C:\Programs\Bin\discord.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/107410`"" | Out-File -FilePath "C:\Programs\Bin\arma.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/281990`"" | Out-File -FilePath "C:\Programs\Bin\stellaris.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/394360`"" | Out-File -FilePath "C:\Programs\Bin\hoi4.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/1142710`"" | Out-File -FilePath "C:\Programs\Bin\warhammer.ps1"
+
+Write-Host "Programs and Terminal shims created..." -ForegroundColor green
+
 
 
 # Autostart
@@ -284,6 +313,7 @@ New-Item -itemtype Junction -path "C:\Programs" -name "Startup" -value "$autosta
 Write-Host "Adjusting the clock..." -ForegroundColor Magenta
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsUTCTime\Make Windows Use UTC Time.reg" >$null 2>&1
 Write-Host "Clock adjustment completed..." -ForegroundColor green
+
 
 
 Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
@@ -306,6 +336,7 @@ Write-Host "Setting keybindings..." -ForegroundColor Magenta
 C:\Windows\System32\reg.exe import "$PSScriptRoot\..\KeyBinding\RebindCaps2Esc.reg" >$null 2>&1
 
 Write-Host "Context menu adjustment completed..." -ForegroundColor green
+
 
 
 # Setup Keyboard and languishes
