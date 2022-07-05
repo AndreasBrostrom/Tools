@@ -11,7 +11,7 @@ Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 $scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
 
 $scoop_pkg        = 'sudo', 'git', 'aria2', '7zip',         # Required
-                    'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget',
+                    'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget', 'findutils',
                     'zip', 'unzip',
                     'neovim', 'scrcpy',
                     'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
