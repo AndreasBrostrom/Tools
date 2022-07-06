@@ -77,12 +77,18 @@ for app in ${pacmanRemove[@]}; do
     fi
 done
 
+
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
 yes "" | sudo pacman -Syyu
 yes "" | yay -Syyu
 
+
 echo -e "\e[1;34mUpdating Font Repository...\e[0m"
 fc-cache -rfv
+
+
+echo -e "\e[1;34mSetting up pulseaudio...\e[0m"
+install_pulse
 
 
 echo -e "\e[1;34mSetting up home...\e[0m"
