@@ -22,7 +22,7 @@ $scoop_pkg        = 'sudo', 'git', 'aria2', '7zip',         # Required
                     'sharpkeys',                            # Key rebinding
                     'armake', 'hemtt'                       # Arma 3 tools
 
-$choco_pkg        = 'linux-reader'
+#$choco_pkg        = $null #'linux-reader'
 
 $winget_pkg       = 'Microsoft.WindowsTerminal'
                     'Google.Chrome',
@@ -33,7 +33,8 @@ $winget_pkg       = 'Microsoft.WindowsTerminal'
                     'Microsoft.PowerShell',
                     'TimKosse.FileZilla.Client'             # FTP Client
                     'VideoLAN.VLC', 'OBSProject.OBSStudio',
-                    'DiskInternals.LinuxReader'             # EXT disk reader
+                    'DiskInternals.LinuxReader',            # EXT disk reader
+
                     'DebaucheeOpenSourceGroup.Barrier'      # Screen passover tool
                     'ShiningLight.OpenSSL'                  # Needed by: Barrier
                     #'rcmaehl.MSEdgeRedirect'               # Deflect from edge
@@ -103,27 +104,27 @@ Write-Host "Installation of scoop packages completed..." -ForegroundColor Green
 
 
 # Installing Chocolately
-Write-Host "Setting up Chocolately..." -ForegroundColor Magenta
-if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
-    Write-Host "Installing Chocolately..." -ForegroundColor green
-    Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-    Write-Host "Changeing and setting some paths for Chocolately..."
-    choco feature enable -n allowGlobalConfirmation >$null 2>&1
-    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
-} else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
-
-# Chocolately packages
-Write-Host "Installing Chocolately packages..."
-$chocoInstalledPackages=choco list --localonly
-foreach ($pkg in $choco_pkg) {
-    if (!($chocoInstalledPackages -like "*$pkg*")) {
-        Write-Host "Installing $pkg..."
-        choco install $pkg -y >$null 2>&1
-    } else {
-        Write-Host "Choco $pkg already installed skipping..." -ForegroundColor Yellow
-    }
-}
-Write-Host "Installation of chocolately packages completed..." -ForegroundColor Green
+#Write-Host "Setting up Chocolately..." -ForegroundColor Magenta
+#if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
+#    Write-Host "Installing Chocolately..." -ForegroundColor green
+#    Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+#    Write-Host "Changeing and setting some paths for Chocolately..."
+#    choco feature enable -n allowGlobalConfirmation >$null 2>&1
+#    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
+#} else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
+#
+## Chocolately packages
+#Write-Host "Installing Chocolately packages..."
+#$chocoInstalledPackages=choco list --localonly
+#foreach ($pkg in $choco_pkg) {
+#    if (!($chocoInstalledPackages -like "*$pkg*")) {
+#        Write-Host "Installing $pkg..."
+#        choco install $pkg -y >$null 2>&1
+#    } else {
+#        Write-Host "Choco $pkg already installed skipping..." -ForegroundColor Yellow
+#    }
+#}
+#Write-Host "Installation of chocolately packages completed..." -ForegroundColor Green
 
 
 
