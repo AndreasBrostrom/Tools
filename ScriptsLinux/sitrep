@@ -48,4 +48,4 @@ else
     echo "All good"
 fi
 
-cd $PWD
+cd $_mainPwd
