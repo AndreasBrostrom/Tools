@@ -9,6 +9,9 @@ _arg_update="false"
 [[ ! -z "$1" ]] && [[ "$1" == "update" ]]   && _arg_update="true"
 [[ ! -z "$1" ]] && [[ "$1" == "upgrade" ]]  && _arg_update="true"
 [[ ! -z "$1" ]] && [[ "$1" == "u" ]]        && _arg_update="true"
+[[ ! -z "$1" ]] && [[ "$1" == "U" ]]        && _arg_update="true"
+[[ ! -z "$1" ]] && [[ "$1" == "-u" ]]        && _arg_update="true"
+[[ ! -z "$1" ]] && [[ "$1" == "-U" ]]        && _arg_update="true"
 
 echo -e "\e[2mChecking dotfile repo status\e[0m"
 if [[ _arg_update == "true" ]]; then
