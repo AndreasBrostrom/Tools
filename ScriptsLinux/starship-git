@@ -1,0 +1,15 @@
+#!/bin/bash
+echo -e "\e[1mGit Starships Symbols:\e[0m"
+
+echo ' conflicted	"="
+ ahead		"⇡"
+ behind		"⇣"
+ diverged	"⇕"
+ up_to_date	""
+ untracked	"?"
+ stashed	"$"
+ modified	"!"
+ staged		"+"
+ renamed	"»"
+ deleted	"✘"
+'
