@@ -62,12 +62,14 @@ echo """
 termux-wake-lock
 sshd
 """ > $HOME/.termux/boot/start-sshd
+chmod +x start-sshd
+
 echo """
 #!/data/data/com.termux/files/usr/bin/bash
 termux-wake-lock
 $HOME/.bin/monitor_termuxdotfilestatus
 """ > $HOME/.termux/boot/start-monitor_termuxdotfilestatus
-
+chmod +x start-monitor_termuxdotfilestatus
 
 # clone and install tools and dotfiles
 cd $HOME/Repositories
