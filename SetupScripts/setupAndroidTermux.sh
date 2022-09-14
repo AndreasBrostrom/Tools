@@ -56,6 +56,17 @@ if [ -d "$HOME/.ssh" ]; then
   chmod 644 $HOME/.ssh/*.pub
 fi
 
+mkdir -p $HOME/.termux/boot/
+echo """
+#!/data/data/com.termux/files/usr/bin/sh
+termux-wake-lock
+sshd
+""" > $HOME/.termux/boot/sshd
+echo """
+#!/data/data/com.termux/files/usr/bin/sh
+termux-wake-lock
+$HOME/.bin/monitor_dotfilestatus
+""" > $HOME/.termux/boot/monitor_dotfilestatus
 
 # clone and install tools and dotfiles
 cd $HOME/Repositories

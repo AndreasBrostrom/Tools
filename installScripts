@@ -3,7 +3,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 echo -e "\033[34;1mCopying scripts\033[0m"
-cd $SCRIPT_DIR/../ScriptsLinux
+cd $SCRIPT_DIR/ScriptsLinux
 [ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
 EXISTING=($(ls /usr/bin/))
 for FILE in $(rg --files --hidden); do
