@@ -1,4 +1,6 @@
-while true; do 
+#!/data/data/com.termux/files/usr/bin/bash
+
+while true; do
     sleep 5
 
     [ ! -d "$HOME/.cache/dotfileWatcher" ] && mkdir -p "$HOME/.cache/dotfileWatcher"
