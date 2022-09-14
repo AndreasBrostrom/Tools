@@ -4,15 +4,19 @@ while true; do
     sleep 10
 
     if [[ ! $(git -C $HOME/Repositories/dotfiles status | grep nothin) || $(git -C $HOME/Repositories/dotfiles status | grep Untracked) ]]; then
+        echo "Changes detected (dotfiles)"
         termux-notification -i "tDotfilesNotification" -t "Termux Dotfiles" -c "Dirty dotfiles detected" --led-on 800 --led-color ff0000  --priority normal
         continue
     fi
     if [[ ! $(git -C $HOME/Repositories/dotfiles_private status | grep nothin) || $(git -C $HOME/Repositories/dotfiles_private status | grep Untracked) ]]; then
+        echo "Changes detected (dotfiles_private)"
         termux-notification -i "tDotfilesNotification" -t "Termux Dotfiles" -c "Dirty dotfiles detected" --led-on 800 --led-color ff0000  --priority normal
         continue
     fi
     if [[ ! $(git -C $HOME/Repositories/Tools status | grep nothin) || $(git -C $HOME/Repositories/Tools status | grep Untracked) ]]; then
+        echo "Changes detected (Tools)"
         termux-notification -i "tDotfilesNotification" -t "Termux Dotfiles" -c "Dirty dotfiles detected" --led-on 800 --led-color ff0000  --priority normal
         continue
     fi
+    echo "No Changed detected"
 done
