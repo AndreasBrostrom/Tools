@@ -63,15 +63,10 @@ termux-wake-lock
 sshd
 """ > $HOME/.termux/boot/start-sshd
 echo """
-#!/data/data/com.termux/files/usr/bin/sh
+#!/data/data/com.termux/files/usr/bin/bash
 termux-wake-lock
-$HOME/.bin/monitor_dotfilestatus
-""" > $HOME/.termux/boot/start-monitor_dotfilestatus
-echo """
-#!/data/data/com.termux/files/usr/bin/sh
-termux-wake-lock
-$HOME/.bin/monitor_termuxNotifyDirtyDotfiles
-""" > $HOME/.termux/boot/monitor_termuxNotifyDirtyDotfiles
+$HOME/.bin/monitor_termuxdotfilestatus
+""" > $HOME/.termux/boot/start-monitor_termuxdotfilestatus
 
 
 # clone and install tools and dotfiles
