@@ -1,0 +1,9 @@
+while true; do 
+    sleep 5
+
+    [ ! -d "$HOME/.cache/dotfileWatcher" ] && mkdir -p "$HOME/.cache/dotfileWatcher"
+
+    if [ "$(cat $HOME/.cache/dotfileWatcher/log)" == "!" ]; then
+        termux-notification -i "tuUpdatePKG" -t "Dirty dotfiles" -c "You have uncommited and dirty dotfiles" --led-color 060600
+    fi
+done

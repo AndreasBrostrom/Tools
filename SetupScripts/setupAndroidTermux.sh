@@ -67,6 +67,12 @@ echo """
 termux-wake-lock
 $HOME/.bin/monitor_dotfilestatus
 """ > $HOME/.termux/boot/start-monitor_dotfilestatus
+echo """
+#!/data/data/com.termux/files/usr/bin/sh
+termux-wake-lock
+$HOME/.bin/monitor_termuxNotifyDirtyDotfiles
+""" > $HOME/.termux/boot/monitor_termuxNotifyDirtyDotfiles
+
 
 # clone and install tools and dotfiles
 cd $HOME/Repositories
