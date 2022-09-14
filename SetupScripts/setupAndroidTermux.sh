@@ -5,6 +5,8 @@ pkgInstall=(
     python3
     openssh
     starship
+    iproute2
+    termux-api x11-repo
   )
 
 echo -e "\033[34;1mSetting up a new terminal...\033[0m"
@@ -38,11 +40,11 @@ mkdir -p $HOME/Programs/src
 mkdir -p $HOME/Repositories
 
 echo -e " \033[2mLinking sdcard paths\033[0m"
-[ ! -d "$HOME/storage" ]      && ln -s /storage/emulated/0 storage
-[ ! -d "$HOME/Documents" ]    && ln -s /storage/emulated/0/Documents Documents
-[ ! -d "$HOME/Downloads" ]    && ln -s /storage/emulated/0/Download Downloads
-[ ! -d "$HOME/Pictures" ]     && ln -s /storage/emulated/0/Pictures Pictures
-[ ! -d "$HOME/Music" ]        && ln -s /storage/emulated/0/Music Music
+ln -sf /storage/emulated/0 storage
+ln -sf /storage/emulated/0/Documents Documents
+ln -sf /storage/emulated/0/Download Downloads
+ln -sf /storage/emulated/0/Pictures Pictures
+ln -sf /storage/emulated/0/Music Music
 
 # Setting up ssh permissions
 if [ -d "$HOME/.ssh" ]; then
@@ -57,9 +59,15 @@ fi
 
 # clone and install tools and dotfiles
 cd $HOME/Repositories
+
 git clone git@github.com:AndreasBrostrom/dotfiles.git
 cd $HOME/Repositories/dotfiles
 chmod +x install
 ./install
+
+# This is done in dotfiles now a days
+#git clone git@github.com:AndreasBrostrom/Tools.git
+#cd $HOME/Repositories/Tools/ScriptsLinux
+#cp -f * $HOME/.bin/.
 
 echo -e "done"
