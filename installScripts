@@ -1,18 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-if [ -d $SCRIPT_DIR/ScriptsLinux ]; then
-    echo -e "\033[34;1mCopying scripts\033[0m"
-    cd $SCRIPT_DIR/../ScriptsLinux
-    [ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
-    EXISTING=($(ls /usr/bin/))
-    for FILE in $(rg --files --hidden); do
-        if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
-            echo -e " \033[2mScript "$FILE" already pressent in /usr/bin skipping\033[0m"
-            continue
-        fi
-        echo -e " \033[2mCopying $FILE\033[0m"
-        cp -f $FILE $HOME/.bin/$FILE
-    done
-fi
+echo -e "\033[34;1mCopying scripts\033[0m"
+cd $SCRIPT_DIR/../ScriptsLinux
+[ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
+EXISTING=($(ls /usr/bin/))
+for FILE in $(rg --files --hidden); do
+    if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
+        echo -e " \033[2mScript "$FILE" already pressent in /usr/bin skipping\033[0m"
+        continue
+    fi
+    echo -e " \033[2mCopying $FILE\033[0m"
+    cp -f $FILE $HOME/.bin/$FILE
+done
