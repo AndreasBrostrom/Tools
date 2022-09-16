@@ -2,48 +2,49 @@
 sudo -v
 
 pacmanInstall=(
-    git neovim
-    yay
-  )
+  git neovim
+  yay
+)
 
 pacmanRemove=(
-    snapd
-    flatpak
-  )
+  snapd
+  flatpak
+)
 
 yayInstall=(
-    jdk8-openjdk
-    android-sdk-cmdline-tools-latest #android-studio
-    github-cli
-    
-    dos2unix jq ripgrep exa xdotool
-    python3 python3-pip
+  jdk8-openjdk
+  android-sdk-cmdline-tools-latest #android-studio
+  github-cli
+  
+  dos2unix jq ripgrep exa xdotool
+  python3 python3-pip
 
-    terminator
+  terminator
 
-    gparted gnome-disk-utility
-    fish starship
+  gparted gnome-disk-utility
+  fish starship
 
-    samba manjaro-settings-samba
+  samba manjaro-settings-samba
+  
+  etcher-bin
 
-    visual-studio-code-bin
-    node
-    ts-node
-    
-    google-chrome
-    spotify
-    discord
-    slack
-    scrcpy
-    obs-studio
-    vlc
-    barrier
+  visual-studio-code-bin
+  node
+  ts-node
+  
+  google-chrome
+  spotify
+  discord
+  scrcpy
+  obs-studio
+  vlc
+  barrier
 
-    steam
+  steam
 
-    all-repository-fonts
-    ttf-ms-fonts
-  )
+  all-repository-fonts
+  ttf-ms-fonts
+)
 
 SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
 
