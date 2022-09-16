@@ -24,7 +24,6 @@ yayInstall=(
     gparted gnome-disk-utility
     fish starship
 
-    nemo
     samba manjaro-settings-samba
 
     visual-studio-code-bin
@@ -42,7 +41,7 @@ yayInstall=(
 
     steam
 
-    nerd-fonts-hack nerd-fonts-dejavu-complete nerd-fonts-noto-sans-mono nerd-fonts-terminus ttf-nerd-fonts-symbols
+    all-repository-fonts
     ttf-ms-fonts
   )
 
