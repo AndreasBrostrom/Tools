@@ -37,7 +37,6 @@ $winget_pkg       = 'Microsoft.WindowsTerminal'
 
                     'DebaucheeOpenSourceGroup.Barrier'      # Screen passover tool
                     'ShiningLight.OpenSSL'                  # Needed by: Barrier
-                    #'rcmaehl.MSEdgeRedirect'               # Deflect from edge
                     #'marha.VcXsrv'                         # xServer
 
 $winget_rm_pkg    = 'Microsoft.GamingApp_8wekyb3d8bbwe',
@@ -104,14 +103,14 @@ Write-Host "Installation of scoop packages completed..." -ForegroundColor Green
 
 
 # Installing Chocolately
-#Write-Host "Setting up Chocolately..." -ForegroundColor Magenta
-#if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
-#    Write-Host "Installing Chocolately..." -ForegroundColor green
-#    Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-#    Write-Host "Changeing and setting some paths for Chocolately..."
-#    choco feature enable -n allowGlobalConfirmation >$null 2>&1
-#    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
-#} else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
+Write-Host "Setting up Chocolately..." -ForegroundColor Magenta
+if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
+    Write-Host "Installing Chocolately..." -ForegroundColor green
+    Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    Write-Host "Changeing and setting some paths for Chocolately..."
+    choco feature enable -n allowGlobalConfirmation >$null 2>&1
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
+} else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
 #
 ## Chocolately packages
 #Write-Host "Installing Chocolately packages..."
@@ -144,8 +143,7 @@ foreach ($pkg in $winget_pkg) {
     Write-Host "Installing $pkg..."
     winget install -e --id $pkg
 }
-Write-Host
- "Installation of WinGet packages completed..." -ForegroundColor Green
+Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
 
 # Remove bloatware
 Write-Host "Removing bloatware..."
