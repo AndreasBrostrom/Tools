@@ -2,6 +2,7 @@
 # /usr/bin/i3-scrot
 #
 # simple screenshot-script using scrot for manjaro-i3 by oberon@manjaro.org
+# modified by andreas.brostrom.ce@gmail.com
 
 _conf=$HOME/.config/i3-scrot.conf
 
@@ -24,7 +25,7 @@ fi
 case "$1" in
 	--desk|-d|$NULL)
 		cd $scrot_dir
-	        $cmd &&
+		$cmd &&
 		sleep 1 &&
 		notify-send "screenshot has been saved in $scrot_dir"
 		;;
@@ -55,7 +56,7 @@ case "$1" in
 	--select-to-clipboard|-sc)
 		cd $scrot_dir
 		notify-send 'select an area for the screenshot' &
-	  scrot -s -e 'xclip -selection clipboard -t image/png -i $f' &&
+		scrot -s -e 'xclip -selection clipboard -t image/png -i $f' &&
 		sleep 1 && notify-send "screenshot has been copied to clipboard"
 		;;
 	--help|-h)
