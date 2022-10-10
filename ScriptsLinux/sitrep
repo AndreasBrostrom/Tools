@@ -29,7 +29,7 @@ _dotfiles=("$_repoDir/dotfiles" "$_repoDir/dotfiles_private" "$_repoDir/wdotfile
 for _path in "${_dotfiles[@]}"; do
     [[ ! -d "$_path" ]] && continue
     if [[ ! $(git -C $_path status | grep nothin) || $(git -C $_path status | grep Untracked) ]]; then
-        _status+=("$(basename $_path): uncommitted changes")
+        _status+=("\e]8;;$_path\a$(basename $_path)\e]8;;\a\e[0m: uncommitted changes")
         continue
     fi
     if [[ "$_arg_update" == "true" ]]; then
@@ -37,7 +37,7 @@ for _path in "${_dotfiles[@]}"; do
         _gitPull="$(git pull)"
         cd $_repoDir
         [[ $(echo $_gitPull | grep Already) ]] && continue
-        _status+=("$(basename $_path): $_gitPull")
+        _status+=("\e]8;;$_path\a$(basename $_path)\e]8;;\a\e[0m: $_gitPull")
     fi
 done
 
@@ -45,7 +45,7 @@ done
 if [ ${#_status[@]} -gt 0 ]; then
     echo -e "\nCurrent status:"
     for _sitrep in "${_status[@]}"; do
-        echo " - $_sitrep"
+        echo -e " - $_sitrep"
     done
 else
     echo "All good"
