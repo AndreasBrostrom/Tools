@@ -26,7 +26,8 @@ yayInstall=(
 
   samba manjaro-settings-samba
   
-  etcher-bin
+  etcher-bin  # Flashdrive maker
+  peek        # gif recorder
 
   visual-studio-code-bin
   node
