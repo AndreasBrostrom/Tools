@@ -19,6 +19,8 @@ if [ "$*" == "-l" ] || [ "$*" == "--list" ]; then
     echo " > node 10"
     echo " > node 12"
     echo " > node 14"
+    echo " > node 16"
+    echo " > node 18"
     echo " > node latest"
     echo
     exit 0
@@ -32,6 +34,10 @@ elif [ "$1" == "12" ]; then
     PACKAGE_NAME=nodejs-lts-erbium
 elif [ "$1" == "14" ]; then
     PACKAGE_NAME=nodejs-lts-fermium
+elif [ "$1" == "16" ]; then
+    PACKAGE_NAME=nodejs-lts-gallium
+elif [ "$1" == "18" ]; then
+    PACKAGE_NAME=nodejs-lts-hydrogen
 elif [ "$1" == "latest" ]; then
     PACKAGE_NAME=nodejs
 else
