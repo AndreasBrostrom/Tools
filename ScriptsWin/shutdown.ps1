@@ -3,4 +3,5 @@ if ( $args[0] -eq "now" ) {
     exit 0
 }
 
-Start-Process -FilePath "C:\Windows\system32\shutdown.exe" -ArgumentList "$args"
+$cmdOutput = (C:\Windows\system32\shutdown.exe $args)
+$cmdOutput
