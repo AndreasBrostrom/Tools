@@ -1,4 +1,5 @@
 #!/bin/bash
+# Needs to me first in path
 
 emulator_proxy_function () {
     if [ ! -f $ANDROID_HOME/emulator/emulator-x86 ]; then
