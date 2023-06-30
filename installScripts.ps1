@@ -4,7 +4,7 @@ if ( -Not $IsWindows ) {
     Write-host "This script does not work on non windows system"
     exit 1
 }
-$desitnation = if ($args[0] -eq "-user") { "$($env:USERPROFILE)\.bin" } else { "C:\bin"}
+$desitnation = "$($env:USERPROFILE)\.bin"
     
 
 Write-host "Copying scripts to $desitnation\."
