@@ -35,12 +35,11 @@ if ( $list ) {
 if ( !$target ) { "shim: missing target operand`nTry 'shim -help' for more information."; exit }
 if ( !$name ) { "shim: missing name operand`nTry 'shim -help' for more information."; exit }
 
-if ([System.IO.Directory]::Exists("C:\ProgramData\Chocolatey\shims")) {
-
+if ([System.IO.Directory]::Exists("C:\Bin\")) {
         Write-Host "Creating shim" -ForegroundColor White
-        shimgen -o "C:\ProgramData\Chocolatey\shims\$name" -p $target >$null 2>&1
-        if ( -not $? ) { Write-Host "Error while creating wsl friendly shim..." -ForegroundColor Red; exit }
-        shimgen -o "C:\ProgramData\Chocolatey\shims\$name.exe" -p $target >$null 2>&1
+        shimgen -o "C:\Bin\$name" -p $target >$null 2>&1
+        #if ( -not $? ) { Write-Host "Error while creating wsl friendly shim..." -ForegroundColor Red; exit }
+        #shimgen -o "C:\Bin\$name.exe" -p $target >$null 2>&1
         if ( -not $? ) { Write-Host "Error while creating exe shim..." -ForegroundColor Red; exit }
         Write-Host "Shims for $target have been created." -ForegroundColor White
 } else {

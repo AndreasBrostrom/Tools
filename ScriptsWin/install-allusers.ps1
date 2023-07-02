@@ -16,13 +16,32 @@ if ( -not [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).gro
     exit 1
 }
 
-$FilePath = Get-Item -LiteralPath $args[0]
-
 if ( -Not $IsWindows ) {
-    Write-host "This script does not work on none-windows system"
+    Write-host "This script does not work on none-windows system" -ForegroundColor Red
     exit 1
 }
-$Dest = "C:\bin"
-    
-$Path = "$($dest)\$($FilePath.name)"
-New-Item -ItemType SymbolicLink -Target "$FilePath" -Path $Path -Force
+
+$TargetName     = $args[0]
+$TargetPathName = Get-Item -LiteralPath $TargetName | % { $_.FullName }
+$Dest           = "C:\bin"
+$DestPathName   = Join-Path $Dest $TargetName
+
+if ( $args[1] -eq "--shim" ) {
+    if (Test-Path -Path $DestPathName -PathType Leaf) { Remove-Item $DestPathName }
+    shimgen -o $DestPathName -p $TargetPathName >$null 2>&1
+    if (Test-Path -Path $DestPathName -PathType Leaf) {
+        Write-host "Shim created: $TargetPathName -> $DestPathName" -ForegroundColor white
+        #Get-ChildItem "$TargetPathName" -Force
+    } else {
+        Write-host "ERROR: Shim for $TargetPathName -> $DestPathName could not be created" -ForegroundColor red
+    }
+} else {
+    if (Test-Path -Path $DestPathName -PathType Leaf) { Remove-Item $DestPathName }
+    New-Item -ItemType SymbolicLink -Target "$TargetPathName" -Path $DestPathName -Force >$null 2>&1   
+    if (Test-Path -Path $DestPathName -PathType Leaf) {
+        Write-host "SymbolicLink created: $DestPathName -> $TargetPathName" -ForegroundColor white
+        #Get-ChildItem "$TargetPathName" -Force
+    } else {
+        Write-host "ERROR: SymbolicLink for $DestPathName -> $TargetPathName could not be created" -ForegroundColor red
+    }
+}
