@@ -9,7 +9,7 @@ bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/Se
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupManjaroI3.sh)
 ```
 
-#### WSL Manjaro
+#### WSL Arch
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSL_Arch.sh)
 ```
