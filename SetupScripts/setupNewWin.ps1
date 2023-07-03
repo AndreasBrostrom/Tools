@@ -8,40 +8,39 @@ Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
 
 # GLOBALS
-$scoop_buckets    = 'extras', 'Arma3Tools https://github.com/AndreasBrostrom/arma3-scoop-bucket.git'
+$scoop_buckets    = 'extras'
 
 $scoop_pkg        = 'sudo', 'git', 'aria2', '7zip',         # Required
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget', 'findutils',
                     'zip', 'unzip',
                     'neovim', 'scrcpy',
-                    'python', 'ruby', 'msys2', 'perl', 'ninja', 'rust',
-                    'gh', 
+                    'python', 'rust',
+                    'gh',
                     'starship',
                     'steamcmd', 'android-sdk', 'rufus',
                     'ntop',                                 # htop-like system-monitor
-                    'sharpkeys',                            # Key rebinding
-                    'armake', 'hemtt'                       # Arma 3 tools
+                    'sharpkeys'                             # Key rebinding
 
-#$choco_pkg        = $null #'linux-reader'
+$choco_pkg        = $null #'linux-reader'
 
-$winget_pkg       = 'Microsoft.WindowsTerminal'
-                    'Google.Chrome',
+$winget_pkg       = 'Google.Chrome',
                     'Microsoft.VisualStudioCode',
+                    'Microsoft.Office',
                     'Valve.Steam',
                     'Discord.Discord', 'TeamSpeakSystems.TeamSpeakClient',
                     'Microsoft.PowerToys',
                     'Microsoft.PowerShell',
-                    'TimKosse.FileZilla.Client'             # FTP Client
                     'VideoLAN.VLC', 'OBSProject.OBSStudio',
-                    'DiskInternals.LinuxReader',            # EXT disk reader
-
-                    'DebaucheeOpenSourceGroup.Barrier'      # Screen passover tool
-                    'ShiningLight.OpenSSL'                  # Needed by: Barrier
+                    'TimKosse.FileZilla.Client',            # FTP Client
+                    'DiskInternals.LinuxReader'             # EXT disk reader
+                    #'Microsoft.WindowsTerminal'            # (Installed via store)
+                    #'DebaucheeOpenSourceGroup.Barrier'     # Screen passover tool
+                    #'ShiningLight.OpenSSL'                 # Needed by: Barrier
                     #'marha.VcXsrv'                         # xServer
 
-$winget_rm_pkg    = 'Microsoft.GamingApp_8wekyb3d8bbwe',
-                    'Microsoft.WindowsMaps_8wekyb3d8bbwe',
-                    'Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe',
+$winget_rm_pkg    = $null #'Microsoft.GamingApp_8wekyb3d8bbwe',
+                    #'Microsoft.WindowsMaps_8wekyb3d8bbwe',
+                    #'Microsoft.WindowsSoundRecorder_8wekyb3d8bbwe',
                     #'Microsoft.Xbox.TCUI_8wekyb3d8bbwe',
                     #'Microsoft.XboxGameOverlay_8wekyb3d8bbwe',
                     #'Microsoft.XboxGamingOverlay_8wekyb3d8bbwe',
@@ -50,20 +49,50 @@ $winget_rm_pkg    = 'Microsoft.GamingApp_8wekyb3d8bbwe',
                     #'Microsoft.Edge',
                     #'Microsoft.Edge.Update',
                     #'Microsoft.EdgeWebView2Runtime',
-                    'Microsoft.549981C3F5F10_8wekyb3d8bbwe',
-                    'Microsoft.BingNews_8wekyb3d8bbwe',
-                    'Microsoft.BingWeather_8wekyb3d8bbwe',
-                    'Microsoft.People_8wekyb3d8bbwe',
-                    'Microsoft.WindowsAlarms_8wekyb3d8bbwe',
-                    'Microsoft.Todos_8wekyb3d8bbwe',
-                    'Microsoft.YourPhone_8wekyb3d8bbwe',
-                    'Microsoft.ZuneMusic_8wekyb3d8bbwe',
-                    'Microsoft.ZuneVideo_8wekyb3d8bbwe'
+                    #'Microsoft.549981C3F5F10_8wekyb3d8bbwe',
+                    #'Microsoft.BingNews_8wekyb3d8bbwe',
+                    #'Microsoft.BingWeather_8wekyb3d8bbwe',
+                    #'Microsoft.People_8wekyb3d8bbwe',
+                    #'Microsoft.WindowsAlarms_8wekyb3d8bbwe',
+                    #'Microsoft.Todos_8wekyb3d8bbwe',
+                    #'Microsoft.YourPhone_8wekyb3d8bbwe',
+                    #'Microsoft.ZuneMusic_8wekyb3d8bbwe',
+                    #'Microsoft.ZuneVideo_8wekyb3d8bbwe'
 
 $pwsh_modules     = 'PSWindowsUpdate'
 
+
+
+
 # Script start
 Write-Host "Starting up..." -ForegroundColor Magenta
+
+
+
+# Setting up root enviroment
+if ( -not Test-Path "C:\Programs" ) {
+    New-Item -itemtype "directory" -path "C:\Programs" >$null 2>&1
+    New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
+}
+
+New-Item -itemtype "directory" -path "C:\Programs\Bin" >$null 2>&1
+if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
+
+New-Item -itemtype Junction -path "C:\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
+
+New-Item -itemtype "directory" -path "C:\Programs\Opt" -Force >$null 2>&1
+New-Item -itemtype "directory" -path "C:\Programs\Lib" -Force >$null 2>&1
+
+
+Write-Host "Setting up symbolic links and directories..."
+New-Item -itemtype Junction -path "C:\" -name "tmp" -value "$Env:temp" -Force >$null 2>&1
+(get-item "C:\tmp\").Attributes += 'Hidden'
+
+New-Item -itemtype "directory" -path "C:\Programs\Lib\Steam\steamapps\common" -Force >$null 2>&1
+New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Lib\Steam\steamapps\common" -Force
+
+New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"  -Force
+(get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
 
 
 
@@ -80,26 +109,28 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
     scoop update scoop >$null 2>&1
 }
 
-Write-Host "Adding Scoop buckets..."
-foreach ($buckets in $scoop_buckets) {
-    scoop bucket add $buckets >$null 2>&1
+if ($scoop_buckets) {
+    Write-Host "Adding Scoop buckets..."
+    foreach ($buckets in $scoop_buckets) {
+        scoop bucket add $buckets >$null 2>&1
+    }
+    Write-Host "Updating repos..."
 }
-Write-Host "Updating repos..."
 scoop update * >$null 2>&1
 
 # Install scoop packages
-Write-Host "Installing Scoop packages..."
-# Packages
-foreach ($pkg in $scoop_pkg) {
-    if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
-        Write-Host "Installing $pkg..."
-        scoop install $pkg --global >$null 2>&1
-    } else {
-        Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
+if ($scoop_pkg) {
+    Write-Host "Installing Scoop packages..."
+    foreach ($pkg in $scoop_pkg) {
+        if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
+            Write-Host "Installing $pkg..."
+            scoop install $pkg --global >$null 2>&1
+        } else {
+            Write-Host "Scoop $pkg already installed skipping..." -ForegroundColor Yellow
+        }
     }
+    Write-Host "Installation of scoop packages completed..." -ForegroundColor Green
 }
-Write-Host "Installation of scoop packages completed..." -ForegroundColor Green
-
 
 
 # Installing Chocolately
@@ -111,19 +142,22 @@ if (![System.IO.File]::Exists("C:\ProgramData\chocolatey\choco.exe")) {
     choco feature enable -n allowGlobalConfirmation >$null 2>&1
     [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
 } else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
-#
-## Chocolately packages
-#Write-Host "Installing Chocolately packages..."
-#$chocoInstalledPackages=choco list --localonly
-#foreach ($pkg in $choco_pkg) {
-#    if (!($chocoInstalledPackages -like "*$pkg*")) {
-#        Write-Host "Installing $pkg..."
-#        choco install $pkg -y >$null 2>&1
-#    } else {
-#        Write-Host "Choco $pkg already installed skipping..." -ForegroundColor Yellow
-#    }
-#}
-#Write-Host "Installation of chocolately packages completed..." -ForegroundColor Green
+
+# Chocolately packages
+if ($choco_pkg) {
+    Write-Host "Installing Chocolately packages..."
+    $chocoInstalledPackages=choco list --localonly
+
+    foreach ($pkg in $choco_pkg) {
+        if (!($chocoInstalledPackages -like "*$pkg*")) {
+            Write-Host "Installing $pkg..."
+            choco install $pkg -y >$null 2>&1
+        } else {
+            Write-Host "Choco $pkg already installed skipping..." -ForegroundColor Yellow
+        }
+    }
+    Write-Host "Installation of chocolately packages completed..." -ForegroundColor Green
+}
 
 
 
@@ -141,17 +175,21 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsA
 Write-Host "Installing WinGet packages..."
 foreach ($pkg in $winget_pkg) {
     Write-Host "Installing $pkg..."
-    winget install -e --id $pkg
+    winget install --silent --id $pkg
 }
 Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
 
+
 # Remove bloatware
-Write-Host "Removing bloatware..."
-foreach ($pkg in $winget_rm_pkg) {
-    Write-Host "Removing $pkg..."
-    winget uninstall $pkg
+if ($winget_rm_pkg) {
+    Write-Host "Removing bloatware..."
+    foreach ($pkg in $winget_rm_pkg) {
+        Write-Host "Removing $pkg..."
+        winget uninstall $pkg
+    }
+    Write-Host "Bloatware removal completed..." -ForegroundColor Green
 }
-Write-Host "Bloatware removal completed..." -ForegroundColor Green
+
 
 
 # Install powershell moduels
@@ -184,18 +222,26 @@ Write-Host "Drives packages downloaded and ready..." -ForegroundColor Green
 
 Write-Host "Applying windows features..." -ForegroundColor Magenta
 
+# WSL
 Write-Host "Setting up WSL" -ForegroundColor green
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 wsl.exe --set-default-version 2
 
+
+# SSH
 Write-Host "Setting up open ssh" -ForegroundColor green
 Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+
 # Default shell to pwsh
 New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value $((Get-Command pwsh.exe).source) -PropertyType String -Force
+
+# Startup
 Start-Service sshd
 Set-Service -Name sshd -StartupType 'Automatic'
+
+# Confirm the Firewall rule is configured. It should be created automatically by setup. Run the following to verify
 if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyContinue | Select-Object Name, Enabled)) {
     Write-Output "Firewall Rule 'OpenSSH-Server-In-TCP' does not exist, creating it..."
     New-NetFirewallRule -Name 'OpenSSH-Server-In-TCP' -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
@@ -208,49 +254,12 @@ Write-Host "Windows features and ssh setup..." -ForegroundColor Green
 
 # Setting up home
 Write-Host "Setting up home..."
-if (![System.IO.Directory]::Exists("$Env:userprofile\.bin")) {
-    New-Item -itemtype "directory" -path "$Env:userprofile\.bin"
-    (get-item $Env:userprofile\.bin).Attributes += 'Hidden'
-    if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.bin", "User") }
-} else {
-    Write-Host "Home/.bin already setup skipping..." -ForegroundColor Yellow
-}
-# .config
-if (![System.IO.Directory]::Exists("$Env:userprofile\.config")) {
-    New-Item -itemtype "directory" -path "$Env:userprofile\.config"
-    (get-item $Env:userprofile\.config).Attributes += 'Hidden'
-} else {
-    Write-Host "Home/.config already setup skipping..." -ForegroundColor Yellow
-}
+New-Item -itemtype "directory" -path "$Env:userprofile\.bin" -Force
+(get-item $Env:userprofile\.bin).Attributes += 'Hidden'
+if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.bin", "User") }
 
-# Setting up root enviroment
-New-Item -itemtype "directory" -path "C:\Programs" >$null 2>&1
-New-Item -itemtype Junction -path "$Env:userprofile" -name "Programs" -value "C:\Programs"
-
-# bin
-New-Item -itemtype "directory" -path "C:\Programs\Bin" >$null 2>&1
-if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
-
-New-Item -itemtype Junction -path "C:\bin\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
-(get-item "C:\bin\").Attributes += 'Hidden'
-
-New-Item -itemtype "directory" -path "C:\usr\" >$null 2>&1
-New-Item -itemtype Junction -path "C:\usr\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
-(get-item "C:\usr\").Attributes += 'Hidden'
-
-
-Write-Host "Setting up symbolic links and directories..."
-New-Item -itemtype Junction -path "C:\" -name "tmp" -value "$Env:temp" >$null 2>&1
-(get-item "C:\tmp\").Attributes += 'Hidden'
-
-New-Item -itemtype "directory" -path "C:\Programs\Lib\Steam\steamapps\common" >$null 2>&1
-New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Lib\Steam\steamapps\common"
-
-New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"
-(get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
-
-New-Item -itemtype "directory" -path "C:\Programs\Lib" >$null 2>&1
-New-Item -itemtype "directory" -path "C:\Programs\Src" >$null 2>&1
+New-Item -itemtype "directory" -path "$Env:userprofile\.config"
+(get-item $Env:userprofile\.config).Attributes += 'Hidden'
 
 
 
@@ -293,10 +302,11 @@ C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\pwsh.exe" -p="C:
 C:\ProgramData\Chocolatey\tools\shimgen.exe -o="C:\Programs\Bin\shimgen.exe" -p="C:\ProgramData\Chocolatey\tools\shimgen.exe" >$null 2>&1
 
 "Start-Process -FilePath `"$env:userprofile\AppData\Local\Discord\Update.exe`" -ArgumentList `"--processStart Discord.exe`"" | Out-File -FilePath "C:\Programs\Bin\discord.ps1"
-"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/107410`"" | Out-File -FilePath "C:\Programs\Bin\arma.ps1"
-"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/281990`"" | Out-File -FilePath "C:\Programs\Bin\stellaris.ps1"
-"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/394360`"" | Out-File -FilePath "C:\Programs\Bin\hoi4.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/107410`""  | Out-File -FilePath "C:\Programs\Bin\arma.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/281990`""  | Out-File -FilePath "C:\Programs\Bin\stellaris.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/394360`""  | Out-File -FilePath "C:\Programs\Bin\hoi4.ps1"
 "Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/1142710`"" | Out-File -FilePath "C:\Programs\Bin\warhammer.ps1"
+"Start-Process -FilePath `"C:\Program Files (x86)\Steam\Steam.exe`" -ArgumentList `"steam://rungameid/1611600`"" | Out-File -FilePath "C:\Programs\Bin\warno.ps1"
 
 Write-Host "Programs and Terminal shims created..." -ForegroundColor green
 
@@ -326,9 +336,9 @@ Write-Host "Adjusting the context menu..." -ForegroundColor Magenta
 #C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsCustomNewFileRegFile\addCreateNewSqfFile.reg" >$null 2>&1
 
 # Cleanup Context Menus
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
-C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_GIT_BASH_CMD.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VLC.reg" >$null 2>&1
+#C:\Windows\System32\reg.exe import "$PSScriptRoot\..\WindowsContextMenu\Removers\remove_VS.reg" >$null 2>&1
 
 # Restoring save files from programs
 Write-Host "Setting keybindings..." -ForegroundColor Magenta
@@ -347,6 +357,9 @@ Write-Host "Context menu adjustment completed..." -ForegroundColor green
 #Set-WinUserLanguageList en-GB -Force
 
 #Write-Host "Language completed..." -ForegroundColor green
+
+
+if (Test-Path D: )
 
 
 Write-Host "Script completed." -ForegroundColor green

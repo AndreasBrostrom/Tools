@@ -21,27 +21,61 @@ if ( -Not $IsWindows ) {
     exit 1
 }
 
+if ( $args.count -eq 3 ) {
+    Write-Host "Usage: install-allusers TARGET"
+    Write-Host "Usage: install-allusers TARGET ALIAS"
+    Write-Host "Usage: install-allusers TARGET --shim"
+    Write-Host "Usage: install-allusers TARGET ALIAS --shim"
+}
+
+
+# Arguments
+$shim = $False
+foreach ($arg in $args) {
+    if ($arg -in @("--shim")) {
+        $shim = $True
+        continue
+    }
+}
+
+# Arguments error handling
+if ( $args.count -eq 3 ) {
+    if ( $args[0] -eq "--shim" ) {
+        Write-host "install-allusers TARGET ALIAS --shim" -ForegroundColor Red; exit 1
+    }
+    if ( $args[1] -eq "--shim" ) { 
+        Write-host "install-allusers TARGET ALIAS --shim" -ForegroundColor Red; exit 1
+    }
+} else {
+    if ($args.count –gt 3) {
+        Write-host "To many arguments" -ForegroundColor Red; exit 1
+    }
+    if ( $args[0] -eq "--shim" ) {
+        Write-host "install-allusers TARGET --shim" -ForegroundColor Red; exit 1
+    }
+}
+
 $TargetName     = $args[0]
 $TargetPathName = Get-Item -LiteralPath $TargetName | % { $_.FullName }
 $Dest           = "C:\bin"
-$DestPathName   = Join-Path $Dest $TargetName
+$DestPathName   = if ( $args.count -eq 3 ) { Join-Path $Dest $args[1] } else { Join-Path $Dest $TargetName }
 
-if ( $args[1] -eq "--shim" ) {
+if ( $shim ) {
     if (Test-Path -Path $DestPathName -PathType Leaf) { Remove-Item $DestPathName }
-    shimgen -o $DestPathName -p $TargetPathName >$null 2>&1
+    shimgen -p $TargetPathName -o $DestPathName >$null 2>&1
+
     if (Test-Path -Path $DestPathName -PathType Leaf) {
         Write-host "Shim created: $TargetPathName -> $DestPathName" -ForegroundColor white
-        #Get-ChildItem "$TargetPathName" -Force
     } else {
-        Write-host "ERROR: Shim for $TargetPathName -> $DestPathName could not be created" -ForegroundColor red
+        Write-host "ERROR: Shim for $TargetPathName -> $DestPathName could not be created" -ForegroundColor red; exit 1
     }
 } else {
     if (Test-Path -Path $DestPathName -PathType Leaf) { Remove-Item $DestPathName }
     New-Item -ItemType SymbolicLink -Target "$TargetPathName" -Path $DestPathName -Force >$null 2>&1   
+
     if (Test-Path -Path $DestPathName -PathType Leaf) {
         Write-host "SymbolicLink created: $DestPathName -> $TargetPathName" -ForegroundColor white
-        #Get-ChildItem "$TargetPathName" -Force
     } else {
-        Write-host "ERROR: SymbolicLink for $DestPathName -> $TargetPathName could not be created" -ForegroundColor red
+        Write-host "ERROR: SymbolicLink for $DestPathName -> $TargetPathName could not be created" -ForegroundColor red; exit 1
     }
 }
