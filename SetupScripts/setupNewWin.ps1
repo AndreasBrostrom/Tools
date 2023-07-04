@@ -172,13 +172,14 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsA
 } else { Write-Host "WinGet already exist..." -ForegroundColor Yellow }
 
 # Winget packages
-Write-Host "Installing WinGet packages..."
-foreach ($pkg in $winget_pkg) {
-    Write-Host "Installing $pkg..."
-    winget install --silent -e --id $pkg
+if ($winget_pkg) {
+    Write-Host "Installing WinGet packages..."
+    foreach ($pkg in $winget_pkg) {
+        Write-Host "Installing $pkg..."
+        winget install --silent -e --id $pkg
+    }
+    Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
 }
-Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
-
 
 # Remove bloatware
 if ($winget_rm_pkg) {
