@@ -98,7 +98,7 @@ New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "
 
 # Installing scoop
 Write-Host "Setting up Scoop..." -ForegroundColor Magenta
-$env:SCOOP_GLOBAL="C:\Programs\Lib\scoop"
+$env:SCOOP_GLOBAL="C:\Programs\Opt\scoop"
 [Environment]::SetEnvironmentVariable('SCOOP_GLOBAL', $env:SCOOP_GLOBAL, 'Machine')
 
 if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
