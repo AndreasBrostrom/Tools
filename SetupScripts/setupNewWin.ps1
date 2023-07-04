@@ -103,7 +103,7 @@ $env:SCOOP_GLOBAL="C:\Programs\Opt\scoop"
 
 if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
     Write-Host "Installing Scoop..." -ForegroundColor Magenta
-    Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh') >$null 2>&1
+    iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
 } else {
     Write-Host "Scoop already exist no need to install. Checking for updates..." -ForegroundColor Yellow
     scoop update scoop >$null 2>&1
