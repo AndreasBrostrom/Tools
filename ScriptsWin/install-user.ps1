@@ -1,19 +1,23 @@
-if ( ($args[1] -eq "--copy") -or (-not [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544"))) {
-    Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.MyCommand.Name)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
-    
-    # check if have sudo programs installed
-    $sudoScripts =  "$env:USERPROFILE\scoop\shims\sudo",
-                    "$env:USERPROFILE\scoop\shims\sudo.ps1",
-                    "$env:PROGRAMDATA\scoop\shims\sudo",
-                    "$env:PROGRAMDATA\scoop\shims\sudo.ps1",
-                    "$env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
-                    "$env:USERPROFILE\.bin\sudo.ps1"
-
-    foreach ($sudoScript in $sudoScripts) { if ( [System.IO.File]::Exists("$sudoScript") ) { [bool] $hasSudo = 1; break } }
-    if ($hasSudo) { Write-Host " or run with sudo" -ForegroundColor Red -NoNewline }
-    
-    Write-Host ", and then running the script again." -ForegroundColor Red
-    exit 1
+function checkIfAdmin {
+    if ( -not [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+        Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.ScriptName)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
+        
+        # check if have sudo programs installed
+        $sudoScripts =  "$env:USERPROFILE\scoop\shims\sudo",
+                        "$env:USERPROFILE\scoop\shims\sudo.ps1",
+                        "$env:PROGRAMDATA\scoop\shims\sudo",
+                        "$env:PROGRAMDATA\scoop\shims\sudo.ps1",
+                        "$env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
+                        "$env:USERPROFILE\.bin\sudo.ps1",
+                        "$env:SCOOP_GLOBAL\shims\sudo",
+                        "$env:SCOOP_GLOBAL\shims\sudo.ps1"
+        
+        foreach ($sudoScript in $sudoScripts) { if ( [System.IO.File]::Exists("$sudoScript") ) { [bool] $hasSudo = 1; break } }
+        if ($hasSudo) { Write-Host " or run with sudo" -ForegroundColor Red -NoNewline }
+        
+        Write-Host ", and then running the script again." -ForegroundColor Red
+        exit 1
+    }
 }
 
 if ( -Not $IsWindows ) {
@@ -22,10 +26,11 @@ if ( -Not $IsWindows ) {
 }
 
 
-if ( $args.count -eq 3 ) {
+if ( $args.count -eq 0 ) {
     Write-Host "Usage: install-allusers TARGET"
-    Write-Host "Usage: install-allusers TARGET ALIAS"
-    Write-Host "Usage: install-allusers TARGET --copy"
+    Write-Host "       install-allusers TARGET ALIAS"
+    Write-Host "       install-allusers TARGET --copy"
+    exit 0
 }
 
 
@@ -38,30 +43,9 @@ foreach ($arg in $args) {
     }
 }
 
-# Arguments error handling
-if ( $args.count -eq 3 ) {
-    if ( $args[0] -eq "--copy" ) {
-        Write-host "Copy argument does not support alias" -ForegroundColor Red; exit 1 
-    }
-    if ( $args[1] -eq "--copy" ) {
-        Write-host "Copy argument does not support alias" -ForegroundColor Red; exit 1 
-    }
-    if ( $args[2] -eq "--copy" ) {
-        Write-host "Copy argument does not support alias" -ForegroundColor Red; exit 1 
-    }
-} else {
-    if ($args.count –gt 3) {
-        Write-host "To many arguments" -ForegroundColor Red; exit 1
-    }
-    if ( $args[0] -eq "--copy" ) {
-        Write-host "install-user TARGET --copy" -ForegroundColor Red; exit 1
-    }
-}
-
-
 $TargetName     = $args[0]
 $TargetPathName = Get-Item -LiteralPath $TargetName | % { $_.FullName }
-$Dest           = "C:\bin"
+$Dest           = "$env:userprofile/.bin"
 $DestPathName   = if ( $args.count -eq 3 ) { Join-Path $Dest $args[1] } else { Join-Path $Dest $TargetName }
 
 if ( $args[1] -eq "--copy" ) {
@@ -74,6 +58,7 @@ if ( $args[1] -eq "--copy" ) {
         Write-host "ERROR: Copy of file $DestPathName -> $TargetPathName could not be done" -ForegroundColor red; exit 1
     }
 } else {
+    checkIfAdmin
     if (Test-Path -Path $DestPathName -PathType Leaf) { Remove-Item $DestPathName }
     New-Item -ItemType SymbolicLink -Target "$TargetPathName" -Path $DestPathName -Force >$null 2>&1   
 
