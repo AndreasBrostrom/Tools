@@ -32,7 +32,7 @@ $winget_pkg       = 'Google.Chrome',
                     'VideoLAN.VLC', 'OBSProject.OBSStudio',
                     'TimKosse.FileZilla.Client',            # FTP Client
                     'DiskInternals.LinuxReader'             # EXT disk reader
-                    #'Valve.Steam'                          # Manually installed in OPT
+                    'Valve.Steam --location "C:\Programs\Opt\Steam"'
                     #'Microsoft.WindowsTerminal'            # (Installed via store)
                     #'DebaucheeOpenSourceGroup.Barrier'     # Screen passover tool
                     #'ShiningLight.OpenSSL'                 # Needed by: Barrier
@@ -175,7 +175,7 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsA
 Write-Host "Installing WinGet packages..."
 foreach ($pkg in $winget_pkg) {
     Write-Host "Installing $pkg..."
-    winget install --silent --id $pkg
+    winget install --silent -e --id $pkg
 }
 Write-Host "Installation of WinGet packages completed..." -ForegroundColor Green
 
