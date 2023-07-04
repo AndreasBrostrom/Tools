@@ -359,7 +359,9 @@ Write-Host "Context menu adjustment completed..." -ForegroundColor green
 #Write-Host "Language completed..." -ForegroundColor green
 
 
-if (Test-Path D: )
+if (Test-Path "D:" ) {
+    Write-Host "You have a D: drive."
+}
 
 
 Write-Host "Script completed." -ForegroundColor green
