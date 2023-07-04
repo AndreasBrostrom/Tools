@@ -169,7 +169,7 @@ if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsA
     Add-AppxPackage "https://aka.ms/getwinget" -InstallAllResources 
 
     Write-Host "Changeing and setting some paths for WinGet..."
-} else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
+} else { Write-Host "WinGet already exist..." -ForegroundColor Yellow }
 
 # Winget packages
 Write-Host "Installing WinGet packages..."
