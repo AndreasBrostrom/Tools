@@ -26,13 +26,13 @@ $choco_pkg        = $null #'linux-reader'
 $winget_pkg       = 'Google.Chrome',
                     'Microsoft.VisualStudioCode',
                     'Microsoft.Office',
-                    'Valve.Steam',
                     'Discord.Discord', 'TeamSpeakSystems.TeamSpeakClient',
                     'Microsoft.PowerToys',
                     'Microsoft.PowerShell',
                     'VideoLAN.VLC', 'OBSProject.OBSStudio',
                     'TimKosse.FileZilla.Client',            # FTP Client
                     'DiskInternals.LinuxReader'             # EXT disk reader
+                    #'Valve.Steam'                          # Manually installed in OPT
                     #'Microsoft.WindowsTerminal'            # (Installed via store)
                     #'DebaucheeOpenSourceGroup.Barrier'     # Screen passover tool
                     #'ShiningLight.OpenSSL'                 # Needed by: Barrier
