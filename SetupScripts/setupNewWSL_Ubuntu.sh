@@ -6,16 +6,13 @@ if ! grep -iq 'microsoft' /proc/version &> /dev/null; then
 fi
 
 aptInstall=(
-  dos2unix
-  gh
-  git
-  jq
-  nemo
-  neovim
-  python3
-  python3-pip
-  ripgrep
+  dos2unix jq ripgrep exa xdotool
+  python3 python3-pip
+
   terminator
+  fish starship
+
+  thunar
 )
 
 
