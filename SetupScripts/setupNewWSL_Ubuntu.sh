@@ -19,12 +19,10 @@ aptInstall=(
 )
 
 
-SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
-
-sudo apt update -y
+# Setup and install
 echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
+sudo apt update -y
 sudo apt full-upgrade -y
-
 
 echo -e "\e[1;34mInstalling general packages and tools...\e[0m"
 for app in ${aptInstall[@]}; do
@@ -37,31 +35,33 @@ sudo apt full-upgrade -y 1>/dev/null 2>&1
 sudo apt autoremove -y 1>/dev/null 2>&1
 sudo apt autoclean -y 1>/dev/null 2>&1
 
+
 # Setup bashrc and home
 echo -e "\e[1;34mSetting up home...\e[0m"
-mkdir $HOME/.config  1>/dev/null 2>&1
-cp "$SCRIPTPATH/../MyLibrary/Linux/home/.profile" $HOME/.profile
-cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bashrc" $HOME/.bashrc
-cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_profile" $HOME/.bash_profile
-cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_path" $HOME/.bash_path
-cp "$SCRIPTPATH/../MyLibrary/Linux/home/.bash_aliases" $HOME/.bash_aliases
-cp "$SCRIPTPATH/../MyLibrary/Linux/home/.config/starship.toml" $HOME/.config/starship.toml
 
-dos2unix $HOME/.bash*
-dos2unix $HOME/.profile
+# Setting up home
+[ ! -d "$HOME/.bin" ] && ln -s $HOME/Programs/bin $HOME/.bin
+[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs
+[ ! -d "$HOME/Programs/bin" ] && mkdir -p $HOME/Programs/bin
+[ ! -d "$HOME/Programs/lib" ] && mkdir -p $HOME/Programs/lib
+[ ! -d "$HOME/Programs/src" ] && mkdir -p $HOME/Programs/src
+[ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
 
-# Setup some scripts
-mkdir $HOME/.bin  1>/dev/null 2>&1
-mkdir -p $HOME/Programs/bin 1>/dev/null 2>&1
-mkdir -p $HOME/Programs/src 1>/dev/null 2>&1
-mkdir -p $HOME/Programs/lib 1>/dev/null 2>&1
-mkdir -p $HOME/Repositories 1>/dev/null 2>&1
-cp "$SCRIPTPATH/../Scripts/adb-key" $HOME/.bin/adb-key
-cp "$SCRIPTPATH/../Scripts/adb-pull" $HOME/.bin/adb-pull
-cp "$SCRIPTPATH/../Scripts/adb-push" $HOME/.bin/adb-push
-cp "$SCRIPTPATH/../Scripts/detach" $HOME/.bin/detach
-dos2unix $HOME/.bin/*
+echo -e " \033[2mFixing SSH permissions\033[0m"
+chmod 700 $HOME/.ssh
+chmod 600 $HOME/.ssh/config
+chmod 600 $HOME/.ssh/authorized_keys
+chmod 600 $HOME/.ssh/*id_rsa
+chmod 644 $HOME/.ssh/*.pub
 
-python3 $SCRIPTPATH/setupNewWSLHome.py
+cd $HOME/Repositories
+git clone git@github.com:AndreasBrostrom/Tools.git
+git clone git@github.com:AndreasBrostrom/dotfiles.git
+cd dotfiles
+chmod +x install
+./install
+
+
+python3 <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSLHome.py)
 
 echo -e "done"

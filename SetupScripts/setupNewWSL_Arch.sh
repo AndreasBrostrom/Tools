@@ -28,9 +28,12 @@ yayInstall=(
     ts-node
   )
 
+
+# Setup and install packman
 echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
 yes "" | sudo pacman -Syyu
 
+# Installing yay
 echo -e "\e[1;34mInstalling yay...\e[0m"
 mkdir -p $HOME/Programs/src
 cd $HOME/Programs/src
@@ -41,7 +44,7 @@ makepkg -si
 cd $HOME
 
 
-# Setup and install snap
+# Setup and install yay
 echo -e "\e[1;34mInstalling pacman packages...\e[0m"
 for app in ${pacmanInstall[@]}; do
     echo "Installing $app and requirements..."
@@ -60,6 +63,7 @@ yes "" | yay -Syyu
 
 echo -e "\e[1;34mUpdating Font Repository...\e[0m"
 fc-cache -rfv
+
 
 # Setup bashrc and home
 echo -e "\e[1;34mSetting up home...\e[0m"
@@ -86,6 +90,6 @@ cd dotfiles
 chmod +x install
 ./install
 
-python3 $HOME/Repositories/Tools/SetupScripts/setupNewWSLHome.py
+python3 <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSLHome.py)
 
 echo -e "done"
