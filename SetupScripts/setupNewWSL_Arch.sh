@@ -65,7 +65,7 @@ fc-cache -rfv
 echo -e "\e[1;34mSetting up home...\e[0m"
 
 # Setting up home
-[ ! -d "$HOME/.bin" ] && ln -s $HOME/.bin $HOME/Programs/bin
+[ ! -d "$HOME/.bin" ] && ln -s $HOME/Programs/bin $HOME/.bin
 [ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs
 [ ! -d "$HOME/Programs/bin" ] && mkdir -p $HOME/Programs/bin
 [ ! -d "$HOME/Programs/lib" ] && mkdir -p $HOME/Programs/lib
