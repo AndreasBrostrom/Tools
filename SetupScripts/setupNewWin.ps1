@@ -88,8 +88,8 @@ Write-Host "Setting up symbolic links and directories..."
 New-Item -itemtype Junction -path "C:\" -name "tmp" -value "$Env:temp" -Force >$null 2>&1
 (get-item "C:\tmp\").Attributes += 'Hidden'
 
-New-Item -itemtype "directory" -path "C:\Programs\Lib\Steam\steamapps\common" -Force >$null 2>&1
-New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Lib\Steam\steamapps\common" -Force
+New-Item -itemtype "directory" -path "C:\Programs\Opt\Steam\steamapps\common" -Force >$null 2>&1
+New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Opt\Steam\steamapps\common" -Force
 
 New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"  -Force
 (get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
