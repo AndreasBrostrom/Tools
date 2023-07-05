@@ -2,7 +2,6 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
 if ("$Env:OS" -ne "Windows_NT") { Write-Host "Your not running on a Windows shell..." -ForegroundColor Red; exit }    
-Import-Module Appx -usewindowspo
 
 Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 
@@ -231,8 +230,10 @@ wsl.exe --set-default-version 2
 
 
 # SSH
-Write-Host "Setting up open ssh" -ForegroundColor green
+Write-Host "Setting up Open SSH server and client" -ForegroundColor green
 Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+
+Write-Host "OpenSSH Server may take a while..." -ForegroundColor Gray
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 
 # Default shell to pwsh
@@ -262,31 +263,6 @@ if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnviron
 New-Item -itemtype "directory" -path "$Env:userprofile\.config"
 (get-item $Env:userprofile\.config).Attributes += 'Hidden'
 
-
-
-# Setup powershell profile
-if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1")) {
-    Write-Host "Configurating Powershell..." -ForegroundColor Magenta
-    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\PowerShell\"
-    (get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
-    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
-    (get-item $Env:userprofile\Documents\WindowsPowerShell).Attributes += 'Hidden'
-    
-    "if (Test-Path `"$env:userprofile\.pwshrc.ps1`" -PathType leaf) {`n    . `"$env:userprofile\.pwshrc.ps1`"`n}" | Out-File -FilePath "$Env:userprofile\Documents\PowerShell\profile.ps1"
-
-    Write-Host "Restoring powershell profile..."
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\Home\.pwshrc.ps1" -Destination "$Env:userprofile"
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\Home\.pwsh_path.ps1" -Destination "$Env:userprofile"
-    Copy-Item "$PSScriptRoot\..\MyLibrary\Windows\Home\.pwsh_aliases.ps1" -Destination "$Env:userprofile"
-    (get-item $Env:userprofile\.pwshrc.ps1).Attributes += 'Hidden'
-    (get-item $Env:userprofile\.pwsh_path.ps1).Attributes += 'Hidden'
-    (get-item $Env:userprofile\.pwsh_aliases.ps1).Attributes += 'Hidden'
-
-    New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
-    Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
-} else {
-    Write-Host "Powershell already configured skipping..." -ForegroundColor Yellow
-}
 
 
 
@@ -360,8 +336,33 @@ Write-Host "Context menu adjustment completed..." -ForegroundColor green
 #Write-Host "Language completed..." -ForegroundColor green
 
 
-if (Test-Path "D:" ) {
-    Write-Host "You have a D: drive."
+
+# Setup powershell profile
+if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1")) {
+    Write-Host "Configurating Powershell..." -ForegroundColor Magenta
+    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\PowerShell\"
+    (get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
+    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
+    (get-item $Env:userprofile\Documents\WindowsPowerShell).Attributes += 'Hidden'
+
+    # Create home link check file for powershell and powershell core.
+    "if (Test-Path `"$env:userprofile\.pwshrc.ps1`" -PathType leaf) {`n    . `"$env:userprofile\.pwshrc.ps1`"`n}" | Out-File -FilePath "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    
+    New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
+
+    Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
+} else {
+    Write-Host "Powershell already configured skipping..." -ForegroundColor Yellow
+}
+
+
+if (Test-Path "D:") {
+    # Install dotfiles
+    if (Test-Path "D:\wdotfiles") {
+        Write-Host "Setting up dotfiles..." -ForegroundColor Magenta
+        . D:\wdotfiles\install.ps1
+        Write-Host "Setup of dotfiles complete..." -ForegroundColor Green
+    }
 }
 
 
