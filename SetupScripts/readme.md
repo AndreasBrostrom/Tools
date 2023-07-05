@@ -1,24 +1,24 @@
-### Windows
+## Windows
 
-### Linux
+## Linux
 #### Manjaro i3
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupManjaroI3.sh)
 ```
 
-### Android
+## Android
 #### Termux Android
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupAndroidTermux.sh)
 ```
 
-### WSL
-#### Arch
+## WSL
+### Arch
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSL_Arch.sh)
 ```
 
-#### Arch
+### Ubuntu
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSL_Ubuntu.sh)
 ```
