@@ -3,10 +3,35 @@ if ( -Not $IsWindows ) {
     exit 1
 }
 
-if ( -not [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")) {
+$IS_ADMIN = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
+
+if ( -not $IS_ADMIN ) {
+    Write-Host "Not running as admin will copy files instead of linking them."
+    Write-Host "Press any key to continue..."
+    $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+}
+
+# Copy user scripts
+$dest = "$($env:USERPROFILE)\.bin"
+
+if ( $IS_ADMIN ){
+    Write-host "Linking scripts to $dest\."
+} else {
+    Write-host "Copying scripts to $dest\."
+}
+ForEach ($filePath in Get-ChildItem "ScriptsWin") {
+    $path = "$($dest)\$($filePath.name)"
+    if ( $IS_ADMIN ) {
+        New-Item -ItemType SymbolicLink -Target "$filePath" -Path $path -Force
+    } else {
+        Copy-Item -Path $filePath -Destination $dest -Force
+    }
+}
+
+
+if ( -not $IS_ADMIN ) {
     Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.MyCommand.Name)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
 
-    
     # check if have sudo programs installed
     $sudoScripts =  "$env:USERPROFILE\scoop\shims\sudo",
                     "$env:USERPROFILE\scoop\shims\sudo.ps1",
@@ -22,12 +47,10 @@ if ( -not [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).gro
     exit 1
 }
 
-$dest = "$($env:USERPROFILE)\.bin"
+$destRoot = "C:\bin"
 
-Write-host "Copying scripts to $dest\."
-
-ForEach ($filePath in Get-ChildItem "ScriptsWin") {
-    #Write-host "$($filePath.name) -> $dest\$($filePath.name)" 
-    $path = "$($dest)\$($filePath.name)"
+Write-host "Linking scripts to $destRoot\."
+ForEach ($filePath in Get-ChildItem "ScriptsWinExec") {
+    $path = "$($destRoot)\$($filePath.name)"
     New-Item -ItemType SymbolicLink -Target "$filePath" -Path $path -Force
 }
