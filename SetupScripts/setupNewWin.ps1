@@ -9,12 +9,12 @@ Set-ExecutionPolicy RemoteSigned -scope CurrentUser
 # GLOBALS
 $scoop_buckets    = 'extras'
 
-$scoop_pkg        = 'sudo', 'git', 'aria2', '7zip',         # Required
+$scoop_pkg        = 'sudo', 'git', 'aria2', '7zip', # Required
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget', 'findutils',
                     'zip', 'unzip',
                     'neovim', 'scrcpy',
-                    'python', 'rust',
-                    'gh',
+                    'python', 'nodejs', 'rust',
+                    'gh', 'act'
                     'starship',
                     'steamcmd', 'android-sdk', 'rufus',
                     'ntop',                                 # htop-like system-monitor

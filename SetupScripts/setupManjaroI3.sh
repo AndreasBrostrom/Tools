@@ -97,29 +97,27 @@ echo -e "\e[1;34mSetting up home...\e[0m"
 # Android sdk
 if [ -d "$HOME/android-sdk" ]; then 
     echo -e "\e[1;34mFixing android SDK...\e[0m"
-    mkdir $HOME/.android 1>/dev/null 2>&1
+    mkdir -p $HOME/.android 1>/dev/null 2>&1
     mv $HOME/android-sdk $HOME/.android/android-sdk 1>/dev/null 2>&1
 fi
 
 # Setting up home
-mkdir -p $HOME/.bin
 mkdir -p $HOME/.ssh
-
 mkdir -p $HOME/Programs/bin
-mkdir -p $HOME/Programs/lib
+mkdir -p $HOME/Programs/bin
+mkdir -p $HOME/Programs/opt
 mkdir -p $HOME/Programs/src
+ln -sf $HOME/Programs/bin $HOME/.bin
 
 mkdir -p $HOME/Repositories
 
 # Setting up ssh permissions
-if [ -d "$HOME/.ssh" ]; then
-  echo -e "\033[1mFixing permission for ssh\033[0m"
-  chmod 700 $HOME/.ssh
-  chmod 600 $HOME/.ssh/config
-  chmod 600 $HOME/.ssh/authorized_keys
-  chmod 600 $HOME/.ssh/*id_rsa
-  chmod 644 $HOME/.ssh/*.pub
-fi
+echo -e "\033[1mFixing permission for ssh\033[0m"
+chmod 700 $HOME/.ssh
+chmod 600 $HOME/.ssh/config
+chmod 600 $HOME/.ssh/authorized_keys
+chmod 600 $HOME/.ssh/*id_rsa
+chmod 644 $HOME/.ssh/*.pub
 
 cd $HOME/Repositories
 git clone git@github.com:AndreasBrostrom/dotfiles.git

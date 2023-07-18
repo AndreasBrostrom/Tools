@@ -69,12 +69,13 @@ fc-cache -rfv
 echo -e "\e[1;34mSetting up home...\e[0m"
 
 # Setting up home
-[ ! -d "$HOME/.bin" ] && ln -s $HOME/Programs/bin $HOME/.bin
-[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs
-[ ! -d "$HOME/Programs/bin" ] && mkdir -p $HOME/Programs/bin
-[ ! -d "$HOME/Programs/lib" ] && mkdir -p $HOME/Programs/lib
-[ ! -d "$HOME/Programs/src" ] && mkdir -p $HOME/Programs/src
-[ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
+mkdir -p $HOME/.ssh
+mkdir -p $HOME/Programs
+mkdir -p $HOME/Programs/bin
+mkdir -p $HOME/Programs/opt
+mkdir -p $HOME/Programs/src
+mkdir -p $HOME/Repositories
+ln -sf $HOME/Programs/bin $HOME/.bin
 
 echo -e " \033[2mFixing SSH permissions\033[0m"
 chmod 700 $HOME/.ssh

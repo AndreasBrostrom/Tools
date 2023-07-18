@@ -37,14 +37,15 @@ sudo apt autoclean -y 1>/dev/null 2>&1
 echo -e "\e[1;34mSetting up home...\e[0m"
 
 # Setting up home
-[ ! -d "$HOME/.bin" ] && ln -s $HOME/Programs/bin $HOME/.bin
-[ ! -d "$HOME/Programs" ] && mkdir -p $HOME/Programs
-[ ! -d "$HOME/Programs/bin" ] && mkdir -p $HOME/Programs/bin
-[ ! -d "$HOME/Programs/lib" ] && mkdir -p $HOME/Programs/lib
-[ ! -d "$HOME/Programs/src" ] && mkdir -p $HOME/Programs/src
-[ ! -d "$HOME/Repositories" ] && mkdir -p $HOME/Repositories
+mkdir -p $HOME/Programs
+mkdir -p $HOME/Programs/bin
+mkdir -p $HOME/Programs/opt
+mkdir -p $HOME/Programs/src
+mkdir -p $HOME/Repositories
+ln -sf $HOME/Programs/bin $HOME/.bin
 
 echo -e " \033[2mFixing SSH permissions\033[0m"
+mkdir -p $HOME/.ssh
 chmod 700 $HOME/.ssh
 chmod 600 $HOME/.ssh/config
 chmod 600 $HOME/.ssh/authorized_keys
