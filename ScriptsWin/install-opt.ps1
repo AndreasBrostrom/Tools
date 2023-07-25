@@ -43,6 +43,8 @@ $subFolder           = Join-Path $installationDir $programName $versionName
 $latestDir           = Join-Path $installationDir $programName "latest"
 $targetFileFullPath  = Get-Item -LiteralPath $targetFile
 
+# TODO Test if Version already is installed
+
 # Unzip or copy directory to Opt
 Write-host "Installing $programName in to $installationDir..." -ForegroundColor Blue
 New-Item -ItemType Directory -Path $subFolder -Force >$null 2>&1
@@ -62,9 +64,16 @@ if ((Get-Item -Path $targetFileFullPath) -is [System.IO.DirectoryInfo]){
 }
 
 # Update latest
+Write-host "Updating latest junction..." -ForegroundColor White
 Remove-Item -Path $latestDir -ErrorAction SilentlyContinue >$null 2>&1
 $LatestCreated = Get-ChildItem $programDir | ? { $_.PSIsContainer } | sort CreationTime -desc | select -f 1
 New-Item -itemtype Junction -Target $LatestCreated -Path $latestDir -Force >$null 2>&1
+if ( Test-Path -Path $latestDir ) {
+    Write-Host "Latest junction for $versionName have been created..." -ForegroundColor White
+    Write-Host "  $LatestCreated -> $latestDir" -ForegroundColor White
+} else {
+    Write-Host "latest junction for $versionName could not be created..." -ForegroundColor Red; exit 1
+}
 
 # Make shims out of exe
 $executables = Get-ChildItem $latestDir -Filter "*.exe"
@@ -73,7 +82,7 @@ foreach ($target in $executables) {
     if (Test-Path -Path $dest -PathType Leaf) { Remove-Item $dest }
     shimgen -p $target -o $dest >$null 2>&1
     Write-host "Created binary shim..." -ForegroundColor white
-    Write-host "$target -> $dest" -ForegroundColor white
+    Write-host "  $target -> $dest" -ForegroundColor white
 }
 
 Write-host "Installation successfully completed" -ForegroundColor Green
