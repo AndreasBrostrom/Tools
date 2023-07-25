@@ -33,6 +33,8 @@ if ( -not $targetFile  ) { Write-Host "Missing or invalid argument" -ForegroundC
 if ( -not $programName ) { Write-Host "Missing or invalid argument" -ForegroundColor Red; exit 1 }
 if ( -not $versionName ) { Write-Host "Missing or invalid argument" -ForegroundColor Red; exit 1 }
 
+if ( -not (Test-Path -Path $targetFile -PathType Leaf) ) { Write-Host "$targetFile does not exist" -ForegroundColor Red; exit 1 }
+
 # Constants
 $executableDir       = "C:\Bin"
 $installationDir     = "C:\Programs\Opt"
@@ -41,16 +43,17 @@ $subFolder           = Join-Path $installationDir $programName $versionName
 $latestDir           = Join-Path $installationDir $programName "latest"
 $targetFileFullPath  = Get-Item -LiteralPath $targetFile
 
-
-
 # Unzip or copy directory to Opt
-New-Item -ItemType Directory -Path $subFolder -Force
+Write-host "Installing $programName in to $installationDir..." -ForegroundColor Blue
+New-Item -ItemType Directory -Path $subFolder -Force >$null 2>&1
+
 # TODO Add a check for exist already and give happy info
-if ((Get-Item $targetFileFullPath) -is [System.IO.DirectoryInfo]){
+if ((Get-Item -Path $targetFileFullPath) -is [System.IO.DirectoryInfo]){
     Copy-Item -Path $targetFileFullPath -Destination $subFolder -Recurse -Force >$null 2>&1
 } elseIf ((Get-Item $targetFileFullPath) -is [System.IO.FileInfo]) {
     if ((Get-ChildItem $targetFileFullPath).Extension -eq '.zip') {
         Expand-Archive -Path $targetFileFullPath -DestinationPath $subFolder >$null 2>&1
+        Write-host "Installation successful in: $subFolder" -ForegroundColor white
     } else {
         Write-host "$((Get-ChildItem $targetFileFullPath).Extension) is a unsupported file extension" -ForegroundColor Red; exit 1
     }
@@ -59,8 +62,9 @@ if ((Get-Item $targetFileFullPath) -is [System.IO.DirectoryInfo]){
 }
 
 # Update latest
+Remove-Item -Path $latestDir -ErrorAction SilentlyContinue >$null 2>&1
 $LatestCreated = Get-ChildItem $programDir | ? { $_.PSIsContainer } | sort CreationTime -desc | select -f 1
-New-Item -itemtype Junction -path $programDir -name "latest" -value $LatestCreated -Force >$null 2>&1
+New-Item -itemtype Junction -Target $LatestCreated -Path $latestDir -Force >$null 2>&1
 
 # Make shims out of exe
 $executables = Get-ChildItem $latestDir -Filter "*.exe"
@@ -68,5 +72,8 @@ foreach ($target in $executables) {
     $dest = Join-Path $executableDir $target.name
     if (Test-Path -Path $dest -PathType Leaf) { Remove-Item $dest }
     shimgen -p $target -o $dest >$null 2>&1
-    Write-host "Shim created: $target -> $dest" -ForegroundColor white
+    Write-host "Created binary shim..." -ForegroundColor white
+    Write-host "$target -> $dest" -ForegroundColor white
 }
+
+Write-host "Installation successfully completed" -ForegroundColor Green
