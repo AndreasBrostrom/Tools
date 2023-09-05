@@ -10,22 +10,24 @@ pacmanInstall=(
   )
 
 yayInstall=(
-    jdk8-openjdk
     android-sdk-cmdline-tools-latest
     github-cli
     
-    dos2unix jq ripgrep exa xdotool
-    python3 python3-pip
-
+    xdotool
+    brightnessctl
+    
+    dos2unix jq ripgrep
+    exa # ls like tool
+    
     terminator
-
+    
     fish starship
-
+    
     thunar
     samba
-
-    node
-    ts-node
+    
+    node ts-node
+    jdk8-openjdk
   )
 
 
