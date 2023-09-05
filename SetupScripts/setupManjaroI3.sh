@@ -12,26 +12,30 @@ pacmanRemove=(
 )
 
 yayInstall=(
-  jdk8-openjdk
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
   
-  dos2unix jq ripgrep exa xdotool
+  xdotool
+  brightnessctl
+  
+  dos2unix jq ripgrep
+  exa # ls like tool
+  
   python3 python3-pip
-
+  
   terminator
-
+  
   gparted gnome-disk-utility
   fish starship
-
+  
   samba manjaro-settings-samba
   
   etcher-bin  # Flashdrive maker
   peek        # gif recorder
-
+  
   visual-studio-code-bin
-  node
-  ts-node
+  node ts-node
+  jdk8-openjdk
   
   google-chrome
   spotify
@@ -40,9 +44,9 @@ yayInstall=(
   obs-studio
   vlc
   barrier
-
+  
   steam
-
+  
   all-repository-fonts
   ttf-ms-fonts
 )
