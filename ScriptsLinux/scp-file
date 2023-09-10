@@ -1,0 +1,6 @@
+#!/bin/bash
+
+file = $1
+fileName = basename "$FILE"
+
+scp $file fileupload:~/file.evul.nu/public_html/0/$fileName
