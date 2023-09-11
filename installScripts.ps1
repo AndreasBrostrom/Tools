@@ -4,17 +4,19 @@ if ( -Not $IsWindows ) {
 }
 
 $IS_ADMIN = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
+$NON_ADMIN_MODE = $false
 
 if ( -not $IS_ADMIN ) {
     Write-Host "Not running as admin will copy files instead of linking them."
     Write-Host "Press any key to continue..."
     $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    $NON_ADMIN_MODE = $true
 }
 
 # Copy user scripts
 $dest = "$($env:USERPROFILE)\.bin"
 
-if ( $IS_ADMIN ){
+if ( $IS_ADMIN ) {
     Write-host "Linking scripts to $dest\."
 } else {
     Write-host "Copying scripts to $dest\."
@@ -28,6 +30,7 @@ ForEach ($filePath in Get-ChildItem "ScriptsWin") {
     }
 }
 
+if ($NON_ADMIN_MODE) { exit 0 }
 
 if ( -not $IS_ADMIN ) {
     Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.MyCommand.Name)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
