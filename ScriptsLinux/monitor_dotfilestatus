@@ -23,6 +23,11 @@ while true; do
         echo "!"  > $HOME/.cache/dotfileWatcher/log
         continue
     fi
+    if [[ ! $(git -C ~/Repositories/Tools status | grep nothin) || $(git -C ~/Repositories/Tools status | grep Untracked) ]]; then
+        echo "Changes detected (Tools)"
+        echo "!"  > $HOME/.cache/dotfileWatcher/log
+        continue
+    fi
     echo "No Changed detected"
     echo "" > $HOME/.cache/dotfileWatcher/log
 done
