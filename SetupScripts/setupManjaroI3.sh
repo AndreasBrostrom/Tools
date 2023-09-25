@@ -113,6 +113,8 @@ mkdir -p $HOME/Programs/opt
 mkdir -p $HOME/Programs/src
 ln -sf $HOME/Programs/bin $HOME/.bin
 
+mkdir -p $HOME/Pictures/Background
+
 mkdir -p $HOME/Repositories
 
 # Setting up ssh permissions
