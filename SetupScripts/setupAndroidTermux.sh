@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 pkgInstall=(
-    git gh neovim
+    git gh neovim helix
     dos2unix jq ripgrep
     python3
     openssh

@@ -12,7 +12,7 @@ $scoop_buckets    = 'extras'
 $scoop_pkg        = 'sudo', 'git', 'aria2', '7zip', # Required
                     'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget', 'findutils',
                     'zip', 'unzip',
-                    'neovim', 'scrcpy',
+                    'neovim', 'scrcpy', 'helix',
                     'python', 'nodejs', 'rust',
                     'gh', 'act'
                     'starship',

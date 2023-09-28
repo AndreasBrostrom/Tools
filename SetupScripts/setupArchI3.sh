@@ -12,6 +12,8 @@ pacmanInstall=(
 yayInstall=(
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
+
+  helix
   
   xdotool
   brightnessctl

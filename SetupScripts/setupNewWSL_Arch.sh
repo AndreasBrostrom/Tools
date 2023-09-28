@@ -13,6 +13,8 @@ yayInstall=(
     android-sdk-cmdline-tools-latest
     github-cli
     
+    helix
+
     xdotool
     brightnessctl
     
@@ -93,6 +95,6 @@ cd dotfiles
 chmod +x install
 ./install
 
-python3 <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSLHome.py)
+python3 <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWSLHomeEnv.py)
 
 echo -e "done"
