@@ -3,66 +3,104 @@ set -e
 version="1.1"
 scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
-if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
-echo "Usage: $scriptName [FILE] [OPTION]
-Downloads a file you define or if a latest screenshot or photo from your phone.
-
-  -k [KEY] --key [KEY]     send a keyevent to a connected device
-  -i [TEXT] --input [TEXT] send a text input to a connected device
-
-  -s, --shake              send a shake event to a connected device
-  -r, --refresh            send a shake and enter, enter event to connected device
-
-  -v, --version         show version number
-  -h, --help            show this help"
-exit 0
-fi
-
-# Shake event
-if [[ "$1" == "-s" ]] || [[ "$1" == "--shake" ]]; then
-    if [ "$#" -ne 1 ]; then echo "$scriptName: illegal number of parameters"; exit 2; fi
-    adb shell input keyevent 82
+function prog_help () {
+    echo "Usage: $scriptName [FILE] [OPTION]"
+    echo "Downloads a file you define or if a latest screenshot or photo from your phone."
+    echo ""
+    echo "  -k [KEY] --key [KEY]      send a keyevent to a connected device"
+    echo "  -i [TEXT] --input [TEXT]  send a text input to a connected device"
+    echo ""
+    echo "  -ss, --shake              send a shake event to a connected device"
+    echo ""
+    echo "  -s [DEVICE]               specify a device"
+    echo ""
+    echo "  -v, --version             show version number"
+    echo "  -h, --help                show this help"
     exit 0
-fi
+}
 
-# React native refresh
-if [[ "$1" == "-r" ]] || [[ "$1" == "--refresh" ]]; then
-    if [ "$#" -ne 1 ]; then echo "$scriptName: illegal number of parameters"; exit 2; fi
-    adb shell input keyevent 82
-    adb shell input keyevent KEYCODE_ENTER
-    adb shell input keyevent KEYCODE_ENTER
-    exit 0
-fi
+function prog_shake () {
+    if [ $# == 1 ]; then
+        adb shell input keyevent 82
+        exit 0
+    fi 
+    if [ $# == 2 ]; then
+        adb -s $1 shell input keyevent 82
+        exit 0
+    fi
+    exit 1
+}
 
-# Key event
-if [ "$1" == "-k" ]; then
-    if [ "$2" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
-    if [ "$#" -ne 2 ]; then echo "$scriptName: illegal number of parameters"; exit 2; fi
-    keyCode=$2
-    keyCode=${keyCode^^}
+function prog_keyevent () {
+    function get_key_event () {
+        keyCode=$1
+        if [ "$1" == "UP" ]; then keyCode=DPAD_UP; fi
+        if [ "$1" == "DOWN" ]; then keyCode=DPAD_DOWN; fi
+        if [ "$1" == "LEFT" ]; then keyCode=DPAD_LEFT; fi
+        if [ "$1" == "RIGHT" ]; then keyCode=DPAD_RIGHT; fi
+        if [ "$1" == "ESC" ]; then keyCode=ESCAPE; fi
+        keyCode=${keyCode^^}
+    }
+    if [ $# == 1 ]; then
+        if [ "$1" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
+        get_key_event $1
+        adb shell input keyevent KEYCODE_$keyCode
+        exit 0
+    fi 
+    if [ $# == 2 ]; then
+        if [ "$2" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
+        get_key_event $2
+        adb -s $1 shell input keyevent KEYCODE_$keyCode
+        exit 0
+    fi
+    exit 1
+}
 
-    if [ "$2" == "UP" ]; then keyCode=DPAD_UP; fi
-    if [ "$2" == "DOWN" ]; then keyCode=DPAD_DOWN; fi
-    if [ "$2" == "LEFT" ]; then keyCode=DPAD_LEFT; fi
-    if [ "$2" == "RIGHT" ]; then keyCode=DPAD_RIGHT; fi
-    if [ "$2" == "ESC" ]; then keyCode=ESCAPE; fi
+function prog_input () {
+    if [ $# == 1 ]; then
+        if [ "$1" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
+        text=`echo $2 | sed "s/\s/\%s/g"`
+        adb shell input text "$text"
+        echo "Written to device > $2" 
+        exit 0
+    fi 
+    if [ $# == 2 ]; then
+        if [ "$2" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
+        text=`echo $2 | sed "s/\s/\%s/g"`
+        adb -s $1 shell input text "$text"
+        echo "Written to device > $2" 
+        exit 0
+    fi
+}
 
-    adb shell input keyevent KEYCODE_$keyCode
-    exit 0
-fi
+function main () {
+    if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
+        prog_help
+    fi
 
-# Input
-if [ "$1" == "-i" ]; then
-    if [ "$2" == "" ]; then echo "$scriptName: missing TEXT operator"; exit 1; fi
-    if [ "$#" -ne 2 ]; then echo "$scriptName: illegal number of parameters"; exit 2; fi
-    text=`echo $2 | sed "s/\s/\%s/g"`
-    adb shell input text "$text"
-    echo "Written to device > $2" 
-    exit 0
-fi
+    # Args handle
+    if [[ "$1" == "-ss" ]] || [[ "$1" == "--shake" ]] || [[ "$3" == "-ss" ]] || [[ "$3" == "--shake" ]]; then
+        if [ "$#" != 2 ]; then echo "$scriptName: invalid option '$1'"; fi
+        if [ "$#" != 4 ]; then echo "$scriptName: invalid option '$3'"; fi
+        if [ "$#" == 1 ]; then prog_shake; fi
+        if [ "$#" == 3 ]; then prog_shake $2; fi
+    fi
 
-# Nothing done
-if [ "$1" == "" ]; then echo "$scriptName: missing file operand"; fi
-if [ "$1" != "" ]; then echo "$scriptName: invalid option '$1'"; fi
-echo "Try '$scriptName --help' for more information."
-exit 1
+    if [ "$1" == "-k" ] || [ "$1" == "--key" ] || [ "$3" == "-k" ] || [ "$3" == "--key" ]; then
+        if [ "$#" == 2 ]; then prog_keyevent $2; fi
+        if [ "$#" == 4 ]; then prog_keyevent $2 $4; fi
+    fi
+    if [ "$1" == "-i" ] || [ "$1" == "--input" ] || [ "$31" == "-i" ] || [ "$3" == "--input" ]; then
+        if [ "$#" == 2 ]; then prog_input $2; fi
+        if [ "$#" == 4 ]; then prog_input $2 $4; fi
+    fi
+
+    # Nothing done
+    if [ "$1" == "" ]; then echo "$scriptName: missing file operand"; fi
+    if [ "$1" != "" ]; then echo "$scriptName: invalid option '$1'"; fi
+    echo "Try '$scriptName --help' for more information."
+    exit 1
+
+}
+
+main $*
