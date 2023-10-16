@@ -12,7 +12,7 @@ while true; do
     [ ! -d "$HOME/.cache/androidDeviceWatcher" ] && mkdir -p "$HOME/.cache/androidDeviceWatcher"
 
     if [[ $(pgrep adb) ]]; then
-        if [[ $(adb devices -l | grep -q "device:OnePlusNordCE") ]]; then
+        if [[ $(adb devices -l | grep "device:OnePlusNordCE") ]]; then
             echo "Android device connected"
             echo "✆"  > $HOME/.cache/androidDeviceWatcher/log
             continue
