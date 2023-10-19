@@ -10,6 +10,8 @@ function prog_help () {
     echo "  -k [KEY] --key [KEY]      send a keyevent to a connected device"
     echo "  -i [TEXT] --input [TEXT]  send a text input to a connected device"
     echo ""
+    echo "  -K --keyboard             enter in to keyboard mode"
+    echo ""
     echo "  -ss, --shake              send a shake event to a connected device"
     echo ""
     echo "  -s [DEVICE]               specify a device"
@@ -19,7 +21,7 @@ function prog_help () {
     exit 0
 }
 
-function prog_shake () {
+function fn_shake () {
     if [ $# == 1 ]; then
         adb shell input keyevent 82
         exit 0
@@ -31,7 +33,7 @@ function prog_shake () {
     exit 1
 }
 
-function prog_keyevent () {
+function fn_keyevent () {
     function get_key_event () {
         keyCode=$1
         if [ "$1" == "UP" ]; then keyCode=DPAD_UP; fi
@@ -56,7 +58,7 @@ function prog_keyevent () {
     exit 1
 }
 
-function prog_input () {
+function fn_input () {
     if [ $# == 1 ]; then
         if [ "$1" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
         text=`echo $2 | sed "s/\s/\%s/g"`
@@ -73,6 +75,38 @@ function prog_input () {
     fi
 }
 
+function fn_keyboard() {
+    IFS=
+    echo "CTRL + C to terminate"
+    escape_char=$(printf "\u1b")
+
+    while read -rsn1 key; do
+        if [[ $key == $escape_char ]]; then
+            read -rsn8 key # read 2 more chars
+        fi
+        case $key in
+            $'\e') key="ESCAPE" ;;
+            '[A')  key="DPAD_UP" ;;
+            '[B')  key="DPAD_DOWN" ;;
+            '[D')  key="DPAD_LEFT" ;;
+            '[C')  key="DPAD_RIGHT" ;;
+            '[3')  key="BACKSPACE" ;;
+            '')    key="RETURN" ;;
+            ' ')   key="SPACE" ;;
+            *)     key="${key:0:1}" ;;
+        esac
+        echo "\{$key\} \{$escape_char\}"
+        [ "$key" == "" ] && echo -ne "Key does not exist\033[0K\r"
+        echo $key
+        if [ $# == 1 ]; then
+            adb -s $1 shell input keyevent KEYCODE_$key
+        else
+            adb shell input keyevent KEYCODE_$key
+        fi
+    done
+    exit 0
+}
+
 function main () {
     if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
         prog_help
@@ -82,17 +116,21 @@ function main () {
     if [[ "$1" == "-ss" ]] || [[ "$1" == "--shake" ]] || [[ "$3" == "-ss" ]] || [[ "$3" == "--shake" ]]; then
         if [ "$#" != 2 ]; then echo "$scriptName: invalid option '$1'"; fi
         if [ "$#" != 4 ]; then echo "$scriptName: invalid option '$3'"; fi
-        if [ "$#" == 1 ]; then prog_shake; fi
-        if [ "$#" == 3 ]; then prog_shake $2; fi
+        if [ "$#" == 1 ]; then fn_shake; fi
+        if [ "$#" == 3 ]; then fn_shake $2; fi
     fi
 
     if [ "$1" == "-k" ] || [ "$1" == "--key" ] || [ "$3" == "-k" ] || [ "$3" == "--key" ]; then
-        if [ "$#" == 2 ]; then prog_keyevent $2; fi
-        if [ "$#" == 4 ]; then prog_keyevent $2 $4; fi
+        if [ "$#" == 2 ]; then fn_keyevent $2; fi
+        if [ "$#" == 4 ]; then fn_keyevent $2 $4; fi
     fi
-    if [ "$1" == "-i" ] || [ "$1" == "--input" ] || [ "$31" == "-i" ] || [ "$3" == "--input" ]; then
-        if [ "$#" == 2 ]; then prog_input $2; fi
-        if [ "$#" == 4 ]; then prog_input $2 $4; fi
+    if [ "$1" == "-i" ] || [ "$1" == "--input" ] || [ "$3" == "-i" ] || [ "$3" == "--input" ]; then
+        if [ "$#" == 2 ]; then fn_input $2; fi
+        if [ "$#" == 4 ]; then fn_input $2 $4; fi
+    fi
+    if [ "$1" == "-K" ] || [ "$1" == "--keyboard" ] || [ "$3" == "-K" ] || [ "$3" == "--keyboard" ]; then
+        if [ "$#" == 1 ]; then fn_keyboard; fi
+        if [ "$#" == 3 ]; then fn_keyboard $2; fi
     fi
 
     # Nothing done
