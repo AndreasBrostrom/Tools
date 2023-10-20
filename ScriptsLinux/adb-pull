@@ -2,6 +2,10 @@
 set -e
 version="1.4"
 
+#device_arg=""
+#device_arg="-d"
+device_arg="-s edbc4ed2"
+
 # Check arguments
 if [[ $# == 0 ]]; then
     echo "$(basename $0): requires an argument"
@@ -30,24 +34,24 @@ fi
 if [ "$1" == "-l" ] || [ "$1" == "-ls" ] || [ "$1" == "--ls" ]; then
     path="$2"
     [ -z "$path" ] && path="/storage/emulated/0/"
-    adb -d shell ls $path
+    adb $device_arg shell ls $path
     exit 0
 fi
 
 if [ "$1" == "-s" ] || [ "$1" == "--screenshot" ]; then
-    file=$(adb -d shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
-    adb -d pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+    file=$(adb $device_arg shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+    adb $device_arg pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
     printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
     exit 0
 fi
 
 if [ "$1" == "-p" ] || [ "$1" == "--photo" ]; then
-    file=$(adb -d shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
-    adb -d pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
+    file=$(adb $device_arg shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
+    adb $device_arg pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
     printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
     exit 0
 fi
 
 
-adb -d pull $1 $HOME/Downloads/.
+adb $device_arg pull $1 $HOME/Downloads/.
 printf "\e]8;;file:$HOME/Downloads/$1\e\\$1\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
