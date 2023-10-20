@@ -54,4 +54,4 @@ fi
 
 
 adb $device_arg pull $1 $HOME/Downloads/.
-printf "\e]8;;file:$HOME/Downloads/$1\e\\$1\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
+printf "\e]8;;file:$HOME/Downloads/$1\e\\$1\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder.\n"
