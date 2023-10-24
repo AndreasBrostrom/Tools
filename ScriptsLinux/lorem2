@@ -1,11 +1,10 @@
 #!/bin/bash
 
-NAME=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
-LOREM="$(curl -s http://metaphorpsum.com/sentences/$((1 + $RANDOM % 3)))"
+scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
 main () {
     if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
-        echo "Usage: $NAME [OPTION]
+        echo "Usage: $scriptName [OPTION]
   print a random length of Lorem Ipsum text\n  
   -w, --write           write a random lorem ipsum text to your cursor location
   
@@ -15,11 +14,37 @@ main () {
 
     if [ "$*" == "--write" ] || [ "$*" == "-w" ]; then
         sleep 0.5
+        RAND=$((1 + $RANDOM % 3))
+        LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
+        echo "$LOREM"
         xdotool type "$LOREM"
         exit 0
     fi
-    echo "$LOREM"
-    exit 0
+    if [ "$*" == "--write-short" ] || [ "$*" == "-ws" ]; then
+        sleep 0.5
+        LOREM="$(curl -s http://metaphorpsum.com/sentences/1)"
+        echo "$LOREM"
+        sleep 0.5
+        xdotool type "$LOREM"
+        exit 0
+    fi
+    if [ "$*" == "--write-long" ] || [ "$*" == "-wl" ]; then
+        sleep 0.5
+        RAND=$((4 + $RANDOM % 8))
+        LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
+        echo "$LOREM"
+        xdotool type "$LOREM"
+        exit 0
+    fi
+    if [[ $# == 0 ]]; then 
+    
+        LOREM="$(curl -s http://metaphorpsum.com/sentences/$((1 + $RANDOM % 4)))"
+        echo "$LOREM"
+        exit 0
+    fi
+    
+    echo "$scriptName: '$*' invalid argument"
+    exit 1
 }
 
 main $*
