@@ -16,14 +16,12 @@ main () {
         sleep 0.5
         RAND=$((1 + $RANDOM % 3))
         LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
-        echo "$LOREM"
         xdotool type "$LOREM"
         exit 0
     fi
     if [ "$*" == "--write-short" ] || [ "$*" == "-ws" ]; then
         sleep 0.5
         LOREM="$(curl -s http://metaphorpsum.com/sentences/1)"
-        echo "$LOREM"
         sleep 0.5
         xdotool type "$LOREM"
         exit 0
@@ -32,7 +30,6 @@ main () {
         sleep 0.5
         RAND=$((4 + $RANDOM % 8))
         LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
-        echo "$LOREM"
         xdotool type "$LOREM"
         exit 0
     fi

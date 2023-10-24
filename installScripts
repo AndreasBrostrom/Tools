@@ -12,5 +12,6 @@ for FILE in $(rg --files --hidden); do
         continue
     fi
     echo -e " \033[2mCopying $FILE\033[0m"
-    ln -fs $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
+    rm $HOME/.bin/$FILE
+    cp -f $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
 done
