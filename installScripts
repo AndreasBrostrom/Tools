@@ -8,10 +8,16 @@ cd $SCRIPT_DIR/ScriptsLinux
 EXISTING=($(ls /usr/bin/))
 for FILE in $(rg --files --hidden); do
     if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
-        echo -e " \033[2mScript "$FILE" already pressent in /usr/bin skipping\033[0m"
+        echo -e " \033[2mScript '$FILE' already pressent in /usr/bin skipping\033[0m"
         continue
     fi
-    echo -e " \033[2mCopying $FILE\033[0m"
-    rm $HOME/.bin/$FILE
-    cp -f $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
+    if [[ $* == ln ]]; then 
+        echo -e " \033[2mLinking $FILE => ./ScriptsLinux/$FILE\033[0m"
+        rm -f $HOME/.bin/$FILE
+        ln -sf $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
+    else
+        echo -e " \033[2mCopying $FILE\033[0m"
+        rm -f $HOME/.bin/$FILE
+        cp $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
+    fi
 done
