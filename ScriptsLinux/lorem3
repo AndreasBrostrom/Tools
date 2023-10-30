@@ -30,7 +30,6 @@ fn_print () {
 
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
     LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
-    echo $RAND
     echo "$LOREM"
     exit 0
 }
