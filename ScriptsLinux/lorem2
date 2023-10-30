@@ -7,6 +7,8 @@ main () {
         echo "Usage: $scriptName [OPTION]
   print a random length of Lorem Ipsum text\n  
   -w, --write           write a random lorem ipsum text to your cursor location
+  -ws, --write-short    write a random short lorem ipsum text to your cursor location
+  -wl, --write-long     write a random long lorem ipsum text to your cursor location
   
   -h, --help            show this help"
     exit 0
