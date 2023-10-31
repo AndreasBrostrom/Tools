@@ -1,0 +1,73 @@
+#!/bin/bash
+# Written (and partially copy-pasted by) Rikard Jansson
+#
+# Simple script to send keyboard input to device over adb
+#
+
+echo "Send input via adb"
+stty -echo
+#echo -e "\e[?1003h"
+#echo -e "\e[?1015h"
+
+_key()
+{
+  local kp
+  ESC=$'\e'
+   _KEY=
+  IFS= read -d '' -sn1 _KEY
+  case $_KEY in
+    "$ESC")
+        while IFS= read -d '' -sn1 -t1 kp
+        do
+          _KEY=$_KEY$kp
+          case $kp in
+            [a-zA-NP-Z~]) break;;
+          esac
+        done
+    ;;
+  esac
+  printf -v "${1:-_KEY}" "%s" "$_KEY"
+}
+
+get_key()
+{
+_key x
+
+case $x in
+  $'\e[11~' | $'\e[OP' | $'\eOP') key=F1 ;;
+  $'\e[12~' | $'\e[OQ' | $'\eOQ') key=F2 ;;
+  $'\e[13~' | $'\e[OR' | $'\eOR') key=F3 ;;
+  $'\e[14~' | $'\e[OS' | $'\eOS') key=F4 ;;
+  $'\e[15~') key=F5 ;;
+  $'\e[17~') key=F6 ;;
+  $'\e[18~') key=F7 ;;
+  $'\e[19~') key=F8 ;;
+  $'\e[20~') key=F9 ;;
+  $'\e[21~') key=F10 ;;
+  $'\e[23~') key=F11 ;;
+  $'\e[24~') key=F12 ;;
+  $'\e[A' ) key=DPAD_UP ;;
+  $'\e[B' ) key=DPAD_DOWN ;;
+  $'\e[C' ) key=DPAD_RIGHT ;;
+  $'\e[D' ) key=DPAD_LEFT ;;
+  $'\e' ) key=BACK ;;
+  $'	' ) key=TAB ;;
+  $'\n' ) key=RETURN ;;
+#  $'.*M' key=MOUSE
+  ?) key=$x ;;
+  *) key=$x ;;
+esac
+}
+
+while true; do
+    get_key key
+    echo "$key"
+    if [ -z $1 ]; then
+        adb shell input keyevent KEYCODE_$key
+    else
+        adb -s $1 shell input keyevent KEYCODE_$key
+    fi
+done
+
+#echo -e "\e[?1003l"
+#echo -e "\e[?1015l"
