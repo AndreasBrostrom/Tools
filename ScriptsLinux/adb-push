@@ -41,6 +41,7 @@ main () {
 
     device=false
     [[ "$1" == "-s" ]] && device=$2
+    [[ -z $device ]] && echo "$scriptName: -s requires an argument" && exit 1
 
     if [[ "$device" == "false" ]]; then
         fn_default $device $1

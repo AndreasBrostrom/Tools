@@ -82,6 +82,7 @@ main () {
 
     device=false
     [[ "$1" == "-s" ]] && device=$2
+    [[ -z $device ]] && echo "$scriptName: -s requires an argument" && exit 1
 
     if [[ "$device" == "false" ]]; then
         if [[ "$1" == "-l" ]] || [[ "$1" == "--ls" ]]; then fn_ls $device $2; fi
