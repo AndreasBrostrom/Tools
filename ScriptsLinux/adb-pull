@@ -7,13 +7,12 @@ fn_help () {
     echo "Usage: $scriptName [FILE] [OPTION]"
     echo "Downloads a file you define or if a latest screenshot or photo from your phone."
     echo ""
-    echo "  -s [ID]               select device"
+    echo "  -s SERIAL             use device with given serial"
     echo ""
     echo "  -S, --screenshot      download latest screenshot"
     echo "  -p, --photo           download latest photo"
-    echo "  -l, --ls              list provied path files [default is /storage/emulated/0/ or /sdcard/]"
+    echo "  -l PATH, --ls PATH    list provied path files [default is /storage/emulated/0/ or /sdcard/]"
     echo ""
-    echo "  -v, --version         show version number"
     echo "  -h, --help            show this help"
     exit 0
 }

@@ -1,28 +1,52 @@
 #!/bin/bash
 set -e
-version="1.2"
+scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
-# Check arguments
-if [[ $# == 0 ]]; then
-    echo "$(basename $0): requires an argument"
-    exit 1
-fi
+# Help
+fn_help () {
+  echo "Usage: $scriptName [FILE] [OPTION]"
+  echo "Files are automaticly uploaded to the download directory."
+  echo ""
+  echo "  -s SERIAL             use device with given serial"
+  echo ""
+  echo "  -h, --help            show this help"
+  exit 0
+}
 
-# Arguments
-if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
-echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [FILE] [OPTION]
-Files are automaticly uploaded to the download directory.
+# Local functions
+_fn_upload_success_message () {
+    file=$(basename $1)
+    echo "$file: file have been pushed to ./storage/emulated/0/Download/$file"
+}
 
-  -v, --version         show version number
-  -h, --help            show this help"
-exit 0
-fi
-
-if [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
-    echo -e "$(basename "$(test -L "$0" && readlink "$0" || echo "$0")") Version: $version"
+# Main functions
+fn_default () {
+    if [[ "$1" != "false" ]]; then
+        adb -s $1 -d push "$2" "/storage/emulated/0/Download/$2"
+    else
+        adb -d push "$2" "/storage/emulated/0/Download/$2"
+    fi
+    _fn_upload_success_message $2
     exit 0
-fi
+}
 
+# Main
+main () {
+    if [[ $# == 0 ]]; then
+        echo "$scriptName: requires an argument"
+        exit 1
+    fi
 
-adb -d push $1 /storage/emulated/0/Download/$2
-echo $1: have been pushed to ./storage/emulated/0/Download/$2
+    if [[ "$*" == "-h" ]] || [[ "$*" == "--help" ]]; then fn_help; fi
+
+    device=false
+    [[ "$1" == "-s" ]] && device=$2
+
+    if [[ "$device" == "false" ]]; then
+        fn_default $device $1
+    else
+        fn_default $device $3
+    fi
+}
+
+main $*
