@@ -1,57 +1,101 @@
 #!/bin/bash
 set -e
-version="1.4"
+scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
-#device_arg=""
-#device_arg="-d"
-device_arg="-s edbc4ed2"
-
-# Check arguments
-if [[ $# == 0 ]]; then
-    echo "$(basename $0): requires an argument"
-    exit 1
-fi
-
-# Arguments
-if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
-echo "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") [FILE] [OPTION]
-Downloads a file you define or if a latest screenshot or photo from your phone.
-
-  -s, --screenshot      download latest screenshot
-  -p, --photo           download latest photo
-  -l, --ls              list provied path files [default is /storage/emulated/0/ or /sdcard/]
-
-  -v, --version         show version number
-  -h, --help            show this help"
-exit 0
-fi
-
-if [ "$1" == "-v" ] || [ "$1" == "--version" ]; then
-    echo -e "$(basename "$(test -L "$0" && readlink "$0" || echo "$0")") Version: $version"
+# Help
+fn_help () {
+    echo "Usage: $scriptName [FILE] [OPTION]"
+    echo "Downloads a file you define or if a latest screenshot or photo from your phone."
+    echo ""
+    echo "  -s [ID]               select device"
+    echo ""
+    echo "  -S, --screenshot      download latest screenshot"
+    echo "  -p, --photo           download latest photo"
+    echo "  -l, --ls              list provied path files [default is /storage/emulated/0/ or /sdcard/]"
+    echo ""
+    echo "  -v, --version         show version number"
+    echo "  -h, --help            show this help"
     exit 0
-fi
+}
 
-if [ "$1" == "-l" ] || [ "$1" == "-ls" ] || [ "$1" == "--ls" ]; then
-    path="$2"
-    [ -z "$path" ] && path="/storage/emulated/0/"
-    adb $device_arg shell ls $path
+# Local functions
+_fn_download_success_message () {
+    file=$(basename $1)
+    printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder.\n"
+}
+
+# Main functions
+fn_default () {
+    if [[ "$1" != "false" ]]; then
+        path="/storage/emulated/0/$2"
+        adb -s $1 pull $path $HOME/Downloads/.
+    else
+        path="/storage/emulated/0/$2"
+        adb pull $path $HOME/Downloads/.
+    fi
+    _fn_download_success_message $2
     exit 0
-fi
+}
 
-if [ "$1" == "-s" ] || [ "$1" == "--screenshot" ]; then
-    file=$(adb $device_arg shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
-    adb $device_arg pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
-    printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
+fn_ls () {
+    if [[ "$1" != "false" ]]; then
+        path="/storage/emulated/0/$2"
+        adb -s $1 shell ls $path
+    else
+        path="/storage/emulated/0/"
+        adb shell ls $path
+    fi
     exit 0
-fi
+}
 
-if [ "$1" == "-p" ] || [ "$1" == "--photo" ]; then
-    file=$(adb $device_arg shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
-    adb $device_arg pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
-    printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder."
+fn_photo () {
+    if [[ "$1" != "false" ]]; then
+        file=$(adb -s $1 shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+        adb -s $1 pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+    else
+        file=$(adb shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+        adb pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+    fi
+    _fn_download_success_message $file
     exit 0
-fi
+}
+
+fn_screenshot () {
+    if [[ "$1" != "false" ]]; then
+        file=$(adb -s $1 shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
+        adb -s $1 pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
+    else
+        file=$(adb shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
+        adb pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
+    fi
+    _fn_download_success_message $file
+    exit 0
+}
 
 
-adb $device_arg pull $1 $HOME/Downloads/.
-printf "\e]8;;file:$HOME/Downloads/$1\e\\$1\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder.\n"
+# Main
+main () {
+    if [[ $# == 0 ]]; then
+        echo "$scriptName: requires an argument"
+        exit 1
+    fi
+
+    if [[ "$*" == "-h" ]] || [[ "$*" == "--help" ]]; then fn_help; fi
+
+    device=false
+    [[ "$1" == "-s" ]] && device=$2
+
+    if [[ "$device" == "false" ]]; then
+        if [[ "$1" == "-l" ]] || [[ "$1" == "--ls" ]]; then fn_ls $device $2; fi
+        if [[ "$1" == "-p" ]] || [[ "$1" == "--photo" ]]; then fn_photo $device; fi
+        if [[ "$1" == "-S" ]] || [[ "$1" == "--screenshot" ]]; then fn_screenshot $device; fi
+        fn_default $device $1
+    else
+        if [[ "$3" == "-l" ]] || [[ "$3" == "--ls" ]]; then fn_ls $device $4; fi
+        if [[ "$3" == "-p" ]] || [[ "$3" == "--photo" ]]; then fn_ls $device; fi
+        if [[ "$3" == "-S" ]] || [[ "$3" == "--screenshot" ]]; then fn_ls $device; fi
+        fn_default $device $3 
+    fi
+}
+
+main $*
