@@ -50,18 +50,6 @@ fn_ls () {
 
 fn_photo () {
     if [[ "$1" != "false" ]]; then
-        file=$(adb -s $1 shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
-        adb -s $1 pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
-    else
-        file=$(adb shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
-        adb pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
-    fi
-    _fn_download_success_message $file
-    exit 0
-}
-
-fn_screenshot () {
-    if [[ "$1" != "false" ]]; then
         file=$(adb -s $1 shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
         adb -s $1 pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
     else
@@ -72,6 +60,17 @@ fn_screenshot () {
     exit 0
 }
 
+fn_screenshot () {
+    if [[ "$1" != "false" ]]; then
+        file=$(adb -s $1 shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+        adb -s $1 pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+    else
+        file=$(adb shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+        adb pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+    fi
+    _fn_download_success_message $file
+    exit 0
+}
 
 # Main
 main () {
