@@ -1,18 +1,32 @@
 #!/bin/bash
+set -e
+scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
-message="$1"
-[ "$1" == "" ] && message="Are you sure?"
-command=$2
-[ "$2" == "" ] && command="echo Action done"
-i=0
-printf "$message (Yes or No): "
-while [ True ]; do
-    read -p "" -r
-    case "$REPLY" in 
-        Yes|yes|Y|y|1|true ) $command;;
-        No|no|N|n|0|false  ) echo; exit 1;;
-    esac
-    ((i=i+1))
-    [ $i == 4 ] && exit 1
-    printf "You need to awnser Yes or No: "
-done
+function fn_help () {
+    echo "Usage: $scriptName [OPTIONS]"
+    echo "This script prompt a yes or no question befor allowing to run the program."
+    echo "exsample: $scriptName echo hello world"
+    echo ""
+    echo "  -h, --help                show this help"
+    exit 0
+}
+
+main () {
+    if [[ $1 == "--help" ]] || [[ $1 == "--help" ]]; then fn_help; fi
+
+    i=0
+    printf "Are you sure you want to run $1? (Yes or No): "
+    while [ True ]; do
+        read -p "" -r
+        case "$REPLY" in 
+            Yes|yes|Y|y|1|true ) break;;
+            No|no|N|n|0|false  ) exit 1; exit 1;;
+        esac
+        ((i=i+1))
+        [ $i == 4 ] && exit 1
+        printf "You need to awnser Yes or No: "
+    done
+    $*
+}
+
+main $*
