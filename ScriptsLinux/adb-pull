@@ -92,8 +92,8 @@ main () {
         fn_default $device $1
     else
         if [[ "$3" == "-l" ]] || [[ "$3" == "--ls" ]]; then fn_ls $device $4; fi
-        if [[ "$3" == "-p" ]] || [[ "$3" == "--photo" ]]; then fn_ls $device; fi
-        if [[ "$3" == "-S" ]] || [[ "$3" == "--screenshot" ]]; then fn_ls $device; fi
+        if [[ "$3" == "-p" ]] || [[ "$3" == "--photo" ]]; then fn_photo $device; fi
+        if [[ "$3" == "-S" ]] || [[ "$3" == "--screenshot" ]]; then fn_screenshot $device; fi
         fn_default $device $3 
     fi
 }
