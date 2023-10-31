@@ -1,9 +1,8 @@
 #!/bin/bash
 set -e
-version="1.1"
 scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
-function prog_help () {
+function fn_help () {
     echo "Usage: $scriptName [FILE] [OPTION]"
     echo "Downloads a file you define or if a latest screenshot or photo from your phone."
     echo ""
@@ -16,7 +15,6 @@ function prog_help () {
     echo ""
     echo "  -s SERIAL                 use device with given serial"
     echo ""
-    echo "  -v, --version             show version number"
     echo "  -h, --help                show this help"
     exit 0
 }
@@ -109,7 +107,7 @@ function fn_keyboard() {
 
 function main () {
     if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
-        prog_help
+        fn_help
     fi
 
     # Args handle
