@@ -1,5 +1,9 @@
 ## Windows
 
+```pwsh
+irm https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupNewWin.ps1 | iex
+```
+
 ## Linux
 #### Manjaro i3
 ```bash
