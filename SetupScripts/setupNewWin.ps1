@@ -25,6 +25,7 @@ $scoop_pkg      = 'sudo', 'git', 'aria2', '7zip', # Required
                   'sharpkeys'                             # Key rebinding
 
 $winget_pkg     = 'Google.Chrome',
+                  'Microsoft.OpenSSH.Beta'
                   'Microsoft.VisualStudioCode',
                   'Discord.Discord',
                   'TeamSpeakSystems.TeamSpeakClient',
@@ -33,6 +34,7 @@ $winget_pkg     = 'Google.Chrome',
                   'VideoLAN.VLC',
                   'OBSProject.OBSStudio',
                   'Valve.Steam --location "C:\Programs\Opt\Steam"'
+                  'qBittorrent.qBittorrent'
                   '9MZNMNKSM73X'                          # [WinStore] WSL: Arch
                   '9MZ1SNWT0N5D'                          # [WinStore] Windows PowerShell Core
                   #'DebaucheeOpenSourceGroup.Barrier'     # Screen passover tool
@@ -225,10 +227,10 @@ wsl.exe --set-default-version 2
 # SSH
 #
 Write-Host "Setting up Open SSH server and client" -ForegroundColor green
-Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
-
-Write-Host "OpenSSH Server may take a while..." -ForegroundColor Gray
-Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+#Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+#
+#Write-Host "OpenSSH Server may take a while..." -ForegroundColor Gray
+#Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 
 # Default shell to pwsh
 New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value $((Get-Command pwsh.exe).source) -PropertyType String -Force
