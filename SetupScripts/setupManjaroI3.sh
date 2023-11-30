@@ -43,13 +43,14 @@ yayInstall=(
   spotify
   discord
   scrcpy
-  obs-studio
+  obs-studio webcamoid
   vlc
   barrier
   
   steam
   
   all-repository-fonts
+  nerd-fonts-noto-sans-mono-extended
   ttf-ms-fonts
 )
 
