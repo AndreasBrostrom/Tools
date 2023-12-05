@@ -9,7 +9,7 @@ pacmanInstall=(
   pulseaudio
 )
 
-yayInstall=(
+paruInstall=(
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
 
@@ -55,7 +55,6 @@ SCRIPTPATH="$( cd "$(dirname "$0")"; pwd -P )"
 
 echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
 yes "" | sudo pacman -Syyu
-yes "" | yay -Syyu
 
 # Install pacman packages
 if [ ${#pacmanInstall[@]} -eq 0 ]; then
@@ -66,25 +65,25 @@ if [ ${#pacmanInstall[@]} -eq 0 ]; then
   done
 fi
 
-# Install yay
+# Install pary
 cd /opt
-git clone https://aur.archlinux.org/yay-bin.git
-cd yay-bin
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/paru.git
+cd paru
 makepkg -si
 cd
 
 # Install yay packages
-if [ ${#yayInstall[@]} -eq 0 ]; then
+if [ ${#paruInstall[@]} -eq 0 ]; then
   echo -e "\e[1;34mInstalling yay packages...\e[0m"
-  for app in ${yayInstall[@]}; do
+  for app in ${paruInstall[@]}; do
       echo "Installing $app and requirements..."
-      yes "" | yay -Sy $app
+      yes "" | paru -Sy $app
   done
 fi
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
-yes "" | sudo pacman -Syyu
-yes "" | yay -Syyu
+yes "" | paru -Syyu
 
 
 echo -e "\e[1;34mUpdating Font Repository...\e[0m"
