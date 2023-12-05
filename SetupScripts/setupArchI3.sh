@@ -34,19 +34,20 @@ yayInstall=(
   scrot       # Screenshot captrure
   
   visual-studio-code-bin
-  node ts-node
-  jdk8-openjdk
+  node
   
   google-chrome
+
   spotify
   discord
   scrcpy
-  obs-studio
 
+  obs-studio webcamoid
   vlc
   barrier
   
   all-repository-fonts
+  nerd-fonts-noto-sans-mono-extended
   ttf-ms-fonts
 )
 
