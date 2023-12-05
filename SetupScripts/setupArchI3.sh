@@ -2,15 +2,18 @@
 sudo -v
 
 pacmanInstall=(
-  git base-devel
-  neovim
+  git
+  base-devel
+  openssh
 )
 
 paruInstall=(
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
 
-  helix
+  gtk4
+  feh # theme and background handle
+  lxappearance-gtk3
   
   xdotool
   brightnessctl
@@ -24,17 +27,20 @@ paruInstall=(
   thunar
   
   gparted gnome-disk-utility
-  
-  samba
+  dconf-editor
+  samba # Network
   
   etcher-bin  # Flashdrive maker
   peek        # Gif recorder
   scrot       # Screenshot captrure
   
   visual-studio-code-bin
+  neovim helix
   node
   
-  google-chrome
+  gnome-calculator
+
+  google-chrome-stable
 
   spotify
   discord
@@ -55,27 +61,18 @@ echo -e "\e[1;34mPreforming full upgrade for all packages stand by...\e[0m"
 yes "" | sudo pacman -Syyu
 
 # Install pacman packages
-if [ ${#pacmanInstall[@]} -eq 0 ]; then
-  echo -e "\e[1;34mInstalling pacman packages...\e[0m"
-  for app in ${pacmanInstall[@]}; do
-      echo "Installing $app and requirements..."
-      yes "" | sudo pacman -Sy $app
-  done
-fi
-
-# Install pary
-#sudo pacman -S --needed base-devel
-#git clone https://aur.archlinux.org/paru.git
-#cd paru
-#makepkg -si
-#cd
+echo -e "\e[1;34mInstalling pacman packages...\e[0m"
+for app in ${pacmanInstall[@]}; do
+    echo "Installing $app and requirements..."
+    yes "" | sudo pacman -Sy $app
+done
 
 # Install paru packages
-  echo -e "\e[1;34mInstalling paru packages...\e[0m"
-  for app in ${paruInstall[@]}; do
-      echo "Installing $app and requirements..."
-      yes "" | paru -Sy $app
-  done
+echo -e "\e[1;34mInstalling paru packages...\e[0m"
+for app in ${paruInstall[@]}; do
+    echo "Installing $app and requirements..."
+    yes "" | paru -Sy $app
+done
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
 yes "" | paru -Syyu
@@ -92,6 +89,10 @@ if [ -d "$HOME/android-sdk" ]; then
     mkdir -p $HOME/.android 1>/dev/null 2>&1
     mv $HOME/android-sdk $HOME/.android/android-sdk 1>/dev/null 2>&1
 fi
+
+# Setup GT
+gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 
 # Setting up home
 mkdir -p $HOME/.ssh

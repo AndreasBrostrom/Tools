@@ -19,7 +19,8 @@ yayInstall=(
   
   xdotool
   brightnessctl
-  
+
+
   dos2unix jq ripgrep
   exa # ls like tool
   
