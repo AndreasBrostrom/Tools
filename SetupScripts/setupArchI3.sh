@@ -11,13 +11,15 @@ paruInstall=(
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
 
-
-  gtk4 feh # theme and background handle
+  # Theme and apparaence 
+  gtk4 feh
   lxappearance-gtk3
   
   xclip
   xdotool
   brightnessctl
+
+  # Audio
   pavucontrol pa-applet
   
   dos2unix jq ripgrep
@@ -26,6 +28,7 @@ paruInstall=(
   
   terminator
   fish starship
+  
   thunar
   
   gparted gnome-disk-utility
