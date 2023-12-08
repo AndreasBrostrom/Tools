@@ -17,6 +17,7 @@ paruInstall=(
   
   xdotool
   brightnessctl
+  pavucontrol pa-applet
   
   dos2unix jq ripgrep
   
