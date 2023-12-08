@@ -11,9 +11,11 @@ paruInstall=(
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
 
+
   gtk4 feh # theme and background handle
   lxappearance-gtk3
   
+  xclip
   xdotool
   brightnessctl
   pavucontrol pa-applet
