@@ -11,8 +11,7 @@ paruInstall=(
   android-sdk-cmdline-tools-latest #android-studio
   github-cli
 
-  gtk4
-  feh # theme and background handle
+  gtk4 feh # theme and background handle
   lxappearance-gtk3
   
   xdotool
