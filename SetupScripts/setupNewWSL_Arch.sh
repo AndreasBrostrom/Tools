@@ -10,25 +10,25 @@ pacmanInstall=(
   )
 
 yayInstall=(
-    android-sdk-cmdline-tools-latest
-    github-cli
-    
-    helix
+    dos2unix jq ripgrep
+    samba
 
     xdotool
     brightnessctl
-    
-    dos2unix jq ripgrep
+
+    helix # Editor
     exa # ls like tool
     
+    android-sdk-cmdline-tools-latest
+    github-cli
+
     terminator
-    
     fish starship
     
     thunar
-    samba
-    
-    node ts-node
+    gvfs thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
+
+    nodejs
     jdk8-openjdk
   )
 
