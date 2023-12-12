@@ -5,4 +5,5 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 type $*
+ls -l $(which $*) | awk {'print $9" "$10" "$11'}
 which -a $*
