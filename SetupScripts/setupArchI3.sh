@@ -8,13 +8,12 @@ pacmanInstall=(
 )
 
 paruInstall=(
-  android-sdk-cmdline-tools-latest #android-studio
-  github-cli
+  samba
 
   # Theme and apparaence 
   gtk4 feh
   lxappearance-gtk3
-  
+
   xclip
   xdotool
   brightnessctl
@@ -27,9 +26,14 @@ paruInstall=(
   python3 python3-pip
   
   terminator
-  fish starship
+  starship
+  fish
   
+  android-sdk-cmdline-tools-latest #android-studio
+  github-cli
+
   thunar
+  gvfs thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
   
   gparted gnome-disk-utility
   dconf-editor

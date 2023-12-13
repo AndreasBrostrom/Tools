@@ -11,10 +11,6 @@ pacmanInstall=(
 
 yayInstall=(
     dos2unix jq ripgrep
-    samba
-
-    xdotool
-    brightnessctl
 
     helix # Editor
     exa # ls like tool
@@ -23,10 +19,10 @@ yayInstall=(
     github-cli
 
     terminator
-    fish starship
+    starship
+    fish
     
     thunar
-    gvfs thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
 
     nodejs
     jdk8-openjdk
