@@ -55,6 +55,9 @@ paruInstall=(
   vlc
   barrier
   
+  gimp
+  pinta
+
   all-repository-fonts
   nerd-fonts-noto-sans-mono-extended
   ttf-ms-fonts
