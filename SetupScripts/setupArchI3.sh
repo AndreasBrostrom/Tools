@@ -5,6 +5,7 @@ pacmanInstall=(
   git
   base-devel
   openssh
+  man-db
 )
 
 paruInstall=(
@@ -13,6 +14,8 @@ paruInstall=(
   # Theme and apparaence 
   gtk4 feh
   lxappearance-gtk3
+  
+  trld
 
   xclip
   xdotool
