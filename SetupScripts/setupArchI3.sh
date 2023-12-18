@@ -21,6 +21,11 @@ paruInstall=(
   xdotool
   brightnessctl
 
+  # Settigns and system stuff
+  gparted gnome-disk-utility
+  dconf-editor d-feet
+  samba # Network
+
   # Audio
   pavucontrol pa-applet
   
@@ -38,9 +43,6 @@ paruInstall=(
   thunar
   gvfs thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
   
-  gparted gnome-disk-utility
-  dconf-editor
-  samba # Network
   
   etcher-bin  # Flashdrive maker
   peek        # Gif recorder
