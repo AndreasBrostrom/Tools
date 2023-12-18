@@ -12,7 +12,7 @@ paruInstall=(
   samba
 
   # Theme and apparaence 
-  gtk4 feh
+  gtk4 
   lxappearance-gtk3
   
   trld
@@ -31,7 +31,7 @@ paruInstall=(
   
   dos2unix jq ripgrep
   
-  python3 python3-pip
+  python3
   
   terminator
   starship
@@ -66,6 +66,7 @@ paruInstall=(
   
   gimp
   pinta
+  qview feh
 
   all-repository-fonts
   nerd-fonts-noto-sans-mono-extended
