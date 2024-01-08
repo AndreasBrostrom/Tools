@@ -14,7 +14,9 @@ paruInstall=(
   # Theme and apparaence 
   gtk4 
   lxappearance-gtk3
-  
+  picom
+  lightdm-webkit2-greeter
+
   trld
 
   xclip
@@ -135,5 +137,11 @@ chmod 644 $HOME/.ssh/*.pub
 #chmod +x install
 #./install
 
+# Setup Greater
+sudo mkdir -p /usr/share/lightdm-webkit/themes/
+cd /usr/share/lightdm-webkit/themes/
+git clone https://github.com/dimaglushkov/lightdm-webkit2-theme-minimal.git minimal
+
+# Reset done
 sudo --reset-timestamp
 echo -e "done"
