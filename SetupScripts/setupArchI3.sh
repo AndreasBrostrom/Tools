@@ -140,7 +140,7 @@ chmod 644 $HOME/.ssh/*.pub
 # Setup Greater
 sudo mkdir -p /usr/share/lightdm-webkit/themes/
 cd /usr/share/lightdm-webkit/themes/
-git clone https://github.com/dimaglushkov/lightdm-webkit2-theme-minimal.git minimal
+git clone https://github.com/AndreasBrostrom/lightdm-webkit2-theme-minimal.git minimal
 
 # Reset done
 sudo --reset-timestamp
