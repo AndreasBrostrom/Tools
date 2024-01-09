@@ -16,7 +16,8 @@ paruInstall=(
   lxappearance-gtk3
   picom
   lightdm-webkit2-greeter
-
+  wol
+  
   trld
 
   xclip
