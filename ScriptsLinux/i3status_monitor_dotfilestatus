@@ -1,33 +1,39 @@
 #!/bin/bash
 # .config/i3status/config
 #       read_file dotfiles {
-#               path = "/home/andre/.cache/dotfileWatcher/log"
+#               path = "/home/andre/.cache/i3status_monitor/dotfiles"
 #               format = "%content"
 #               format_bad = ""
 #               color_good = "#DC322F"
 #               color_bad = "#DC322F"
 #       }
 
+_device="device:OnePlusNordCE"
+_symbol="✆"
+
+_file="dotfiles"
+_path="~/.cache/i3status_monitor"
+
 while true; do 
     sleep 10
 
-    [ ! -d "$HOME/.cache/dotfileWatcher" ] && mkdir -p "$HOME/.cache/dotfileWatcher"
+    [ ! -d "$_path" ] && mkdir -p "$_path"
 
     if [[ ! $(git -C ~/Repositories/dotfiles status | grep nothin) || $(git -C ~/Repositories/dotfiles status | grep Untracked) ]]; then
         echo "Changes detected (dotfiles)"
-        echo "!"  > $HOME/.cache/dotfileWatcher/log
+        echo "!"  > $_path/$_file
         continue
     fi
     if [[ ! $(git -C ~/Repositories/dotfiles_private status | grep nothin) || $(git -C ~/Repositories/dotfiles_private status | grep Untracked) ]]; then
         echo "Changes detected (dotfiles_private)"
-        echo "!"  > $HOME/.cache/dotfileWatcher/log
+        echo "!"  > $_path/$_file
         continue
     fi
     if [[ ! $(git -C ~/Repositories/Tools status | grep nothin) || $(git -C ~/Repositories/Tools status | grep Untracked) ]]; then
         echo "Changes detected (Tools)"
-        echo "!"  > $HOME/.cache/dotfileWatcher/log
+        echo "!"  > $_path/$_file
         continue
     fi
     echo "No Changed detected"
-    echo "" > $HOME/.cache/dotfileWatcher/log
+    echo "" > $_path/$_file
 done
