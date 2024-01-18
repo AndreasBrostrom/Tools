@@ -18,7 +18,7 @@ while true; do
     [ ! -d "$_path" ] && mkdir -p $_path
 
     if [[ $(pgrep adb) ]]; then
-        if [[ $(adb devices -l | grep "$device") ]]; then
+        if [[ $(adb devices -l | grep "$_device") ]]; then
             echo "Android device connected"
             echo "$_symbol"  > $_path/$_file
             continue
