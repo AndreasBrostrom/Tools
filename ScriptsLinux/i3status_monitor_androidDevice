@@ -30,5 +30,5 @@ while true; do
     fi
 
     echo "No device connected"
-    echo "" > $_path/android_device
+    echo "" > $_path/$_file
 done
