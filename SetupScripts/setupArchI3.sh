@@ -18,6 +18,7 @@ paruInstall=(
   lightdm-webkit2-greeter
   wol
   
+  # Tools
   trld
 
   xclip
@@ -26,6 +27,7 @@ paruInstall=(
 
   # Settigns and system stuff
   gparted gnome-disk-utility
+  dosfstools ntfsprogs # gnome disks moduels
   dconf-editor d-feet
   samba # Network
 
@@ -45,7 +47,7 @@ paruInstall=(
 
   thunar
   gvfs thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
-  
+  file-roller # Archive manager
   
   etcher-bin  # Flashdrive maker
   peek        # Gif recorder
