@@ -14,6 +14,7 @@ paruInstall=(
   # Theme and apparaence 
   gtk4 
   lxappearance-gtk3
+  lxsession-gtk3 # gui auth
   picom polkit
   lightdm-webkit2-greeter
   wol
