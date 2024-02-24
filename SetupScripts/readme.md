@@ -5,7 +5,7 @@ irm https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/
 ```
 
 ## Linux
-
+#### Arch i3
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/AndreasBrostrom/Tools/master/SetupScripts/setupArchI3.sh)
 ```
