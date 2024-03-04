@@ -6,8 +6,6 @@ pacmanInstall=(
   base-devel
   openssh
   man-db
-
-  exa # ls replacement
 )
 
 paruInstall=(
