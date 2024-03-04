@@ -17,12 +17,14 @@ paruInstall=(
   lxsession-gtk3 # gui auth
   picom polkit
   lightdm-webkit2-greeter
-  wol
+  wol # WakeOnLan
   
   # Tools
   trld
+  bat # cat
 
-  xclip
+
+  xclip # clipboard
   xdotool
   brightnessctl
 
