@@ -22,7 +22,7 @@ paruInstall=(
   # Tools
   trld
   bat # cat
-
+  eza # modern ls (exa)
 
   xclip # clipboard
   xdotool
