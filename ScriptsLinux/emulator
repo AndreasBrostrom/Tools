@@ -2,10 +2,16 @@
 # Needs to me first in path
 
 emulator_proxy_function () {
-    if [ ! -f $ANDROID_HOME/emulator/emulator-x86 ]; then
-        ln $ANDROID_HOME/emulator/emulator $ANDROID_HOME/emulator/emulator-x86
+    emulator_bin=""
+    if [ -d $ANDROID_HOME/emulator/ ]; then 
+        if [ ! -f $ANDROID_HOME/emulator/emulator-x86 ]; then
+            ln $ANDROID_HOME/emulator/emulator $ANDROID_HOME/emulator/emulator-x86
+        fi
+        emulator_bin="emulator-x86"
     fi
     
+    [[ -z $emulator_bin ]] &&  echo "Android emulator is not installed" && exit 1
+
     # setup config dir
     if [ ! -d ~/.config/emulator_proxy/ ]; then mkdir ~/.config/emulator_proxy; fi
 
@@ -18,7 +24,7 @@ emulator_proxy_function () {
 
     if [ "$1" == "-l" ] || [ "$1" == "--list" ] || [ "$1" == "-list-avds" ]; then
         echo "AVD devices:"
-        for e in $(emulator-x86 -list-avds); do
+        for e in $($emulator_bin -list-avds); do
             if [ $e == $defaultEmulator ]; then
                 echo "  $e (Default)"
             else
@@ -29,12 +35,12 @@ emulator_proxy_function () {
     fi
     if [ "$1" == "-d" ] || [ "$1" == "--default" ]; then
         if [ "$defaultEmulator" == "" ]; then echo "No default emulator defined"; exit 1; fi
-        emulator-x86 -avd $defaultEmulator >/dev/null 2>&1 &
+        $emulator_bin -avd $defaultEmulator >/dev/null 2>&1 &
         exit 0
     fi
     if [ "$1" == "-dp" ] || [ "$1" == "--default-pin" ]; then
         if [ "$defaultEmulator" == "" ]; then echo "No default emulator defined"; exit 1; fi
-        emulator-x86 -avd $defaultEmulator
+        $emulator_bin -avd $defaultEmulator
         exit 0
     fi
     if [ "$1" == "--set" ]; then
@@ -58,7 +64,7 @@ emulator_proxy_function () {
     fi
     
     if [[ $# -eq 0 ]]; then
-        emulator-x86 $*
+        $emulator_bin $*
         echo "AVD devices:"
         for e in $(emulator -list-avds); do
             if [ $e == $defaultEmulator ]; then
@@ -67,17 +73,15 @@ emulator_proxy_function () {
                 echo "  $e"
             fi
         done
-        echo "
-Extended commands:
-  -d, --default           Open the set default emulator
-  -dp, --default-pin      Open the set default emulator
-  -l, --list              List avalible AVDs (alias to list-avds)
-  --set                   Set the defualt emulator
-  --kill                  Kill all emulators
-  --clear                 Kill and clear default emulator and lockfile
-"
+        echo "Extended commands:"
+        echo "  -d, --default           Open the set default emulator"
+        echo "  -dp, --default-pin      Open the set default emulator"
+        echo "  -l, --list              List avalible AVDs (alias to list-avds)"
+        echo "  --set                   Set the defualt emulator"
+        echo "  --kill                  Kill all emulators"
+        echo "  --clear                 Kill and clear default emulator and lockfile"
         exit 1
     fi
-    emulator-x86 $*
+    $emulator_bin $*
 }
 emulator_proxy_function $*
