@@ -14,11 +14,11 @@ $use_choco      = $false
 $scoop_buckets  = 'extras'
 
 $scoop_pkg      = 'sudo', 'git', 'aria2', '7zip', # Required
-                  'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget', 'findutils',
+                  'git', 'gh', 'act'
                   'zip', 'unzip',
+                  'grep', 'ripgrep', 'sed', 'touch', 'jq', 'dos2unix', 'wget', 'findutils',
                   'neovim', 'scrcpy', 'helix',
                   'python', 'nodejs', 'rust',
-                  'gh', 'act'
                   'starship',
                   'steamcmd', 'android-sdk', 'rufus',
                   'ntop',                                 # htop-like system-monitor
@@ -71,12 +71,14 @@ $pwsh_modules   = 'PSWindowsUpdate'
 # Script start
 Write-Host "Starting up..." -ForegroundColor Magenta
 
+#
 # Setting up linux like root enviroment
+#
 if ( -not Test-Path "C:\Programs" ) {
-    New-Item -itemtype "directory" -path "C:\Programs" >$null 2>&1
+    New-Item -itemtype "directory" -path "C:\Programs" -Force >$null 2>&1
 }
 
-New-Item -itemtype "directory" -path "C:\Programs\Bin" >$null 2>&1
+New-Item -itemtype "directory" -path "C:\Programs\Bin" -Force >$null 2>&1
 if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
 
 New-Item -itemtype Junction -path "C:\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
@@ -96,7 +98,9 @@ New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "
 
 
 
+#
 # Scoop
+#
 if ($use_scoop) {
     Write-Host "Setting up Scoop..." -ForegroundColor Magenta
     
@@ -138,7 +142,10 @@ if ($use_scoop) {
 }
 
 
+
+#
 # Chocolately
+#
 if ($use_choco) {
     Write-Host "Setting up Chocolately..." -ForegroundColor Magenta
 
@@ -169,7 +176,10 @@ if ($use_choco) {
 }
 
 
+
+#
 # Winget
+#
 if (use_winget) {
     # Install Winget
     Write-Host "Setting up WinGet..." -ForegroundColor Magenta
@@ -201,9 +211,9 @@ if (use_winget) {
 
 
 
-
-
+#
 # Install powershell moduels
+#
 Write-Host "Powershell modules..."
 Set-PSRepository PSGallery
 foreach ($module in $pwsh_modules) {
@@ -260,6 +270,7 @@ if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyCon
 Write-Host "Windows features and ssh setup..." -ForegroundColor Green
 
 
+
 #
 # Setting up home
 #
@@ -270,7 +281,6 @@ if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnviron
 
 New-Item -itemtype "directory" -path "$Env:userprofile\.config"
 (get-item $Env:userprofile\.config).Attributes += 'Hidden'
-
 
 
 # Autostart
