@@ -19,6 +19,8 @@ paruInstall=(
   lightdm-webkit2-greeter
   wol # WakeOnLan
   
+  conky notification-daemon
+
   # Tools
   trld
   bat # cat
