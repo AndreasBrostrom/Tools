@@ -18,7 +18,7 @@ paruInstall=(
   picom polkit
   lightdm-webkit2-greeter
   wol # WakeOnLan
-  
+  numlockx # numlock toggler
   conky notification-daemon
 
   # Tools
