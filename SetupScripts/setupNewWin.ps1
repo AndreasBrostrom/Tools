@@ -79,7 +79,7 @@ if ( -not Test-Path "C:\Programs" ) {
 }
 
 New-Item -itemtype "directory" -path "C:\Programs\Bin" -Force >$null 2>&1
-if ( ! $env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Programs\Bin", "Machine") }
+if ( ! $Env:path.Contains(";C:\Programs\Bin")) { [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\Programs\Bin", "Machine") }
 
 New-Item -itemtype Junction -path "C:\" -name "bin" -value "C:\Programs\Bin" >$null 2>&1
 
@@ -93,8 +93,8 @@ New-Item -itemtype Junction -path "C:\" -name "tmp" -value "$Env:temp" -Force >$
 New-Item -itemtype "directory" -path "C:\Programs\Opt\Steam\steamapps\common" -Force >$null 2>&1
 New-Item -itemtype Junction -path "C:\Programs\" -name "SteamApps" -value "C:\Programs\Opt\Steam\steamapps\common" -Force
 
-New-Item -itemtype Junction -path "$Env:userprofile" -name ".Templates" -value "$env:appdata\Microsoft\Windows\Templates"  -Force
-(get-item $Env:userprofile\.Templates).Attributes += 'Hidden'
+New-Item -itemtype Junction -path "$Env:USERPROFILE" -name ".Templates" -value "$Env:appdata\Microsoft\Windows\Templates"  -Force
+(get-item $Env:USERPROFILE\.Templates).Attributes += 'Hidden'
 
 
 
@@ -105,11 +105,11 @@ if ($use_scoop) {
     Write-Host "Setting up Scoop..." -ForegroundColor Magenta
     
     # Set global install directory
-    $env:SCOOP_GLOBAL="C:\Programs\Opt\scoop"
-    [Environment]::SetEnvironmentVariable('SCOOP_GLOBAL', $env:SCOOP_GLOBAL, 'Machine')
+    $Env:SCOOP_GLOBAL="C:\Programs\Opt\scoop"
+    [Environment]::SetEnvironmentVariable('SCOOP_GLOBAL', $Env:SCOOP_GLOBAL, 'Machine')
 
     # Install Scoop
-    if (![System.IO.File]::Exists("$env:USERPROFILE\scoop\shims\scoop")) {
+    if (![System.IO.File]::Exists("$Env:USERPROFILE\scoop\shims\scoop")) {
         Write-Host "Installing Scoop..." -ForegroundColor Magenta
         iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
     } else {
@@ -130,7 +130,7 @@ if ($use_scoop) {
     if ($scoop_pkg) {
         Write-Host "Installing Scoop packages..."
         foreach ($pkg in $scoop_pkg) {
-            if (![System.IO.Directory]::Exists("$env:PROGRAMDATA\scoop\apps\$pkg")) {
+            if (![System.IO.Directory]::Exists("$Env:PROGRAMDATA\scoop\apps\$pkg")) {
                 Write-Host "Installing $pkg..."
                 scoop install $pkg --global >$null 2>&1
             } else {
@@ -155,7 +155,7 @@ if ($use_choco) {
         Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
         Write-Host "Changeing and setting some paths for Chocolately..."
         choco feature enable -n allowGlobalConfirmation >$null 2>&1
-        [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
+        [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";C:\ProgramData\Chocolatey\tools", "Machine")
     } else { Write-Host "Chocolately already exist..." -ForegroundColor Yellow }
 
     # Chocolately packages
@@ -183,7 +183,7 @@ if ($use_choco) {
 if (use_winget) {
     # Install Winget
     Write-Host "Setting up WinGet..." -ForegroundColor Magenta
-    if (![System.IO.File]::Exists("$env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\winget.exe")) {
+    if (![System.IO.File]::Exists("$Env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\winget.exe")) {
         Write-Host "Installing WinGet..." -ForegroundColor green
         Add-AppxPackage "https://aka.ms/getwinget" -InstallAllResources 
     } else { Write-Host "WinGet already exist..." -ForegroundColor Yellow }
@@ -275,12 +275,12 @@ Write-Host "Windows features and ssh setup..." -ForegroundColor Green
 # Setting up home
 #
 Write-Host "Setting up home..."
-New-Item -itemtype "directory" -path "$Env:userprofile\.bin" -Force
-(get-item $Env:userprofile\.bin).Attributes += 'Hidden'
-if ( ! $env:path.Contains(";$Env:userprofile\.bin")) { [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$Env:userprofile\.bin", "User") }
+New-Item -itemtype "directory" -path "$Env:USERPROFILE\.bin" -Force
+(get-item $Env:USERPROFILE\.bin).Attributes += 'Hidden'
+if ( ! $Env:path.Contains(";$Env:USERPROFILE\.bin")) { [Environment]::SetEnvironmentVariable("Path", $Env:Path + ";$Env:USERPROFILE\.bin", "User") }
 
-New-Item -itemtype "directory" -path "$Env:userprofile\.config"
-(get-item $Env:userprofile\.config).Attributes += 'Hidden'
+New-Item -itemtype "directory" -path "$Env:USERPROFILE\.config"
+(get-item $Env:USERPROFILE\.config).Attributes += 'Hidden'
 
 
 # Autostart
@@ -334,17 +334,17 @@ Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
 
 # Setup powershell profile
-if (![System.IO.File]::Exists("$Env:userprofile\Documents\PowerShell\profile.ps1")) {
+if (![System.IO.File]::Exists("$Env:USERPROFILE\Documents\PowerShell\profile.ps1")) {
     Write-Host "Configurating Powershell..." -ForegroundColor Magenta
-    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\PowerShell\"
-    (get-item $Env:userprofile\Documents\PowerShell).Attributes += 'Hidden'
-    New-Item -itemtype "directory" -path "$Env:userprofile\Documents\WindowsPowerShell\"
-    (get-item $Env:userprofile\Documents\WindowsPowerShell).Attributes += 'Hidden'
+    New-Item -itemtype "directory" -path "$Env:USERPROFILE\Documents\PowerShell\"
+    (get-item $Env:USERPROFILE\Documents\PowerShell).Attributes += 'Hidden'
+    New-Item -itemtype "directory" -path "$Env:USERPROFILE\Documents\WindowsPowerShell\"
+    (get-item $Env:USERPROFILE\Documents\WindowsPowerShell).Attributes += 'Hidden'
 
     # Create home link check file for powershell and powershell core.
-    "if (Test-Path `"$env:userprofile\.pwshrc.ps1`" -PathType leaf) {`n    . `"$env:userprofile\.pwshrc.ps1`"`n}" | Out-File -FilePath "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    "if (Test-Path `"$Env:USERPROFILE\.pwshrc.ps1`" -PathType leaf) {`n    . `"$Env:USERPROFILE\.pwshrc.ps1`"`n}" | Out-File -FilePath "$Env:USERPROFILE\Documents\PowerShell\profile.ps1"
     
-    New-Item -itemtype SymbolicLink -path "$Env:userprofile\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:userprofile\Documents\PowerShell\profile.ps1"
+    New-Item -itemtype SymbolicLink -path "$Env:USERPROFILE\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:USERPROFILE\Documents\PowerShell\profile.ps1"
 
     Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
 } else {
@@ -362,8 +362,8 @@ if (Test-Path "D:") {
         Write-Host "Setup of dotfiles complete..." -ForegroundColor Green
     }
     if (Test-Path "D:\secure") {
-        New-Item -itemtype "directory" -path "$Env:userprofile\.ssh"
-        (get-item $Env:userprofile\.ssh).Attributes += 'Hidden'
+        New-Item -itemtype "directory" -path "$Env:USERPROFILE\.ssh"
+        (get-item $Env:USERPROFILE\.ssh).Attributes += 'Hidden'
         Copy-Item "D:\secure\ssh\" -Destination "C:\ProgramData\ssh\" -Recurse -force
 
     }
@@ -373,15 +373,15 @@ if (Test-Path "D:") {
 
 # Download drives and packages for gaming
 Write-Host "Downloading drives and programs for gaming..." -ForegroundColor Magenta
-if (![System.IO.File]::Exists("$Env:userprofile\Downloads\TrackIR_5.4.2.exe")) {
-    Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:userprofile\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
+if (![System.IO.File]::Exists("$Env:USERPROFILE\Downloads\TrackIR_5.4.2.exe")) {
+    Invoke-WebRequest https://s3.amazonaws.com/naturalpoint/trackir/software/TrackIR_5.4.2.exe -OutFile "$Env:USERPROFILE\Downloads\TrackIR_5.4.2.exe" >$null 2>&1
 } else {
     Write-Host "TrackIR already downloaded skipping..." -ForegroundColor Yellow
 }
-if (![System.IO.File]::Exists("$Env:userprofile\Downloads\Setup.exe")) {
-    Invoke-WebRequest https://api.roccat-neon.com/device/Support/Driver/Download/315/Tyon.zip -OutFile "$Env:userprofile\Downloads\Tyon.zip" >$null 2>&1
-    Expand-Archive "$Env:userprofile\Downloads\Tyon.zip" -DestinationPath "$Env:userprofile\Downloads\" >$null 2>&1
-    Remove-Item "$Env:userprofile\Downloads\Tyon.zip" >$null 2>&1
+if (![System.IO.File]::Exists("$Env:USERPROFILE\Downloads\Setup.exe")) {
+    Invoke-WebRequest https://api.roccat-neon.com/device/Support/Driver/Download/315/Tyon.zip -OutFile "$Env:USERPROFILE\Downloads\Tyon.zip" >$null 2>&1
+    Expand-Archive "$Env:USERPROFILE\Downloads\Tyon.zip" -DestinationPath "$Env:USERPROFILE\Downloads\" >$null 2>&1
+    Remove-Item "$Env:USERPROFILE\Downloads\Tyon.zip" >$null 2>&1
 } else {
     Write-Host "ROCCAT Tyon already downloaded skipping..." -ForegroundColor Yellow
 }

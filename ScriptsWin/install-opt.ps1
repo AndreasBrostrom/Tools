@@ -2,14 +2,14 @@ if ( -not [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).gro
     Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.MyCommand.Name)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
 
     # check if have sudo programs installed
-    $sudoScripts =  "$env:USERPROFILE\scoop\shims\sudo",
-                    "$env:USERPROFILE\scoop\shims\sudo.ps1",
-                    "$env:PROGRAMDATA\scoop\shims\sudo",
-                    "$env:PROGRAMDATA\scoop\shims\sudo.ps1",
-                    "$env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
-                    "$env:USERPROFILE\.bin\sudo.ps1",
-                    "$env:SCOOP_GLOBAL\shims\sudo",
-                    "$env:SCOOP_GLOBAL\shims\sudo.ps1"
+    $sudoScripts =  "$Env:USERPROFILE\scoop\shims\sudo",
+                    "$Env:USERPROFILE\scoop\shims\sudo.ps1",
+                    "$Env:PROGRAMDATA\scoop\shims\sudo",
+                    "$Env:PROGRAMDATA\scoop\shims\sudo.ps1",
+                    "$Env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
+                    "$Env:USERPROFILE\.bin\sudo.ps1",
+                    "$Env:SCOOP_GLOBAL\shims\sudo",
+                    "$Env:SCOOP_GLOBAL\shims\sudo.ps1"
 
     foreach ($sudoScript in $sudoScripts) { if ( [System.IO.File]::Exists("$sudoScript") ) { [bool] $hasSudo = 1; break } }
     if ($hasSudo) { Write-Host " or run with sudo" -ForegroundColor Red -NoNewline }
