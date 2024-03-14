@@ -34,7 +34,7 @@ mkdir -p $HOME/.bin
 mkdir -p $HOME/.ssh
 
 mkdir -p $HOME/Programs/bin
-mkdir -p $HOME/Programs/lib
+mkdir -p $HOME/Programs/opt
 mkdir -p $HOME/Programs/src
 
 mkdir -p $HOME/Repositories
