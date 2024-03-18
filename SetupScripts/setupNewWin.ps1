@@ -334,17 +334,15 @@ Write-Host "Context menu adjustment completed..." -ForegroundColor green
 
 
 # Setup powershell profile
-if (![System.IO.File]::Exists("$Env:USERPROFILE\Documents\PowerShell\profile.ps1")) {
+if (![System.IO.File]::Exists("$Env:USERPROFILE\.config\PowerShell\config.ps1")) {
     Write-Host "Configurating Powershell..." -ForegroundColor Magenta
     New-Item -itemtype "directory" -path "$Env:USERPROFILE\Documents\PowerShell\"
     (get-item $Env:USERPROFILE\Documents\PowerShell).Attributes += 'Hidden'
     New-Item -itemtype "directory" -path "$Env:USERPROFILE\Documents\WindowsPowerShell\"
     (get-item $Env:USERPROFILE\Documents\WindowsPowerShell).Attributes += 'Hidden'
 
-    # Create home link check file for powershell and powershell core.
-    "if (Test-Path `"$Env:USERPROFILE\.pwshrc.ps1`" -PathType leaf) {`n    . `"$Env:USERPROFILE\.pwshrc.ps1`"`n}" | Out-File -FilePath "$Env:USERPROFILE\Documents\PowerShell\profile.ps1"
-    
-    New-Item -itemtype SymbolicLink -path "$Env:USERPROFILE\Documents\WindowsPowerShell" -name "profile.ps1" -value "$Env:USERPROFILE\Documents\PowerShell\profile.ps1"
+    New-Item -itemtype "directory" -path "$Env:USERPROFILE/.config/powershell/conf.d/"
+    New-Item -itemtype "directory" -path "$Env:USERPROFILE/.config/powershell/functions/"
 
     Write-Host "Configuration of PowerShell complete..." -ForegroundColor Green
 } else {
