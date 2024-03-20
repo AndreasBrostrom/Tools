@@ -29,10 +29,10 @@ fi
 if [ "$1" == '' ]; then echo -e "Usage: $(basename "$(test -L "$0" && readlink "$0" || echo "$0")") VERSION|options\nNo version provided"; exit 1; fi
 
 if [ "$1" == "10" ]; then
-    echo "node 10 'nodejs-lts-dubnium' is no longer supported"; exit 1
+    echo "nodejs version 10* (nodejs-lts-dubnium) is no longer supported"; exit 1
     PACKAGE_NAME=nodejs-lts-dubnium
 elif [ "$1" == "12" ]; then
-    echo "node 12 'nodejs-lts-erbium' is no longer supported"; exit 1
+    echo "nodejs version 12* (nodejs-lts-erbium) is no longer supported"; exit 1
     PACKAGE_NAME=nodejs-lts-erbium
 elif [ "$1" == "14" ]; then
     PACKAGE_NAME=nodejs-lts-fermium
