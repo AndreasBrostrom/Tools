@@ -16,11 +16,12 @@ if [ "$*" == "-v" ] || [ "$*" == "--version" ]; then
 fi
 
 if [ "$*" == "-l" ] || [ "$*" == "--list" ]; then
-    echo " > node 10"
-    echo " > node 12"
+    #echo " > node 10"
+    #echo " > node 12"
     echo " > node 14"
     echo " > node 16"
     echo " > node 18"
+    echo " > node 20"
     echo " > node latest"
     echo
     exit 0
