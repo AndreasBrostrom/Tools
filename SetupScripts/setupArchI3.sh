@@ -26,7 +26,6 @@ paruInstall=(
   trld
   bat # cat
   eza # modern ls (exa)
-  pyakm # Kernal manager
 
   xclip # clipboard
   xdotool
