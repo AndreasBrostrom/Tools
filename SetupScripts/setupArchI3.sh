@@ -20,11 +20,13 @@ paruInstall=(
   wol # WakeOnLan
   numlockx # numlock toggler
   conky notification-daemon
+  feh # (background)
 
   # Tools
   trld
   bat # cat
   eza # modern ls (exa)
+  pyakm # Kernal manager
 
   xclip # clipboard
   xdotool
@@ -39,18 +41,14 @@ paruInstall=(
   # Audio
   pavucontrol pa-applet
   
-  dos2unix jq ripgrep
-  
-  python3
-  
-  terminator
-  starship
-  fish
-  
-  android-sdk-cmdline-tools-latest #android-studio
+  dos2unix jq ripgrep # Utilities
   github-cli
+  android-sdk-cmdline-tools-latest # ADB
+  
+  terminator, starship, fish, zsh # Terminal and shell
+  
 
-  thunar
+  thunar # File manager
   gvfs thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
   file-roller # Archive manager
   
@@ -60,7 +58,9 @@ paruInstall=(
   
   visual-studio-code-bin
   neovim helix
+
   node
+  python3
   
   gnome-calculator
 
@@ -75,8 +75,8 @@ paruInstall=(
   barrier
   
   gimp
-  pinta
-  qview feh
+  pinta # Paint-ish
+  qview 
 
   all-repository-fonts
   nerd-fonts-noto-sans-mono-extended
