@@ -149,6 +149,7 @@ chmod 644 $HOME/.ssh/*.pub
 
 #systemctl services
 echo -e "\e[1;34mSetting up systemctl...\e[0m"
+
 sudo systemctl enable --now paccache.timer
 
 # Setup Greater
