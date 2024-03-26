@@ -27,6 +27,8 @@ paruInstall=(
   bat # cat
   eza # modern ls (exa)
 
+  pacman-contrib # paccache to clear cashe
+
   xclip # clipboard
   xdotool
   brightnessctl
