@@ -146,6 +146,11 @@ chmod 644 $HOME/.ssh/*.pub
 #chmod +x install
 #./install
 
+
+#systemctl services
+echo -e "\e[1;34mSetting up systemctl...\e[0m"
+sudo systemctl enable --now paccache.timer
+
 # Setup Greater
 sudo mkdir -p /usr/share/lightdm-webkit/themes/
 cd /usr/share/lightdm-webkit/themes/
