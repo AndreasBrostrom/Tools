@@ -80,6 +80,8 @@ paruInstall=(
   pinta # Paint-ish
   qview 
 
+  yed # graph editor
+
   all-repository-fonts
   nerd-fonts-noto-sans-mono-extended
   ttf-ms-fonts
