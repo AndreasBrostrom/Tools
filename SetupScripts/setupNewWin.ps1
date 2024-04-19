@@ -59,11 +59,7 @@ $winget_rm_pkg  = 'Microsoft.People_8wekyb3d8bbwe',
                   #'Microsoft.XboxGameOverlay_8wekyb3d8bbwe',
                   #'Microsoft.XboxGamingOverlay_8wekyb3d8bbwe',
                   #'Microsoft.XboxIdentityProvider_8wekyb3d8bbwe',
-                  #'Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe',
-                  #'Microsoft.Edge',
-                  #'Microsoft.Edge.Update',
-                  #'Microsoft.EdgeWebView2Runtime',
-                  #'Microsoft.549981C3F5F10_8wekyb3d8bbwe',
+                  #'Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe'
 
 $choco_pkg      = $null #'linux-reader'
 
