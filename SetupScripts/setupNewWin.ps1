@@ -33,10 +33,12 @@ $winget_pkg     = 'Google.Chrome',
                   'Microsoft.PowerShell',
                   'VideoLAN.VLC',
                   'OBSProject.OBSStudio',
-                  'Valve.Steam --location "C:\Programs\Opt\Steam"'
-                  'qBittorrent.qBittorrent'
-                  '9MZNMNKSM73X'                          # [WinStore] WSL: Arch
-                  '9MZ1SNWT0N5D'                          # [WinStore] Windows PowerShell Core
+                  'Valve.Steam --location "C:\Programs\Opt\Steam"',
+                  'qBittorrent.qBittorrent',
+                  '9MZNMNKSM73X',                         # [WinStore] WSL: Arch
+                  '9MZ1SNWT0N5D',                         # [WinStore] Windows PowerShell Core
+                  '9p8ltpgcbzxd',                         # [WinStore] Wintoys
+                  'xp89dcgq3k6vld'                        # [WinStore] Microsoft PowerToys
                   #'DebaucheeOpenSourceGroup.Barrier'     # Screen passover tool
                   #'ShiningLight.OpenSSL'                 # Needed by: Barrier
                   #'DiskInternals.LinuxReader',           # EXT disk reader
