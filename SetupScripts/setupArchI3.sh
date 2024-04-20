@@ -66,7 +66,7 @@ paruInstall=(
   
   gnome-calculator
 
-  google-chrome-stable
+  google-chrome
 
   spotify
   discord
