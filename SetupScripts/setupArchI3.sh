@@ -103,11 +103,11 @@ done
 echo -e "\e[1;34mInstalling paru packages...\e[0m"
 for app in ${paruInstall[@]}; do
     echo "Installing $app and requirements..."
-    yes "" | paru -Sy $app
+    yes "" | paru -Sy --skipreview --sudoloop $app
 done
 
 echo -e "\e[1;34mPreforming final checks and cleaning...\e[0m"
-yes "" | paru -Syyu
+yes "" | paru -Syyu --skipreview --sudoloop
 
 
 echo -e "\e[1;34mUpdating Font Repository...\e[0m"
