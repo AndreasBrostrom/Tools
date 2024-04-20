@@ -47,7 +47,7 @@ paruInstall=(
   github-cli
   android-sdk-cmdline-tools-latest # ADB
   
-  terminator, starship, fish, zsh # Terminal and shell
+  terminator starship fish zsh # Terminal and shell
   
 
   thunar # File manager
