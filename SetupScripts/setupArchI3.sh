@@ -37,7 +37,7 @@ paruInstall=(
   gparted gnome-disk-utility
   baobab-gtk3 # Disk Usage Analyzer
   dosfstools ntfsprogs # gnome disks moduels
-  dconf-editor d-feet
+  dconf-editor d-spy # gnome editors
   samba # Network
 
   # Audio
