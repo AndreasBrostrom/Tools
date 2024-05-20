@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# This script is just a wrapper
+# Best usage is to add the script to your git aliases
+# > [alias]
+# >	squash = "!bash git_squash"
+
+git reset $(git merge-base main $(git branch --show-current))

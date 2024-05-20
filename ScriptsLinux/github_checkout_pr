@@ -3,7 +3,7 @@
 # This script Require GIT and GH to function propperly
 # Best usage is to add the script to your git aliases
 # > [alias]
-# >	checkout-pr = "!bash git-checkout-pr"
+# >	checkout-pr = "!bash github_checkout_pr"
 
 if [ $# -eq 0 ]; then
     echo -e "No pull request number provided"
