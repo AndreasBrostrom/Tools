@@ -64,6 +64,6 @@ else
     echo "No version '$1' was found are you sure you spelled it right?"; exit 1
 fi
 
-yes "" | sudo pacman -Sy "$PACKAGE_NAME"
+yes "Y" | sudo pacman -Sy "$PACKAGE_NAME"
 echo -e "\nVersion have been changed to $(node -v)"
 exit 0
