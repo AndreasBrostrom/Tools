@@ -14,6 +14,7 @@ fn_help () {
     echo ""
     echo "  -p, --print           print a random lorem ipsum text"
     echo "  -w, --write           write a random lorem ipsum text to your cursor location"
+    echo "  -c, --clipboard       saves a random lorem ipsum text to your clipboard"
     echo ""
     echo "  -h, --help            show this help"
 
@@ -34,7 +35,19 @@ fn_print () {
     exit 0
 }
 
+fn_clipboard () {
+    command -v xclip >/dev/null 2>&1 || { echo >&2 "ERROR: Script requires 'xclip' but it's not installed. Aborting."; exit 1; }
+    if [[ ! -z $1 ]] && [[ $1 =~ $isNumber ]]; then _RANDS=$1; else _RANDS=1; fi
+    if [[ ! -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
+
+    RAND=$(($_RANDS + $RANDOM % $_RANDE))
+    LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
+    echo "$LOREM" | xclip -selection clipboard
+    exit 0
+}
+
 fn_write () {
+    command -v xdotool >/dev/null 2>&1 || { echo >&2 "ERROR: Script requires 'xdotool' but it's not installed. Aborting."; exit 1; }
     if [[ ! -z $1 ]] && [[ $1 =~ $isNumber ]]; then _RANDS=$1; else _RANDS=1; fi
     if [[ ! -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
 
@@ -48,9 +61,10 @@ fn_write () {
 main () {
     if [[ $# -gt 3 ]]; then fn_error "To many arguments"; fi
 
-    if [[ "$*"  == "--help" ]] || [[ "$1"  == "-h" ]]; then fn_help; fi
-    if [[ "$1"  == "--write" ]] || [[ "$1"  == "-w" ]]; then fn_write $2 $3; fi
-    if [[ "$1"  == "--print" ]] || [[ "$1"  == "-p" ]]; then fn_print $2 $3; fi
+    if [[ "$*"  == "--help"      ]] || [[ "$1"  == "-h" ]]; then fn_help; fi
+    if [[ "$1"  == "--write"     ]] || [[ "$1"  == "-w" ]]; then fn_write $2 $3; fi
+    if [[ "$1"  == "--print"     ]] || [[ "$1"  == "-p" ]]; then fn_print $2 $3; fi
+    if [[ "$1"  == "--clipboard" ]] || [[ "$1"  == "-c" ]]; then fn_clipboard $2 $3; fi
     
     if [[ $# == 0 ]]; then fn_print; fi
     
