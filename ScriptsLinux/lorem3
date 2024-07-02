@@ -14,7 +14,7 @@ fn_help () {
     echo ""
     echo "  -p, --print           print a random lorem ipsum text"
     echo "  -w, --write           write a random lorem ipsum text to your cursor location"
-    echo "  -c, --clipboard       saves a random lorem ipsum text to your clipboard"
+    echo "  -c, --clipboard       saves and paste a random lorem ipsum from your clipboard"
     echo ""
     echo "  -h, --help            show this help"
 
@@ -43,6 +43,7 @@ fn_clipboard () {
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
     LOREM="$(curl -s http://metaphorpsum.com/sentences/$RAND)"
     echo "$LOREM" | xclip -selection clipboard
+    nohup setsid xdotool key Ctrl+v </dev/null >/dev/null 2>&1 &
     exit 0
 }
 
