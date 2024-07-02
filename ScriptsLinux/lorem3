@@ -35,9 +35,8 @@ fn_print () {
 }
 
 fn_write () {
-    if [[ -z $1 ]] && [[ $1 =~ $isNumber ]]; then _RANDS=$1; else _RANDS=1; fi
-    if [[ -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
-    if [[ ! -z $1 ]] && [[ ! -z $2 ]] ; then _RANDS=1; _RANDE=1; fi
+    if [[ ! -z $1 ]] && [[ $1 =~ $isNumber ]]; then _RANDS=$1; else _RANDS=1; fi
+    if [[ ! -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
 
     sleep 0.5
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
