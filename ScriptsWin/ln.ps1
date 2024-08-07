@@ -39,7 +39,7 @@ if ( $targetFullPath -ne $null ) { $targetFullPath = (Get-Item $target).fullname
     Write-Host "Target '$target' does not exist..." -ForegroundColor Red; exit 1
 }
 
-if (!$force -and ( ( [System.IO.File]::Exists($targetFullPath) ) -or ( [System.IO.Directory]::Exists($targetFullPath) ) ) ) {
+if (!$force -and ( ( [System.IO.File]::Exists($name) ) -or ( [System.IO.Directory]::Exists($name) ) ) ) {
     Write-Host "Name '$name' already exist." -ForegroundColor Red; exit 1
 } else {
     Remove-Item -Path $name -Force -ErrorAction SilentlyContinue

@@ -9,7 +9,6 @@ if ( $help ) {
     Write-Host  "Usage: shim TARGET NAME [-list] [-help]"
     Write-Host  ""
     Write-Host  "    -h, -help          Show this help"
-    Write-Host  "    -l, -list          Disable update check for windows"
     exit 0
 }
 
