@@ -35,6 +35,7 @@ $winget_pkg     = 'Google.Chrome',
                   'OBSProject.OBSStudio',
                   'Valve.Steam --location "C:\Programs\Opt\Steam"',
                   'qBittorrent.qBittorrent',
+                  'AntibodySoftware.WizTree',             # WizTree Disk analizer
                   '9MZNMNKSM73X',                         # [WinStore] WSL: Arch
                   '9MZ1SNWT0N5D',                         # [WinStore] Windows PowerShell Core
                   '9p8ltpgcbzxd',                         # [WinStore] Wintoys
