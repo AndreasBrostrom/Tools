@@ -10,24 +10,17 @@ pacmanInstall=(
 
 paruInstall=(
   # Theme and appearance 
-  gtk4 
-  lxappearance-gtk3
-  lxsession-gtk3      # gui auth
-  picom polkit
   wol                 # WakeOnLan
   numlockx            # numlock toggler
-  conky               # Desktop widget
-  notification-daemon
-  feh                 # Fixes background
 
   # Tools
-  tldr # tldr # man TLDR
-  bat  # Cat variant
-  eza  # Modern ls (previus exa)
+  tldr      # tldr #  man TLDR
+  bat       # cat
+  eza       # Modern ls (exa)
 
-  pacman-contrib # paccache to clear cashe
+  pacman-contrib  # paccache # clear cashe
 
-  xclip # clipboard
+  xclip         # clipboard
   xdotool
   brightnessctl
 
@@ -41,10 +34,14 @@ paruInstall=(
   # Audio
   pavucontrol pa-applet
   
+  dos2unix jq ripgrep # Utilities
+  github-cli
+  android-sdk-cmdline-tools-latest # ADB
+  
   # Terminal and shell
   terminator
   starship fish zsh 
-
+  
   # Terminal Utils
   dos2unix jq ripgrep
   github-cli
@@ -84,6 +81,7 @@ paruInstall=(
 
   yed # graph editor
 
+  # Fonts
   all-repository-fonts
   nerd-fonts-noto-sans-mono-extended
   ttf-ms-fonts
@@ -125,8 +123,8 @@ if [ -d "$HOME/android-sdk" ]; then
 fi
 
 # Setup GT
-gsettings set org.gnome.desktop.interface gtk-theme Adwaita
-gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+# gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+# gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 
 # Setting up home
 mkdir -p $HOME/.ssh
@@ -156,11 +154,6 @@ chmod 644 $HOME/.ssh/*.pub
 echo -e "\e[1;34mSetting up systemctl...\e[0m"
 
 sudo systemctl enable --now paccache.timer
-
-# Setup Greater
-sudo mkdir -p /usr/share/lightdm-webkit/themes/
-cd /usr/share/lightdm-webkit/themes/
-git clone https://github.com/AndreasBrostrom/lightdm-webkit2-theme-minimal.git minimal
 
 # Reset done
 sudo --reset-timestamp
