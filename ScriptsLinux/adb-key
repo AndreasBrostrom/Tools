@@ -106,7 +106,7 @@ function fn_keyboard() {
 }
 
 function main () {
-    if [ "$*" == "--help" ] || [ "$*" == "-h" ]; then
+    if [ "$*" == *"--help"* ] || [ "$*" == *"-h"* ]; then
         fn_help
     fi
 

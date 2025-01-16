@@ -78,7 +78,7 @@ main () {
         exit 1
     fi
 
-    if [[ "$*" == "-h" ]] || [[ "$*" == "--help" ]]; then fn_help; fi
+    if [[ "$*" == *"-h"* ]] || [[ "$*" == *"--help"* ]]; then fn_help; fi
 
     device=false
     [[ "$1" == "-s" ]] && device=$2
