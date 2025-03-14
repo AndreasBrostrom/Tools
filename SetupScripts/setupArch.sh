@@ -143,13 +143,6 @@ chmod 600 $HOME/.ssh/authorized_keys
 chmod 600 $HOME/.ssh/*id_rsa
 chmod 644 $HOME/.ssh/*.pub
 
-#cd $HOME/Repositories
-#git clone git@github.com:AndreasBrostrom/dotfiles.git
-#cd $HOME/Repositories/dotfiles
-#chmod +x install
-#./install
-
-
 #systemctl services
 echo -e "\e[1;34mSetting up systemctl...\e[0m"
 

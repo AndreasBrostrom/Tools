@@ -9,6 +9,9 @@ pacmanInstall=(
 )
 
 paruInstall=(
+  # I3
+  i3exit 
+
   # Theme and appearance 
   gtk4 
   lxappearance-gtk3
@@ -61,7 +64,7 @@ paruInstall=(
   scrot          # Screenshot capture
   
   # Programs
-  visual-studio-code-bin
+  code
   neovim helix
 
   node
@@ -81,10 +84,11 @@ paruInstall=(
   
   gimp
   pinta # Paint-ish
-  qview 
+  qview
 
   yed # graph editor
 
+  # Fonts
   all-repository-fonts
   nerd-fonts-noto-sans-mono-extended
   ttf-ms-fonts
@@ -146,22 +150,15 @@ chmod 600 $HOME/.ssh/authorized_keys
 chmod 600 $HOME/.ssh/*id_rsa
 chmod 644 $HOME/.ssh/*.pub
 
-#cd $HOME/Repositories
-#git clone git@github.com:AndreasBrostrom/dotfiles.git
-#cd $HOME/Repositories/dotfiles
-#chmod +x install
-#./install
-
-
 #systemctl services
 echo -e "\e[1;34mSetting up systemctl...\e[0m"
 
 sudo systemctl enable --now paccache.timer
 
 # Setup Greater
-sudo mkdir -p /usr/share/lightdm-webkit/themes/
-cd /usr/share/lightdm-webkit/themes/
-git clone https://github.com/AndreasBrostrom/lightdm-webkit2-theme-minimal.git minimal
+#sudo mkdir -p /usr/share/lightdm-webkit/themes/
+#cd /usr/share/lightdm-webkit/themes/
+#git clone https://github.com/AndreasBrostrom/lightdm-webkit2-theme-minimal.git minimal
 
 # Reset done
 sudo --reset-timestamp
