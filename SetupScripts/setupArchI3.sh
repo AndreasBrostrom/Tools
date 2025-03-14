@@ -19,6 +19,7 @@ paruInstall=(
   conky               # Desktop widget
   notification-daemon
   feh                 # Fixes background
+  lightdm-webkit2-greeter
 
   # Tools
   tldr # tldr # man TLDR
