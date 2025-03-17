@@ -68,7 +68,7 @@ paruInstall=(
   scrot           # Screenshot capture
   
   # Programs
-  code
+  visual-studio-code-bin
   neovim helix
 
   node

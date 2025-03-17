@@ -32,11 +32,11 @@ paruInstall=(
   samba                                   # Network
 
   # Audio
-  pavucontrol pa-applet
-  
-  dos2unix jq ripgrep # Utilities
-  github-cli
-  android-sdk-cmdline-tools-latest # ADB
+  pavucontrol
+  pasystray     # Systen Tray Icon
+
+  # Bluetooth
+  blueman
   
   # Terminal and shell
   terminator
