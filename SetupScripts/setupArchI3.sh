@@ -10,18 +10,18 @@ pacmanInstall=(
 
 paruInstall=(
   # I3
-  i3exit 
+  i3exit
 
   # Theme and appearance 
   gtk4 
   lxappearance-gtk3
-  lxsession-gtk3      # gui auth
+  lxsession-gtk3            # gui auth
   picom polkit
-  wol                 # WakeOnLan
-  numlockx            # numlock toggler
-  conky               # Desktop widget
+  wol                       # WakeOnLan
+  numlockx                  # numlock toggler
+  conky                     # Desktop widget
   notification-daemon
-  feh                 # Fixes background
+  feh                       # Fixes background
   lightdm-webkit2-greeter
 
   # Tools
@@ -43,7 +43,11 @@ paruInstall=(
   samba                                   # Network
 
   # Audio
-  pavucontrol pa-applet
+  pavucontrol
+  pasystray     # Systen Tray Icon
+
+  # Bluetooth
+  blueman
   
   # Terminal and shell
   terminator
@@ -57,11 +61,11 @@ paruInstall=(
   thunar # File manager
   gvfs   # Virtual filesystem implementation for GIO
   thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
-  file-roller # Archive manager
+  file-roller     # Archive manager
   
-  balena-etcher  # Flashdrive maker
-  peek           # Gif recorder
-  scrot          # Screenshot capture
+  balena-etcher   # Flashdrive maker
+  peek            # Gif recorder
+  scrot           # Screenshot capture
   
   # Programs
   code
