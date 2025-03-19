@@ -33,7 +33,7 @@ paruInstall=(
 
   # Audio
   pavucontrol
-  pasystray     # Systen Tray Icon
+  pasystray     # Audio Tray Icon
 
   # Bluetooth
   blueman
