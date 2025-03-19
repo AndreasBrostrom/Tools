@@ -37,6 +37,7 @@ paruInstall=(
 
   # Bluetooth
   blueman
+  pulseaudio-bluetooth
   
   # Terminal and shell
   terminator
@@ -121,6 +122,10 @@ if [ -d "$HOME/android-sdk" ]; then
     mkdir -p $HOME/.android 1>/dev/null 2>&1
     mv $HOME/android-sdk $HOME/.android/android-sdk 1>/dev/null 2>&1
 fi
+
+# Pulseaurdio moduels
+pacmd load-module module-bluetooth-policy
+pacmd load-module module-bluetooth-discover
 
 # Setup GT
 # gsettings set org.gnome.desktop.interface gtk-theme Adwaita

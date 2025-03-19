@@ -24,6 +24,8 @@ paruInstall=(
   feh                       # Fixes background
   lightdm-webkit2-greeter
 
+  pulseaudio-bluetooth
+
   # Tools
   tldr # tldr # man TLDR
   bat  # Cat variant
@@ -48,6 +50,7 @@ paruInstall=(
 
   # Bluetooth
   blueman
+  pulseaudio-bluetooth
   
   # Terminal and shell
   terminator
@@ -133,6 +136,10 @@ if [ -d "$HOME/android-sdk" ]; then
     mv $HOME/android-sdk $HOME/.android/android-sdk 1>/dev/null 2>&1
 fi
 
+# Pulseaurdio moduels
+pacmd load-module module-bluetooth-policy
+pacmd load-module module-bluetooth-discover
+
 # Setup GT
 gsettings set org.gnome.desktop.interface gtk-theme Adwaita
 gsettings set org.gnome.desktop.interface color-scheme prefer-dark
@@ -157,6 +164,7 @@ chmod 644 $HOME/.ssh/*.pub
 #systemctl services
 echo -e "\e[1;34mSetting up systemctl...\e[0m"
 
+# Pacman cashe buster
 sudo systemctl enable --now paccache.timer
 
 # Setup Greater
