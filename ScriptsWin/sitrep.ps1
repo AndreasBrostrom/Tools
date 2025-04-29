@@ -18,12 +18,11 @@ foreach ($arg in $args) {
         '-c'        { $argCommit = $true }
         '--push'    { $argCommit = $true }
         '-P'        { $argCommit = $true }
-        default {
-            Write-Host "Unknown option: $arg" -ForegroundColor Red
-            Write-Host "Usage: ./sitrep.ps1 [OPTIONS]" -ForegroundColor Cyan
+        '--help'    {
+            Write-Host "Usage: sitrep [OPTIONS]" -ForegroundColor Cyan
             Write-Host "  --upgrade, -u, --pull, -p    Update repositories if no changes are found"
             Write-Host "  --commit, -c, --push, -P     Commit and push changes to repositories"
-            exit 1
+            exit 0
         }
     }
 }
@@ -40,7 +39,8 @@ if (-not (Test-Path -Path $repoDir)) {
     Write-Host "Repositories directory not found..." -ForegroundColor Red
     exit 1
 } else {
-    Write-Host "Repo path: $repoDir" -ForegroundColor Gray
+    $uriLink = "`e]8;;file:///$repoDir`a$repoDir`e]8;;`a"
+    Write-Host "Repo path: $uriLink" -ForegroundColor Gray
 }
 
 if ($argUpdate) {
@@ -71,24 +71,27 @@ foreach ($path in $dotfiles) {
     $gitStatus = git -C $repoPath status --porcelain
     if ($gitStatus) {
         if ($argCommit) {
-            Write-Host "Committing changes in $path" -ForegroundColor Yellow
             git -C $repoPath add --all
             git -C $repoPath commit --all --quiet
             if ($LASTEXITCODE -ne 0) {
                 $errorOccurred = $true
-                $status += "${path}: Failed to commit changes"
+                $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
+                $status += "${uriLink}: Failed to commit changes"
                 git -C $repoPath reset --quiet
             } else {
                 git -C $repoPath push --quiet
                 if ($LASTEXITCODE -ne 0) {
                     $errorOccurred = $true
-                    $status += "${path}: Failed to push changes"
+                    $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
+                    $status += "${uriLink}: Failed to push changes"
                 } else {
-                    $status += "${path}: Committed and pushed changes"
+                    $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
+                    $status += "${uriLink}: Committed and pushed changes"
                 }
             }
         } else {
-            $status += "${path}: Uncommitted changes"
+            $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
+            $status += "${uriLink}: Uncommitted changes"
             $status += $gitStatus
         }
         continue
@@ -103,10 +106,12 @@ foreach ($path in $dotfiles) {
         }
         $gitChanges = git -C $repoPath diff --name-only HEAD@{1}
         if ($gitChanges) {
-            $status += "${path}: Repository updated"
+            $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
+            $status += "${uriLink}: Repository updated"
             $status += $gitChanges
         } else {
-            $status += "${path}: Repository updated, but no file changes detected"
+            $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
+            $status += "${uriLink}: Repository updated, but no file changes detected"
         }
     }
 }
