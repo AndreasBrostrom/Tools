@@ -76,14 +76,14 @@ foreach ($path in $dotfiles) {
             if ($LASTEXITCODE -ne 0) {
                 $errorOccurred = $true
                 $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
-                $status += "${uriLink}: Failed to commit changes"
+                $status += "${uriLink}: `e[31mFailed to commit changes`e[0m"
                 git -C $repoPath reset --quiet
             } else {
                 git -C $repoPath push --quiet
                 if ($LASTEXITCODE -ne 0) {
                     $errorOccurred = $true
                     $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
-                    $status += "${uriLink}: Failed to push changes"
+                    $status += "${uriLink}: `e[31mFailed to push changes`e[0m"
                 } else {
                     $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
                     $status += "${uriLink}: Committed and pushed changes"
