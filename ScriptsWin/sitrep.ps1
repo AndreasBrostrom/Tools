@@ -53,9 +53,7 @@ $dotfiles = @(
     "dotfiles_private",
     "wdotfiles",
     "secure",
-    "Tools",
     "tools",
-    "Scripts",
     "scripts",
     "win-upgrade"
 )
