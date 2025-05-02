@@ -102,7 +102,7 @@ foreach ($path in $dotfiles) {
         if ($gitPull -match "Already up to date") {
             continue
         }
-        $gitChanges = git -C $repoPath diff --name-only HEAD@{1}
+        $gitChanges = git -C $repoPath diff --name-only "HEAD@{1}"
         if ($gitChanges) {
             $uriLink = "`e]8;;file:///$path`a$path`e]8;;`a"
             $status += "${uriLink}: Repository updated"
