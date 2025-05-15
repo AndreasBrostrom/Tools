@@ -18,8 +18,6 @@ paruInstall=(
   bat       # cat
   eza       # Modern ls (exa)
 
-  pacman-contrib  # paccache # clear cashe
-
   xclip         # clipboard
   xdotool
   brightnessctl
@@ -32,26 +30,20 @@ paruInstall=(
   dconf-editor d-spy                      # Variable and system browser
   samba                                   # Network
 
-  # Audio
-  pavucontrol
-  pasystray     # Audio Tray Icon
-
   # Bluetooth
   blueman
   pulseaudio-bluetooth
   
   # Terminal and shell
   terminator
-  starship fish zsh 
+  starship fish
   
   # Terminal Utils
   dos2unix jq ripgrep
   github-cli
   android-sdk-cmdline-tools-latest # ADB
    
-  thunar # File manager
   gvfs   # Virtual filesystem implementation for GIO
-  thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
   file-roller # Archive manager
   
   balena-etcher  # Flashdrive maker
@@ -125,8 +117,8 @@ if [ -d "$HOME/android-sdk" ]; then
 fi
 
 # Pulseaurdio moduels
-pacmd load-module module-bluetooth-policy
-pacmd load-module module-bluetooth-discover
+#pacmd load-module module-bluetooth-policy
+#pacmd load-module module-bluetooth-discover
 
 # Setup GT
 # gsettings set org.gnome.desktop.interface gtk-theme Adwaita
