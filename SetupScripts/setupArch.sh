@@ -50,7 +50,7 @@ paruInstall=(
   android-sdk-cmdline-tools-latest # ADB
    
   thunar # File manager
-  gvfs   # Virtual filesystem implementation for GIO
+  gvfs gvfs-smb # Virtual filesystem implementation for GIO
   thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunar-shares-plugin
   file-roller # Archive manager
   
