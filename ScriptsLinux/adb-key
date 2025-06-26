@@ -3,19 +3,24 @@ set -e
 scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 
 function fn_help () {
-    echo "Usage: $scriptName [FILE] [OPTION]"
-    echo "Downloads a file you define or if a latest screenshot or photo from your phone."
+    echo "Usage: $scriptName [OPTION]"
     echo ""
-    echo "  -k KEY --key KEY          send a keyevent to a connected device"
-    echo "  -i TEXT --input TEXT      send a text input to a connected device"
-    echo ""
-    echo "  -K --keyboard             enter in to keyboard mode"
-    echo ""
+    echo "  -k KEY, --key KEY         send a keyevent to a connected device"
+    echo "  -i TEXT, --input TEXT     send a text input to a connected device"
+    echo "  -K, --keyboard            enter keyboard mode (type keys directly to device)"
     echo "  -ss, --shake              send a shake event to a connected device"
-    echo ""
     echo "  -s SERIAL                 use device with given serial"
-    echo ""
     echo "  -h, --help                show this help"
+    echo ""
+    echo "Examples:"
+    echo "  $scriptName -k HOME"
+    echo "  $scriptName -i \"hello world\""
+    echo "  $scriptName -K"
+    echo "  $scriptName -ss"
+    echo "  $scriptName -s SERIAL -k HOME"
+    echo "  $scriptName -s SERIAL -i \"hello world\""
+    echo "  $scriptName -s SERIAL -K"
+    echo "  $scriptName -s SERIAL -ss"
     exit 0
 }
 
@@ -80,9 +85,28 @@ function fn_keyboard() {
 
     while read -rsn1 key; do
         if [[ $key == $escape_char ]]; then
-            read -rsn8 key # read 2 more chars
+            read -rsn2 rest
+            key+="$rest"
+            if [[ "$rest" == "OP" || "$rest" == "OQ" || "$rest" == "OR" || "$rest" == "OS" ]]; then
+                :
+            else
+                read -rsn1 extra
+                key+="$extra"
+            fi
         fi
         case $key in
+            $'\eOP') key="F1" ;;
+            $'\eOQ') key="F2" ;;
+            $'\eOR') key="F3" ;;
+            $'\eOS') key="F4" ;;
+            $'\e[15') key="F5" ;;
+            $'\e[17') key="F6" ;;
+            $'\e[18') key="F7" ;;
+            $'\e[19') key="F8" ;;
+            $'\e[20') key="F9" ;;
+            $'\e[21') key="F10" ;;
+            $'\e[23') key="F11" ;;
+            $'\e[24') key="F12" ;;
             $'\e') key="ESCAPE" ;;
             '[A')  key="DPAD_UP" ;;
             '[B')  key="DPAD_DOWN" ;;
@@ -93,20 +117,20 @@ function fn_keyboard() {
             ' ')   key="SPACE" ;;
             *)     key="${key:0:1}" ;;
         esac
-        echo "\{$key\} \{$escape_char\}"
+        #echo "\{$key\} \{$escape_char\}"
         [ "$key" == "" ] && echo -ne "Key does not exist\033[0K\r"
-        echo $key
         if [ $# == 1 ]; then
             adb -s $1 shell input keyevent KEYCODE_$key
         else
             adb shell input keyevent KEYCODE_$key
         fi
+        sleep 0.1
     done
     exit 0
 }
 
 function main () {
-    if [ "$*" == *"--help"* ] || [ "$*" == *"-h"* ]; then
+    if [[ "$*" == *"--help"* ]] || [[ "$*" == *"-h"* ]]; then
         fn_help
     fi
 
