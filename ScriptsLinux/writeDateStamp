@@ -1,0 +1,7 @@
+#!/bin/bash
+
+command -v xdotool >/dev/null 2>&1 || { echo >&2 "ERROR: Script requires 'xdotool' but it's not installed. Aborting."; exit 1; }
+DATESTAMP="$(date '+%Y-%m-%d %H:%M:%S')"
+sleep 0.5
+xdotool type "$DATESTAMP"
+
