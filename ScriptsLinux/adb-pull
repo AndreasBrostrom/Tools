@@ -13,6 +13,8 @@ fn_help () {
     echo "  -p, --photo           download latest photo"
     echo "  -l PATH, --ls PATH    list provied path files [default is /storage/emulated/0/ or /sdcard/]"
     echo ""
+    echo "  --devices              lists devices"
+    echo ""
     echo "  -h, --help            show this help"
     exit 0
 }
@@ -41,9 +43,14 @@ fn_ls () {
         path="/storage/emulated/0/$2"
         adb -s $1 shell ls $path
     else
-        path="/storage/emulated/0/"
+        path="/storage/emulated/0/$1"
         adb shell ls $path
     fi
+    exit 0
+}
+
+fn_devices () {
+    adb devices -l
     exit 0
 }
 
@@ -88,11 +95,13 @@ main () {
         if [[ "$1" == "-l" ]] || [[ "$1" == "--ls" ]]; then fn_ls $device $2; fi
         if [[ "$1" == "-p" ]] || [[ "$1" == "--photo" ]]; then fn_photo $device; fi
         if [[ "$1" == "-S" ]] || [[ "$1" == "--screenshot" ]]; then fn_screenshot $device; fi
+        if [[ "$1" == "--devices" ]]; then fn_devices; fi
         fn_default $device $1
     else
         if [[ "$3" == "-l" ]] || [[ "$3" == "--ls" ]]; then fn_ls $device $4; fi
         if [[ "$3" == "-p" ]] || [[ "$3" == "--photo" ]]; then fn_photo $device; fi
         if [[ "$3" == "-S" ]] || [[ "$3" == "--screenshot" ]]; then fn_screenshot $device; fi
+        if [[ "$3" == "--devices" ]]; then fn_devices; fi
         fn_default $device $3 
     fi
 }
