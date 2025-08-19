@@ -5,9 +5,11 @@ scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 # Help
 fn_help () {
   echo "Usage: $scriptName [FILE] [OPTION]"
-  echo "Files are automaticly uploaded to the download directory."
+  echo "Files are uploaded to the download directory."
   echo ""
   echo "  -s SERIAL             use device with given serial"
+  echo ""
+  echo "  --devices             list connected devices"
   echo ""
   echo "  -h, --help            show this help"
   exit 0
@@ -30,6 +32,11 @@ fn_default () {
     exit 0
 }
 
+fn_devices () {
+    adb devices -l
+    exit 0
+}
+
 # Main
 main () {
     if [[ $# == 0 ]]; then
@@ -44,8 +51,10 @@ main () {
     [[ -z $device ]] && echo "$scriptName: -s requires an argument" && exit 1
 
     if [[ "$device" == "false" ]]; then
+        if [[ "$1" == "--devices" ]]; then fn_devices; fi
         fn_default $device $1
     else
+        if [[ "$3" == "--devices" ]]; then fn_devices; fi
         fn_default $device $3
     fi
 }

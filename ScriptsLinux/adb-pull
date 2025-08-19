@@ -11,9 +11,9 @@ fn_help () {
     echo ""
     echo "  -S, --screenshot      download latest screenshot"
     echo "  -p, --photo           download latest photo"
-    echo "  -l PATH, --ls PATH    list provied path files [default is /storage/emulated/0/ or /sdcard/]"
+    echo "  -l PATH, --ls PATH    list of defined path files [default is /storage/emulated/0/ or /sdcard/]"
     echo ""
-    echo "  --devices              lists devices"
+    echo "  --devices             list connected devices"
     echo ""
     echo "  -h, --help            show this help"
     exit 0
