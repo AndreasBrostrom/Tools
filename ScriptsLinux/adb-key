@@ -131,37 +131,49 @@ function fn_keyboard() {
                 key+="$extra"
             fi
         fi
+
         case $key in
-            $'\eOP') key="F1" ;;
-            $'\eOQ') key="F2" ;;
-            $'\eOR') key="F3" ;;
-            $'\eOS') key="F4" ;;
-            $'\e[15') key="F5" ;;
-            $'\e[17') key="F6" ;;
-            $'\e[18') key="F7" ;;
-            $'\e[19') key="F8" ;;
-            $'\e[20') key="F9" ;;
-            $'\e[21') key="F10" ;;
-            $'\e[23') key="F11" ;;
-            $'\e[24') key="F12" ;;
-            $'\e') key="ESCAPE" ;;
-            '[A')  key="DPAD_UP" ;;
-            '[B')  key="DPAD_DOWN" ;;
-            '[D')  key="DPAD_LEFT" ;;
-            '[C')  key="DPAD_RIGHT" ;;
-            '[3')  key="BACKSPACE" ;;
-            '')    key="RETURN" ;;
-            ' ')   key="SPACE" ;;
-            *)     key="${key:0:1}" ;;
+            $'\eOP')         key="F1" ;;
+            $'\eOQ')         key="F2" ;;
+            $'\eOR')         key="F3" ;;
+            $'\eOS')         key="F4" ;;
+            $'\e[15')        key="F5" ;;
+            $'\e[17')        key="F6" ;;
+            $'\e[18')        key="F7" ;;
+            $'\e[19')        key="F8" ;;
+            $'\e[20')        key="F9" ;;
+            $'\e[21')        key="F10" ;;
+            $'\e[23')        key="F11" ;;
+            $'\e[24')        key="F12" ;;
+            $'\e')           key="ESCAPE" ;;
+            '[A')            key="DPAD_UP" ;;
+            '[B')            key="DPAD_DOWN" ;;
+            '[D')            key="DPAD_LEFT" ;;
+            '[C')            key="DPAD_RIGHT" ;;
+            '[3' | $'\177')  key="DEL" ;;
+            '')              key="RETURN" ;;
+            '	' )          key="TAB" ;;
+            ' ')             key="SPACE" ;;
+            *) ;; # leave other keys unchanged
         esac
         #echo "\{$key\} \{$escape_char\}"
-        [ "$key" == "" ] && echo -ne "Key does not exist\033[0K\r"
-        if [ $# == 1 ]; then
-            adb -s $1 shell input keyevent KEYCODE_$key
+
+        # If it's a printable character, send as text (case-sensitive)
+        if [[ "$key" =~ ^[[:print:]]$ ]]; then
+            if [ $# == 1 ]; then
+                adb -s $1 shell input text "$key"
+            else
+                adb shell input text "$key"
+            fi
         else
-            adb shell input keyevent KEYCODE_$key
+            # otherwise fall back to keyevent
+            if [ $# == 1 ]; then
+                adb -s $1 shell input keyevent "KEYCODE_$key"
+            else
+                adb shell input keyevent "KEYCODE_$key"
+            fi
         fi
-        sleep 0.1
+        sleep 0.005
     done
     exit 0
 }
