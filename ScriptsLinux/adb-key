@@ -88,12 +88,12 @@ function fn_keyevent () {
     if [[ "$1" != "false" ]]; then
         if [ "$1" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
         get_key_event $1
-        adb shell input keyevent KEYCODE_$keyCode
+        adb -s $1 shell input keyevent KEYCODE_$keyCode
         exit 0
     else
         if [ "$2" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
         get_key_event $2
-        adb -s $1 shell input keyevent KEYCODE_$keyCode
+        adb shell input keyevent KEYCODE_$keyCode
         exit 0
     fi
     exit 1
@@ -103,13 +103,13 @@ function fn_input () {
     if [[ "$1" != "false" ]]; then
         if [ "$1" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
         text=`echo $2 | sed "s/\s/\%s/g"`
-        adb shell input text "$text"
+        adb -s $1 shell input text "$text"
         echo "Written to device > $2" 
         exit 0
     else
         if [ "$2" == "" ]; then echo "$scriptName: missing KEY operator"; exit 1; fi
         text=`echo $2 | sed "s/\s/\%s/g"`
-        adb -s $1 shell input text "$text"
+        adb shell input text "$text"
         echo "Written to device > $2" 
         exit 0
     fi
