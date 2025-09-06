@@ -29,7 +29,8 @@ paruInstall=(
   baobab-gtk3                             # baobab # Disk Usage Analyzer
   dconf-editor d-spy                      # Variable and system browser
   samba                                   # Network
-
+  networkmanager-openvpn
+  
   # Bluetooth
   blueman
   pulseaudio-bluetooth
