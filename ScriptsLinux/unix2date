@@ -5,5 +5,16 @@ if [[ -z "$1" ]]; then
     date "+%Y-%m-%d %H:%M:%S"
 else
     # Argument: convert Unix timestamp to date
-    date -d "@$1" "+%Y-%m-%d %H:%M:%S"
+    timestamp="$1"
+    
+    # Check if timestamp is in milliseconds (13+ digits) or seconds (10 digits or less)
+    if [[ ${#timestamp} -gt 10 ]]; then
+        # Milliseconds timestamp - convert to seconds
+        seconds="${timestamp:0:-3}"
+        milliseconds="${timestamp: -3}"
+        date -d "@$seconds" "+%Y-%m-%d %H:%M:%S.${milliseconds}"
+    else
+        # Regular seconds timestamp
+        date -d "@$timestamp" "+%Y-%m-%d %H:%M:%S"
+    fi
 fi

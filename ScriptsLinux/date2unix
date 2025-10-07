@@ -1,10 +1,9 @@
 #!/bin/bash
 
 if [[ -z "$1" ]]; then
-    # No argument: use today's date
-    date +%s
+    # No argument: use today's date in milliseconds
+    echo "$(date +%s)000"
 else
-    # Argument provided: convert given date string 
-    # "2025-08-26 12:00"
-    date -d "$1" +%s
+    # Argument provided: convert given date string to milliseconds
+    echo "$(date -d "$1" +%s)000"
 fi
