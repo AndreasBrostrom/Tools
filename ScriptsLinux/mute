@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# Get the default source (microphone)
-SOURCE=$(pactl get-default-source)
+# Get the default audio sink (output device)
+SINK=$(pactl get-default-sink)
 
-# Get the current mute state
-STATE=$(pactl get-source-mute "$SOURCE" | awk '{print $2}')
+# Get current mute state
+STATE=$(pactl get-sink-mute "$SINK" | awk '{print $2}')
 
 if [ "$STATE" = "yes" ]; then
     # Currently muted → unmute
-    pactl set-source-mute "$SOURCE" 0
+    pactl set-sink-mute "$SINK" 0
     echo "Sound unmuted"
 else
     # Currently unmuted → mute
-    pactl set-source-mute "$SOURCE" 1
+    pactl set-sink-mute "$SINK" 1
     echo "Sound muted"
 fi
