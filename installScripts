@@ -1,14 +1,57 @@
 #!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd $SCRIPT_DIR
+echo -e "\033[34;1mInstalling $(basename $SCRIPT_DIR)...\033[0m"
+
+# Argument flags
+ARG_NONE_I3=0
+ARG_NO_SUDO=0
+ARG_ANDROID=0
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --none-i3)
+            ARG_NONE_I3=1
+            shift
+            ;;
+        -a|--android)
+            ARG_ANDROID=1
+            shift
+            ;;
+        --no-sudo)
+            ARG_NO_SUDO=1
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
+
+function isAndroid() {
+    if [[ $ARG_ANDROID == 1 ]]; then
+        return 0
+    fi
+    return 1
+}
 
 echo -e "\033[34;1mCopying scripts\033[0m"
 cd $SCRIPT_DIR/ScriptsLinux
 [ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
-EXISTING=($(ls /usr/bin/))
+
+EXISTING=()
+if isAndroid; then
+    EXISTING=($(ls /data/data/com.termux/files/usr/bin/))
+else
+    EXISTING=($(ls /usr/bin/))
+fi
+
 for FILE in $(rg --files --hidden); do
     if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
-        echo -e " \033[2mScript '$FILE' already pressent in /usr/bin skipping\033[0m"
+        echo -e " \033[2mScript '$FILE' already present in /usr/bin skipping\033[0m"
         continue
     fi
     if [[ $* == ln ]]; then 
