@@ -8,6 +8,7 @@ echo -e "\033[34;1mInstalling $(basename $SCRIPT_DIR)...\033[0m"
 ARG_NONE_I3=0
 ARG_NO_SUDO=0
 ARG_ANDROID=0
+ARG_SOFTLINKS=0
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -24,6 +25,10 @@ while [[ $# -gt 0 ]]; do
             ARG_NO_SUDO=1
             shift
             ;;
+        --link)
+            ARG_SOFTLINKS=1
+            shift
+            ;;
         *)
             echo "Unknown option: $1"
             exit 1
@@ -33,6 +38,12 @@ done
 
 function isAndroid() {
     if [[ $ARG_ANDROID == 1 ]]; then
+        return 0
+    fi
+    return 1
+}
+function useSoftlinks() {
+    if [[ $ARG_SOFTLINKS == 1 ]]; then
         return 0
     fi
     return 1
@@ -54,7 +65,7 @@ for FILE in $(rg --files --hidden); do
         echo -e " \033[2mScript '$FILE' already present in /usr/bin skipping\033[0m"
         continue
     fi
-    if [[ $* == ln ]]; then 
+    if useSoftlinks; then 
         echo -e " \033[2mLinking $FILE => ./ScriptsLinux/$FILE\033[0m"
         rm -f $HOME/.bin/$FILE
         ln -sf $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
