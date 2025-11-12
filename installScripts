@@ -55,6 +55,7 @@ cd $SCRIPT_DIR/ScriptsLinux
 
 EXISTING=()
 if isAndroid; then
+    echo -e "\033[33;1mDetected Android environment\033[0m"
     EXISTING=($(ls /data/data/com.termux/files/usr/bin/))
 else
     EXISTING=($(ls /usr/bin/))
