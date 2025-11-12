@@ -65,7 +65,7 @@ fi
 
 for FILE in $(rg --files --hidden); do
     if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
-        echo -e " \033[2mScript '$FILE' already present in /usr/bin skipping\033[0m"
+        echo -e " \033[33mScript '$FILE' already present in /usr/bin skipping\033[0m"
         continue
     fi
     if useSoftlinks; then 
