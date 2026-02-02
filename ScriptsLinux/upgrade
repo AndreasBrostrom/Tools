@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+
+upgrade() {
+    # Check for help argument
+    if [[ $# -gt 0 ]]; then
+        for arg in "$@"; do
+            case "$arg" in
+                --help)
+                    echo -e "\033[1mUsage:\033[0m upgrade [--help]"
+                    echo -e ""
+                    echo -e "\033[1mDescription:\033[0m"
+                    echo -e "  Fully upgrades your system using the detected package manager."
+                    echo -e ""
+                    echo -e "\033[1mSupported Package Managers:\033[0m"
+                    echo -e "  \033[1;34mArch Linux:\033[0m    paru, yay, pacman"
+                    echo -e "  \033[1;34mDebian/Ubuntu:\033[0m apt, pkg (Termux)"
+                    echo -e "  \033[1;34mFedora:\033[0m        dnf"
+                    echo -e ""
+                    echo -e "\033[1mAdditional Features:\033[0m"
+                    echo -e "  • Automatically upgrades Flatpak packages if installed"
+                    echo -e "  • Automatically upgrades Snap packages if installed"
+                    echo -e "  • Runs sitrep (dotfiles manager) if installed"
+                    echo -e "  • Lists orphaned packages (Arch-based systems)"
+                    echo -e "  • Sends desktop notifications on completion"
+                    echo -e ""
+                    echo -e "\033[1mOptions:\033[0m"
+                    echo -e "  \033[1;32m--help\033[0m    Show this help message and exit"
+                    return
+                    ;;
+            esac
+        done
+    fi
+
+    # Helper function to check if command exists
+    exist() {
+        command -v "$1" &>/dev/null
+    }
+
+    _fn_upgrade_flatpak() {
+        if exist flatpak; then
+            echo -e "\033[1;32mflatpak\033[0m"
+            sudo flatpak update -y
+        fi
+    }
+
+    _fn_upgrade_snap() {
+        if exist snap; then
+            echo -e "\033[1;32msnap\033[0m"
+            sudo snap refresh
+        fi
+    }
+
+    _fn_upgrade_dotfiles() {
+        if exist sitrep; then
+            echo -e '\033[1;32msitrep\033[0m'
+            sitrep -u -i
+        fi
+    }
+
+    echo -e '\033[1mFully upgrading system and packages...\033[0m'
+
+    # Arch
+    if exist pacman; then
+        # pacman paru
+        if exist paru; then
+            sudo -v
+            echo -e '\033[1;32mparu\033[0m'
+            paru -Syyu --sudoloop --noconfirm --color=always
+            _fn_upgrade_flatpak
+            _fn_upgrade_snap
+            _fn_upgrade_dotfiles
+            local orphan
+            orphan=$(paru -Qtdq 2>/dev/null)
+            if [[ -n "$orphan" ]]; then
+                echo -e '\n\033[1mOrphan package dependencies:\033[0m'
+                echo "$orphan" | while read -r pkg; do echo " $pkg"; done
+                echo -e '\033[2mTo remove them:           paru -Rc $(paru -Qtdq)\033[0m'
+                echo -e '\033[2mTo set them as explicit:  paru -D --asexplicit PKG\033[0m'
+            fi
+            exist notify-send && notify-send 'paru' '<i>System upgrade is completed.</i>' --urgency=normal >/dev/null 2>/dev/null
+            echo -e '\n\033[1mFull upgrade completed\033[0m'
+            sudo --reset-timestamp
+            return
+        fi
+
+        # pacman yay
+        if exist yay; then
+            sudo -v
+            echo -e '\033[1mFully upgrading system and packages...\033[0m'
+            echo -e '\033[1;32myay\033[0m'
+            yay -Syyu --sudoloop --noconfirm --color=always
+            exist flatpak && _fn_upgrade_flatpak
+            exist snap && _fn_upgrade_snap
+            _fn_upgrade_dotfiles
+            local orphan
+            orphan=$(yay -Qtdq 2>/dev/null)
+            if [[ -n "$orphan" ]]; then
+                echo -e '\n\033[1mOrphan package dependencies:\033[0m'
+                echo "$orphan" | while read -r pkg; do echo " $pkg"; done
+                echo -e '\033[2mTo remove them:           yay -Rc $(yay -Qtdq)\033[0m'
+                echo -e '\033[2mTo set them as explicit:  yay -D --asexplicit PKG\033[0m'
+            fi
+            exist notify-send && notify-send 'yay' '<i>System upgrade is completed.</i>' --urgency=normal >/dev/null 2>/dev/null
+            echo -e '\n\033[1mFull upgrade completed\033[0m'
+            sudo --reset-timestamp
+            return
+        fi
+
+        # pacman (default)
+        echo -e '\033[1;32mpacman\033[0m'
+        sudo pacman -Syyu --noconfirm --color=always
+        _fn_upgrade_flatpak
+        _fn_upgrade_snap
+        _fn_upgrade_dotfiles
+        local orphan
+        orphan=$(pacman -Qtdq 2>/dev/null)
+        if [[ -n "$orphan" ]]; then
+            echo -e '\n\033[1mOrphan package dependencies:\033[0m'
+            echo "$orphan" | while read -r pkg; do echo " $pkg"; done
+            echo -e '\033[2mTo remove them:           sudo pacman -Rc $(pacman -Qtdq)\033[0m'
+            echo -e '\033[2mTo set them as explicit:  sudo pacman -D --asexplicit PKG\033[0m'
+        fi
+        exist notify-send && notify-send 'pacman' '<i>System upgrade is completed.</i>' --urgency=normal >/dev/null 2>/dev/null
+        echo -e '\n\033[1mFull upgrade completed\033[0m'
+        sudo --reset-timestamp
+        return
+    fi
+
+    # Debian
+    if exist apt; then
+        # termux pkg (apt wrapper)
+        if exist pkg; then
+            echo -e '\033[1;32mpkg\033[0m'
+            pkg upgrade -y
+            pkg autoclean
+            _fn_upgrade_dotfiles
+            exist termux-notification && termux-notification -i "tuUpdatePKG" -t "Termux PKG" -c "System upgrade is completed." --led-color AAFF00 >/dev/null 2>/dev/null
+            echo -e '\n\033[1mFull upgrade completed\033[0m'
+            return
+        fi
+
+        # apt (default)
+        sudo -v
+        echo -e "\033[32mapt\033[0m"
+        sudo apt update
+        sudo apt full-upgrade -y
+        sudo apt autoremove -y
+        _fn_upgrade_flatpak
+        _fn_upgrade_snap
+        _fn_upgrade_dotfiles
+        exist notify-send && notify-send 'apt' '<i>System upgrade is completed.</i>' --urgency=normal >/dev/null 2>/dev/null
+        echo -e "\n\033[1mAll updates are completed.\033[0m"
+        return
+    fi
+
+    # Fedora
+    if exist dnf; then
+        # dnf (default)
+        sudo -v
+        echo -e "\033[32mdnf\033[0m"
+        sudo dnf upgrade -y
+
+        _fn_upgrade_flatpak
+        _fn_upgrade_snap
+        _fn_upgrade_dotfiles
+        exist notify-send && notify-send 'dnf' '<i>System upgrade is completed.</i>' --urgency=normal >/dev/null 2>/dev/null
+        echo -e "\n\033[1mAll updates are completed.\033[0m"
+        return
+    fi
+}
+
+# If script is executed directly (not sourced), run the function
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    upgrade "$@"
+fi
