@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This script Require GIT and GH to function propperly
+# This script Require GIT and GH to function properly
 # Best usage is to add the script to your git aliases
 # > [alias]
 # >	checkout-pr = "!bash github_checkout_pr"
