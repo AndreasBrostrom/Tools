@@ -7,7 +7,8 @@ echo -e "\033[34;1mInstalling $(basename $SCRIPT_DIR)...\033[0m"
 ORIGINAL_ARGS=("$@")
 
 # Argument flags
-ARG_NONE_I3=0
+ARG_I3=0
+ARG_NIRI=0
 ARG_NO_SUDO=0
 ARG_ANDROID=0
 ARG_SOFTLINKS=0
@@ -15,8 +16,27 @@ ARG_SOFTLINKS=0
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --none-i3)
-            ARG_NONE_I3=1
+        -h|--help)
+            echo "Usage: ./installScripts [OPTIONS]"
+            echo ""
+            echo "Install scripts to ~/.bin directory."
+            echo ""
+            echo "Options:"
+            echo "  -h, --help      Show this help message"
+            echo "  --i3            (Compatibility flag, no effect)"
+            echo "  --niri          (Compatibility flag, no effect)"
+            echo "  -a, --android   Install for Android/Termux environment"
+            echo "  --no-sudo       Skip operations requiring sudo privileges"
+            echo "  --link          Create symlinks instead of copying files"
+            echo ""
+            exit 0
+            ;;
+        --i3)
+            ARG_I3=1
+            shift
+            ;;
+        --niri)
+            ARG_NIRI=1
             shift
             ;;
         -a|--android)
@@ -33,6 +53,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Unknown option: $1"
+            echo "Use -h or --help for usage information"
             exit 1
             ;;
     esac
@@ -40,6 +61,12 @@ done
 
 function isAndroid() {
     if [[ $ARG_ANDROID == 1 ]]; then
+        return 0
+    fi
+    return 1
+}
+function hasNoSudo() {
+    if [[ $ARG_NO_SUDO == 1 ]]; then
         return 0
     fi
     return 1
@@ -60,12 +87,12 @@ if isAndroid; then
     echo -e "\033[33;1mDetected Android environment\033[0m"
     EXISTING=($(ls /data/data/com.termux/files/usr/bin/))
 else
-    EXISTING=($(ls /usr/bin/))
+    EXISTING=($(ls /bin/))
 fi
 
 for FILE in $(rg --files --hidden); do
     if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
-        echo -e " \033[33mScript '$FILE' already present in /usr/bin skipping\033[0m"
+        echo -e " \033[33mScript '$FILE' already present in /bin skipping\033[0m"
         continue
     fi
     if useSoftlinks; then 
