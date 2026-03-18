@@ -11,6 +11,7 @@ ARG_I3=0
 ARG_NIRI=0
 ARG_NO_SUDO=0
 ARG_ANDROID=0
+ARG_WSL=0
 ARG_SOFTLINKS=0
 
 # Parse arguments
@@ -26,6 +27,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --i3            (Compatibility flag, no effect)"
             echo "  --niri          (Compatibility flag, no effect)"
             echo "  -a, --android   Install for Android/Termux environment"
+            echo "  -w, --wsl       Install for Windows Subsystem for Linux environment"
             echo "  --no-sudo       Skip operations requiring sudo privileges"
             echo "  --link          Create symlinks instead of copying files"
             echo ""
@@ -41,6 +43,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -a|--android)
             ARG_ANDROID=1
+            shift
+            ;;
+        -w|--wsl)
+            ARG_WSL=1
             shift
             ;;
         --no-sudo)
@@ -61,6 +67,12 @@ done
 
 function isAndroid() {
     if [[ $ARG_ANDROID == 1 ]]; then
+        return 0
+    fi
+    return 1
+}
+function isWSL() {
+    if [[ $ARG_WSL == 1 ]]; then
         return 0
     fi
     return 1
