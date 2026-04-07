@@ -9,6 +9,7 @@ ORIGINAL_ARGS=("$@")
 # Argument flags
 ARG_I3=0
 ARG_NIRI=0
+ARG_XFCE=0
 ARG_NO_SUDO=0
 ARG_ANDROID=0
 ARG_WSL=0
@@ -26,6 +27,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -h, --help      Show this help message"
             echo "  --i3            (Compatibility flag, no effect)"
             echo "  --niri          (Compatibility flag, no effect)"
+            echo "  --xfce          (Compatibility flag, no effect)"
             echo "  -a, --android   Install for Android/Termux environment"
             echo "  -w, --wsl       Install for Windows Subsystem for Linux environment"
             echo "  --no-sudo       Skip operations requiring sudo privileges"
@@ -39,6 +41,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --niri)
             ARG_NIRI=1
+            shift
+            ;;
+        --xfce)
+            ARG_XFCE=1
             shift
             ;;
         -a|--android)
@@ -99,7 +105,11 @@ if isAndroid; then
     echo -e "\033[33;1mDetected Android environment\033[0m"
     EXISTING=($(ls /data/data/com.termux/files/usr/bin/))
 else
-    EXISTING=($(ls /bin/))
+    if [[ -L /bin ]] && [[ "$(readlink -f /bin)" == "/usr/bin" ]]; then
+        EXISTING=($(ls /usr/bin/))
+    else
+        EXISTING=($(ls /bin/))
+    fi
 fi
 
 for FILE in $(rg --files --hidden); do
