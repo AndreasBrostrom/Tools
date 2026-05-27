@@ -3,11 +3,13 @@
 scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
 isNumber='^[0-9]+$'
 USE_X11=false
+SERVER="https://lorem.brostrom.online"
+SERVER_DISPLAY="${SERVER#http://}"; SERVER_DISPLAY="${SERVER_DISPLAY#https://}"; SERVER_DISPLAY="${SERVER_DISPLAY%%:*}"
 
 fn_help () {
     echo "Usage: $scriptName [OPTION]"
     echo ""
-    echo "Prints or writes a random generated text from lorem.brostrom.online."
+    echo "Prints or writes a random generated text from $SERVER_DISPLAY."
     echo "Each option have 2 optional parameter of a number. For a set amount of sentences define one number:"
     echo "   Exsample: $scriptName -p 1"
     echo "To get a random number between 1 och 3 you define a secondary parameter"
@@ -34,7 +36,7 @@ fn_print () {
     if [[ ! -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
 
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
-    LOREM="$(curl -s http://lorem.brostrom.online:3000/lorem/sentences/$RAND)"
+    LOREM="$(curl -s $SERVER/lorem/sentences/$RAND)"
     echo "$LOREM"
     exit 0
 }
@@ -44,7 +46,7 @@ fn_nonsense () {
     if [[ ! -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
 
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
-    LOREM="$(curl -s http://lorem.brostrom.online:3000/nonsense/sentences/$RAND)"
+    LOREM="$(curl -s $SERVER/nonsense/sentences/$RAND)"
     echo "$LOREM"
     exit 0
 }
@@ -54,7 +56,7 @@ fn_clipboard () {
     if [[ ! -z $2 ]] && [[ $2 =~ $isNumber ]]; then _RANDE=$2; else _RANDE=1; fi
 
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
-    LOREM="$(curl -s http://lorem.brostrom.online:3000/lorem/sentences/$RAND)"
+    LOREM="$(curl -s $SERVER/lorem/sentences/$RAND)"
 
     if [[ "$USE_X11" == true ]]; then
         command -v xclip >/dev/null 2>&1 || command -v xsel >/dev/null 2>&1 || { echo >&2 "ERROR: Script requires 'xclip' or 'xsel' but neither is installed. Aborting."; exit 1; }
@@ -81,14 +83,14 @@ fn_write () {
 
     sleep 0.5
     RAND=$(($_RANDS + $RANDOM % $_RANDE))
-    LOREM="$(curl -s http://lorem.brostrom.online:3000/lorem/sentences/$RAND)"
+    LOREM="$(curl -s $SERVER/lorem/sentences/$RAND)"
 
     if [[ "$USE_X11" == true ]]; then
         command -v xdotool >/dev/null 2>&1 || { echo >&2 "ERROR: Script requires 'xdotool' but it's not installed. Aborting."; exit 1; }
-        xdotool type "$LOREM"
+        xdotool type --delay 1 "$LOREM"
     else
         command -v ydotool >/dev/null 2>&1 || { echo >&2 "ERROR: Script requires 'ydotool' but it's not installed. Aborting."; exit 1; }
-        ydotool type "$LOREM"
+        ydotool type --key-delay 1 "$LOREM"
     fi
     exit 0
 }
