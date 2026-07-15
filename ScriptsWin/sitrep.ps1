@@ -7,6 +7,7 @@ $status = @()
 $argUpdate = $false
 $argCommit = $false
 $argInstall = $false
+$argDryRun = $false
 $errorOccurred = $false
 $hasChanges = $false
 $installParams = @()
@@ -48,9 +49,9 @@ function Show-Help {
     Write-Host ""
     Write-Host "Options:"
     Write-Host "  --upgrade, -u, --pull, -p    Update repositories if no changes are found"
-    Write-Host "  --commit, -c, --push, -P     Commit and push changes to repositories"
+    Write-Host "  --commit, -c, --push, -pu    Commit and push changes to repositories"
     Write-Host "  --install, -i                Run install script for dotfiles (always installs unless combined with --pull, then only on changes)"
-    Write-Host "  -ui                          Shorthand for --upgrade --install"
+    Write-Host "  --dryrun, -n                 Pass through to the install script: print what would be linked/copied instead of doing it"
     Write-Host "  --help, -h                   Show this help message"
 }
 
@@ -64,10 +65,15 @@ foreach ($arg in $args) {
         '--commit' { $argCommit = $true }
         '-c' { $argCommit = $true }
         '--push' { $argCommit = $true }
-        '-P' { $argCommit = $true }
+        '-pu' { $argCommit = $true }
         '--install' { $argInstall = $true }
         '-i' { $argInstall = $true }
+        '--dryrun' { $argDryRun = $true }
+        '-n' { $argDryRun = $true }
         '-ui' { $argUpdate = $true; $argInstall = $true }
+        '-pi' { $argUpdate = $true; $argInstall = $true }
+        '-ip' { $argUpdate = $true; $argInstall = $true }
+        '-iu' { $argUpdate = $true; $argInstall = $true }
         '--help' { Show-Help; exit 0 }
         '-h' { Show-Help; exit 0 }
         default {
@@ -88,6 +94,11 @@ else {
     $uriLink = "`e]8;;file:///$repoDir`a$repoDir`e]8;;`a"
     Write-Host "Repo path: $uriLink" -ForegroundColor Gray
 }
+if (Test-Path -Path $configFile) {
+    $configLink = "`e]8;;file:///$configFile`a$configFile`e]8;;`a"
+    Write-Host "Config file: $configLink"
+    Write-Host "             $($installParams -join ' ')"
+}
 
 if ($argUpdate) {
     Write-Host "Updating repositories if no changes are found" -ForegroundColor Gray
@@ -99,8 +110,11 @@ $dotfiles = @(
     "dotfiles_private",
     "wdotfiles",
     "secure",
+    "Tools",
     "tools",
+    "Scripts",
     "scripts",
+    "Win-Upgrade",
     "win-upgrade"
 )
 
@@ -121,7 +135,7 @@ foreach ($path in $dotfiles) {
             if ($LASTEXITCODE -ne 0) {
                 $errorOccurred = $true
                 $uriLink = "`e]8;;file:///$repoPath`a$path`e]8;;`a"
-                $status += "${uriLink}: `e[31mFailed to commit changes`e[0m"
+                $status += "${uriLink}: `e[31mfailed to committing changes`e[0m"
                 git -C $repoPath reset --quiet
             }
             else {
@@ -129,11 +143,11 @@ foreach ($path in $dotfiles) {
                 if ($LASTEXITCODE -ne 0) {
                     $errorOccurred = $true
                     $uriLink = "`e]8;;file:///$repoPath`a$path`e]8;;`a"
-                    $status += "${uriLink}: `e[31mFailed to push changes`e[0m"
+                    $status += "${uriLink}: `e[31mfailed to push changes`e[0m"
                 }
                 else {
                     $uriLink = "`e]8;;file:///$repoPath`a$path`e]8;;`a"
-                    $status += "${uriLink}: Committed and pushed changes"
+                    $status += "${uriLink}: committed and pushed changes"
                 }
             }
             $uriLink = "`e]8;;file:///$repoPath`a$path`e]8;;`a"
@@ -141,7 +155,7 @@ foreach ($path in $dotfiles) {
         }
         else {
             $uriLink = "`e]8;;file:///$repoPath`a$path`e]8;;`a"
-            $status += "${uriLink}: Uncommitted changes"
+            $status += "${uriLink}: uncommitted changes"
             $status += "`e[2m$gitStatus`e[0m"
         }
         continue
@@ -157,7 +171,7 @@ foreach ($path in $dotfiles) {
         $hasChanges = $true
         $gitChanges = git -C $repoPath diff --name-only "HEAD@{1}"
         $uriLink = "`e]8;;file:///$repoPath`a$path`e]8;;`a"
-        $status += "${uriLink}: Repository updated"
+        $status += "${uriLink}: repository updated"
         $status += "`e[2m$gitChanges`e[0m"
     }
 }
@@ -166,7 +180,9 @@ foreach ($path in $dotfiles) {
 if ($argInstall -and (!$argUpdate -or $hasChanges)) {
     $installScriptPath = Join-Path -Path $repoDir -ChildPath $installScript
     if (Test-Path -Path $installScriptPath) {
-        & $installScriptPath @installParams
+        $finalParams = @($installParams)
+        if ($argDryRun) { $finalParams += "--dryrun" }
+        & $installScriptPath @finalParams
     }
 }
 

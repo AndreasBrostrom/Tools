@@ -15,6 +15,7 @@ ARG_NO_SUDO=0
 ARG_ANDROID=0
 ARG_WSL=0
 ARG_SOFTLINKS=0
+ARG_DRYRUN=0
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -33,6 +34,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -w, --wsl       Install for Windows Subsystem for Linux environment"
             echo "  --no-sudo       Skip operations requiring sudo privileges"
             echo "  --link          Create symlinks instead of copying files"
+            echo "  -n, --dryrun    Print what would be linked/copied instead of doing it"
             echo ""
             exit 0
             ;;
@@ -62,6 +64,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --link)
             ARG_SOFTLINKS=1
+            shift
+            ;;
+        -n|--dryrun)
+            ARG_DRYRUN=1
             shift
             ;;
         *)
@@ -96,35 +102,52 @@ function useSoftlinks() {
     fi
     return 1
 }
-
-echo -e "\033[34;1mCopying scripts\033[0m"
-cd $SCRIPT_DIR/ScriptsLinux
-[ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
-
-EXISTING=()
-if isAndroid; then
-    echo -e "\033[33;1mDetected Android environment\033[0m"
-    EXISTING=($(ls /data/data/com.termux/files/usr/bin/))
-else
-    if [[ -L /bin ]] && [[ "$(readlink -f /bin)" == "/usr/bin" ]]; then
-        EXISTING=($(ls /usr/bin/))
-    else
-        EXISTING=($(ls /bin/))
+function isDryRun() {
+    if [[ $ARG_DRYRUN == 1 ]]; then
+        return 0
     fi
+    return 1
+}
+
+if [ -d "$SCRIPT_DIR/ScriptsLinux" ]; then
+    echo -e "\033[34;1mCopying scripts\033[0m"
+    isDryRun && echo -e "\033[33;1mDry run: no files will be linked or copied\033[0m"
+    cd $SCRIPT_DIR/ScriptsLinux
+    [ ! -d "$HOME/.bin" ] && mkdir -p $HOME/.bin
+
+    EXISTING=()
+    if isAndroid; then
+        echo -e "\033[33;1mDetected Android environment\033[0m"
+        EXISTING=($(ls /data/data/com.termux/files/usr/bin/))
+    else
+        if [[ -L /bin ]] && [[ "$(readlink -f /bin)" == "/usr/bin" ]]; then
+            EXISTING=($(ls /usr/bin/))
+        else
+            EXISTING=($(ls /bin/))
+        fi
+    fi
+
+    for FILE in $(rg --files --hidden); do
+        if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
+            echo -e " \033[33mScript '$FILE' already present in /bin skipping\033[0m"
+            continue
+        fi
+        if useSoftlinks; then
+            if isDryRun; then
+                echo -e " \033[2m[dry-run] Would link $FILE => ./ScriptsLinux/$FILE\033[0m"
+                continue
+            fi
+            echo -e " \033[2mLinking $FILE => ./ScriptsLinux/$FILE\033[0m"
+            rm -f $HOME/.bin/$FILE
+            ln -sf $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
+        else
+            if isDryRun; then
+                echo -e " \033[2m[dry-run] Would copy $FILE\033[0m"
+                continue
+            fi
+            echo -e " \033[2mCopying $FILE\033[0m"
+            rm -f $HOME/.bin/$FILE
+            cp $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
+        fi
+    done
 fi
-
-for FILE in $(rg --files --hidden); do
-    if [[ " ${EXISTING[*]} " =~ " ${FILE} " ]]; then
-        echo -e " \033[33mScript '$FILE' already present in /bin skipping\033[0m"
-        continue
-    fi
-    if useSoftlinks; then 
-        echo -e " \033[2mLinking $FILE => ./ScriptsLinux/$FILE\033[0m"
-        rm -f $HOME/.bin/$FILE
-        ln -sf $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
-    else
-        echo -e " \033[2mCopying $FILE\033[0m"
-        rm -f $HOME/.bin/$FILE
-        cp $SCRIPT_DIR/ScriptsLinux/$FILE $HOME/.bin/$FILE
-    fi
-done

@@ -3,8 +3,14 @@ if ( -Not $IsWindows ) {
     exit 1
 }
 
+$DryRun = $false
+foreach ($arg in $args) {
+    if ($arg -in @("--dryrun", "-n")) { $DryRun = $true }
+}
+
 $IS_ADMIN = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
 $NON_ADMIN_MODE = $false
+if ($DryRun) { Write-Host "Dry run: no files will be linked or copied" -ForegroundColor Yellow }
 
 if ( -not $IS_ADMIN ) {
     Write-Host "Not running as admin will copy files instead of linking them."
@@ -16,17 +22,27 @@ if ( -not $IS_ADMIN ) {
 # Copy user scripts
 $dest = "$($Env:USERPROFILE)\.bin"
 
-if ( $IS_ADMIN ) {
-    Write-host "Linking scripts to $dest\."
-} else {
-    Write-host "Copying scripts to $dest\."
-}
-ForEach ($filePath in Get-ChildItem "ScriptsWin") {
-    $path = "$($dest)\$($filePath.name)"
+if ( Test-Path -Path "ScriptsWin" ) {
     if ( $IS_ADMIN ) {
-        New-Item -ItemType SymbolicLink -Target "$filePath" -Path $path -Force
+        Write-host "Linking scripts to $dest\."
     } else {
-        Copy-Item -Path $filePath -Destination $dest -Force
+        Write-host "Copying scripts to $dest\."
+    }
+    ForEach ($filePath in Get-ChildItem "ScriptsWin") {
+        $path = "$($dest)\$($filePath.name)"
+        if ( $DryRun ) {
+            if ( $IS_ADMIN ) {
+                Write-Host "[dry-run] Would link $path => $filePath"
+            } else {
+                Write-Host "[dry-run] Would copy $filePath to $dest"
+            }
+            continue
+        }
+        if ( $IS_ADMIN ) {
+            New-Item -ItemType SymbolicLink -Target "$filePath" -Path $path -Force
+        } else {
+            Copy-Item -Path $filePath -Destination $dest -Force
+        }
     }
 }
 
@@ -36,14 +52,15 @@ if ( -not $IS_ADMIN ) {
     Write-Host "$([io.path]::GetFileNameWithoutExtension("$($MyInvocation.MyCommand.Name)")) is not running as Administrator. Start PowerShell by using the Run as Administrator option" -ForegroundColor Red -NoNewline
 
     # check if have sudo programs installed
-    $sudoScripts =  "$Env:USERPROFILE\scoop\shims\sudo",
-                    "$Env:USERPROFILE\scoop\shims\sudo.ps1",
-                    "$Env:PROGRAMDATA\scoop\shims\sudo",
-                    "$Env:PROGRAMDATA\scoop\shims\sudo.ps1",
-                    "$Env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
-                    "$Env:USERPROFILE\.bin\sudo.ps1",
-                    "$Env:SCOOP_GLOBAL\shims\sudo",
-                    "$Env:SCOOP_GLOBAL\shims\sudo.ps1"
+    $sudoScripts = "$env:WINDIR\system32\sudo.exe",
+                   "$env:USERPROFILE\scoop\shims\sudo",
+                   "$env:USERPROFILE\scoop\shims\sudo.ps1",
+                   "$env:PROGRAMDATA\scoop\shims\sudo",
+                   "$env:PROGRAMDATA\scoop\shims\sudo.ps1",
+                   "$env:PROGRAMDATA\chocolatey\bin\Sudo.exe",
+                   "$env:USERPROFILE\.bin\sudo.ps1",
+                   "$env:SCOOP_GLOBAL\shims\sudo",
+                   "$env:SCOOP_GLOBAL\shims\sudo.ps1"
 
     foreach ($sudoScript in $sudoScripts) { if ( [System.IO.File]::Exists("$sudoScript") ) { [bool] $hasSudo = 1; break } }
     if ($hasSudo) { Write-Host " or run with sudo" -ForegroundColor Red -NoNewline }
@@ -54,8 +71,14 @@ if ( -not $IS_ADMIN ) {
 
 $destRoot = "C:\bin"
 
-Write-host "Linking scripts to $destRoot\."
-ForEach ($filePath in Get-ChildItem "ScriptsWinExec") {
-    $path = "$($destRoot)\$($filePath.name)"
-    New-Item -ItemType SymbolicLink -Target "$filePath" -Path $path -Force
+if ( Test-Path -Path "ScriptsWinExec" ) {
+    Write-host "Linking scripts to $destRoot\."
+    ForEach ($filePath in Get-ChildItem "ScriptsWinExec") {
+        $path = "$($destRoot)\$($filePath.name)"
+        if ( $DryRun ) {
+            Write-Host "[dry-run] Would link $path => $filePath"
+            continue
+        }
+        New-Item -ItemType SymbolicLink -Target "$filePath" -Path $path -Force
+    }
 }
