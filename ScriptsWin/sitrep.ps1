@@ -14,7 +14,8 @@ $installParams = @()
 $installScript = "wdotfiles/install.ps1"
 
 # Create config file if it doesn't exist
-if (-not (Test-Path -Path $configFile)) {
+$configExisted = Test-Path -Path $configFile
+if (-not $configExisted) {
     New-Item -ItemType Directory -Force -Path (Split-Path $configFile) | Out-Null
     @"
 # Configuration file for sitrep
@@ -29,8 +30,10 @@ install_params = []
 "@ | Set-Content -Path $configFile
 }
 
-# Read config file
-if (Test-Path -Path $configFile) {
+# Read config file (skip on first run: we just wrote the defaults above,
+# and re-reading a file immediately after creating it can transiently fail
+# on Windows, e.g. while AV/OneDrive is still settling the new file)
+if ($configExisted) {
     $paramsLine = (Get-Content $configFile | Where-Object { $_ -match '^install_params' }) -replace 'install_params\s*=\s*', ''
     if ($paramsLine) {
         $paramsLine = $paramsLine -replace '^\[|\]$', '' -replace '"', '' -replace "'", ''
