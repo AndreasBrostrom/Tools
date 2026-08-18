@@ -21,7 +21,7 @@ fn_help () {
 
 # Local functions
 _fn_download_success_message () {
-    file=$(basename $1)
+    file=$(basename "$1")
     printf "\e]8;;file:$HOME/Downloads/$file\e\\$file\e]8;;\e\\: have been pulled down to your \e]8;;file:$HOME/Downloads/\e\\downloads\e]8;;\e\\ folder.\n"
 }
 
@@ -29,22 +29,22 @@ _fn_download_success_message () {
 fn_default () {
     if [[ "$1" != "false" ]]; then
         path="/storage/emulated/0/$2"
-        adb -s $1 pull $path $HOME/Downloads/.
+        adb -s "$1" pull "$path" "$HOME/Downloads/."
     else
         path="/storage/emulated/0/$2"
-        adb pull $path $HOME/Downloads/.
+        adb pull "$path" "$HOME/Downloads/."
     fi
-    _fn_download_success_message $2
+    _fn_download_success_message "$2"
     exit 0
 }
 
 fn_ls () {
     if [[ "$1" != "false" ]]; then
         path="/storage/emulated/0/$2"
-        adb -s $1 shell ls $path
+        adb -s "$1" shell ls "$path"
     else
         path="/storage/emulated/0/$1"
-        adb shell ls $path
+        adb shell ls "$path"
     fi
     exit 0
 }
@@ -56,25 +56,25 @@ fn_devices () {
 
 fn_photo () {
     if [[ "$1" != "false" ]]; then
-        file=$(adb -s $1 shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
-        adb -s $1 pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
+        file=$(adb -s "$1" shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
+        adb -s "$1" pull "/storage/emulated/0/DCIM/Camera/$file" "$HOME/Downloads/."
     else
         file=$(adb shell ls -t /storage/emulated/0/DCIM/Camera | head -1)
-        adb pull /storage/emulated/0/DCIM/Camera/$file $HOME/Downloads/.
+        adb pull "/storage/emulated/0/DCIM/Camera/$file" "$HOME/Downloads/."
     fi
-    _fn_download_success_message $file
+    _fn_download_success_message "$file"
     exit 0
 }
 
 fn_screenshot () {
     if [[ "$1" != "false" ]]; then
-        file=$(adb -s $1 shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
-        adb -s $1 pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+        file=$(adb -s "$1" shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
+        adb -s "$1" pull "/storage/emulated/0/Pictures/Screenshots/$file" "$HOME/Downloads/."
     else
         file=$(adb shell ls -t /storage/emulated/0/Pictures/Screenshots | head -1)
-        adb pull /storage/emulated/0/Pictures/Screenshots/$file $HOME/Downloads/.
+        adb pull "/storage/emulated/0/Pictures/Screenshots/$file" "$HOME/Downloads/."
     fi
-    _fn_download_success_message $file
+    _fn_download_success_message "$file"
     exit 0
 }
 
@@ -92,18 +92,18 @@ main () {
     [[ -z $device ]] && echo "$scriptName: -s requires an argument" && exit 1
 
     if [[ "$device" == "false" ]]; then
-        if [[ "$1" == "-l" ]] || [[ "$1" == "--ls" ]]; then fn_ls $device $2; fi
-        if [[ "$1" == "-p" ]] || [[ "$1" == "--photo" ]]; then fn_photo $device; fi
-        if [[ "$1" == "-S" ]] || [[ "$1" == "--screenshot" ]]; then fn_screenshot $device; fi
+        if [[ "$1" == "-l" ]] || [[ "$1" == "--ls" ]]; then fn_ls "$device" "$2"; fi
+        if [[ "$1" == "-p" ]] || [[ "$1" == "--photo" ]]; then fn_photo "$device"; fi
+        if [[ "$1" == "-S" ]] || [[ "$1" == "--screenshot" ]]; then fn_screenshot "$device"; fi
         if [[ "$1" == "--devices" ]]; then fn_devices; fi
-        fn_default $device $1
+        fn_default "$device" "$1"
     else
-        if [[ "$3" == "-l" ]] || [[ "$3" == "--ls" ]]; then fn_ls $device $4; fi
-        if [[ "$3" == "-p" ]] || [[ "$3" == "--photo" ]]; then fn_photo $device; fi
-        if [[ "$3" == "-S" ]] || [[ "$3" == "--screenshot" ]]; then fn_screenshot $device; fi
+        if [[ "$3" == "-l" ]] || [[ "$3" == "--ls" ]]; then fn_ls "$device" "$4"; fi
+        if [[ "$3" == "-p" ]] || [[ "$3" == "--photo" ]]; then fn_photo "$device"; fi
+        if [[ "$3" == "-S" ]] || [[ "$3" == "--screenshot" ]]; then fn_screenshot "$device"; fi
         if [[ "$3" == "--devices" ]]; then fn_devices; fi
-        fn_default $device $3 
+        fn_default "$device" "$3"
     fi
 }
 
-main $*
+main "$@"

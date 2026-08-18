@@ -1,11 +1,17 @@
 #!/bin/bash
 set -e
 scriptName=$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")
+androidRoot="/storage/emulated/0"
+androidDefaultDest="$androidRoot/Download"
 
 # Help
 fn_help () {
-  echo "Usage: $scriptName [FILE] [OPTION]"
-  echo "Files are uploaded to the download directory."
+  echo "Usage: $scriptName [FILE] [DEST] [OPTION]"
+  echo "Files are uploaded to DEST, or the download directory if DEST is omitted."
+  echo ""
+  echo "  DEST                  destination folder on the device"
+  echo "                        a leading '~/' expands to $androidRoot/"
+  echo "                        e.g. ~/DCIM/ -> $androidRoot/DCIM/"
   echo ""
   echo "  -s SERIAL             use device with given serial"
   echo ""
@@ -16,19 +22,34 @@ fn_help () {
 }
 
 # Local functions
+_fn_resolve_dest () {
+    dest=$1
+    if [[ -z "$dest" || "$dest" == "." ]]; then
+        echo "$androidDefaultDest"
+    elif [[ "$dest" == "~/"* || "$dest" == "~" ]]; then
+        echo "$androidRoot/${dest#\~}"
+    elif [[ "$dest" == /* ]]; then
+        echo "$dest"
+    else
+        echo "$androidRoot/$dest"
+    fi
+}
+
 _fn_upload_success_message () {
-    file=$(basename $1)
-    echo "$file: file have been pushed to ./storage/emulated/0/Download/$file"
+    echo "$(basename "$1"): file have been pushed to $2"
 }
 
 # Main functions
 fn_default () {
+    destDir=$(_fn_resolve_dest "$3")
+    remotePath="${destDir%/}/$(basename "$2")"
+
     if [[ "$1" != "false" ]]; then
-        adb -s $1 -d push "$2" "/storage/emulated/0/Download/$2"
+        adb -s "$1" -d push "$2" "$remotePath"
     else
-        adb -d push "$2" "/storage/emulated/0/Download/$2"
+        adb -d push "$2" "$remotePath"
     fi
-    _fn_upload_success_message $2
+    _fn_upload_success_message "$2" "$remotePath"
     exit 0
 }
 
@@ -52,11 +73,11 @@ main () {
 
     if [[ "$device" == "false" ]]; then
         if [[ "$1" == "--devices" ]]; then fn_devices; fi
-        fn_default $device $1
+        fn_default "$device" "$1" "$2"
     else
         if [[ "$3" == "--devices" ]]; then fn_devices; fi
-        fn_default $device $3
+        fn_default "$device" "$3" "$4"
     fi
 }
 
-main $*
+main "$@"
